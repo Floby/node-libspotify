@@ -1,0 +1,37 @@
+{
+  "name": "libspotify",
+  "description": "Node bindings to the libspotify C library",
+  "author": "Florent Jaby <florent.jaby@gmail.com>",
+  "keywords": [
+    "spotify",
+    "libspotify",
+    "bindings",
+    "play",
+    "player",
+    "music"
+  ],
+  "version": "0.0.0",
+  "maintainers": [
+    { "name": "Florent Jaby", "email": "florent.jaby@gmail.com" }
+  ],
+  "bugs": {
+    "url": "https://github.com/floby/node-libspotify/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/floby/node-libspotify.git"
+  },
+  "engines": {
+    "node": "~0.8.0"
+  },
+  "dependencies": {
+    "bindings": "~1.0.0"
+  },
+  "devDependencies": {
+    "vows": "~0.7"
+  },
+  "scripts": {
+    "install": "node-gyp configure build"
+  },
+  "main": "lib/libspotify.js"
+}
