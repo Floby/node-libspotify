@@ -24,7 +24,7 @@ static unsigned int scount = 0;
 
 void Session::onMainThreadNotified(sp_session* spsession) {
     Session* session = static_cast<Session*>(sp_session_userdata(spsession));
-    session->do_schedule_processing_events = 5;
+    session->do_schedule_processing_events = 100;
 }
 
 void Session::Idler(uv_idle_t* idler_handle, int status) {
@@ -66,7 +66,7 @@ void Session::scheduleProcessingEvents(unsigned int timeout) {
     }
     uv_timer_init(uv_default_loop(), &process_events_handle);
     process_events_handle.data = this;
-    uv_timer_start(&process_events_handle, process_events_timer_callback, timeout, NULL);
+    uv_timer_start(&process_events_handle, process_events_timer_callback, timeout, 0);
     processing_scheduled = true;
 }
 
