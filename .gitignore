@@ -15,3 +15,6 @@ npm-debug.log
 
 .*.sw[a-z]
 .*.un~
+
+build
+node_modules

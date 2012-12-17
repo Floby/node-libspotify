@@ -3,7 +3,9 @@
     {
       "target_name": "libspotify",
       "sources": [
-        "src/binding.cpp",
+        "src/binding.cc",
+        "src/spotify.cc",
+        "src/session.cc"
       ],
       "conditions" : [
         [
