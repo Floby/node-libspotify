@@ -20,6 +20,7 @@
 #ifndef NSP_SESSION_H
 #define NSP_SESSION_H
 #include <node.h>
+#include <node_buffer.h>
 #include <libspotify/api.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -33,15 +34,17 @@ namespace nsp {
         void processEvents();
     
     private:
-        Session ();
+        Session (v8::Handle<v8::Object> buffer);
         virtual ~Session ();
-        void initAppKey();
         void initConfig();
         void initCallbacks();
+        void scheduleProcessingEvents(unsigned int timeout);
 
 
         static void onLoggedIn(sp_session* spsession, sp_error error);
         static void onMainThreadNotified(sp_session* spsession);
+
+        static v8::Handle<v8::Value> Login(const v8::Arguments& args);
 
         static v8::Handle<v8::Value> New(const v8::Arguments& args);
 
@@ -54,6 +57,8 @@ namespace nsp {
 
         uint8_t* g_appkey;
         size_t g_appkey_size;
+
+        unsigned int processing_scheduled;
     };
 
 }
