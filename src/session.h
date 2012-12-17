@@ -17,18 +17,28 @@
  */
 
 
+#ifndef NSP_SESSION_H
+#define NSP_SESSION_H
 #include <node.h>
+#include <libspotify/api.h>
 
-namespace "nsp" {
+namespace nsp {
 
     class Session :public node::ObjectWrap {
     public:
-        Session ();
-        virtual ~Session ();
+        static void Init(v8::Handle<v8::Object> target);
     
     private:
-        sp_session_config spconfig;
-        sp_session spsession;
+        Session ();
+        virtual ~Session ();
+
+        static v8::Handle<v8::Value> New(const v8::Arguments& args);
+
+        sp_session_config config;
+        sp_session_callbacks callbacks;
+        sp_session* spsession;
     };
 
 }
+
+#endif /* NSP_SESSION_H */

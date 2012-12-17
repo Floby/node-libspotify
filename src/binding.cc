@@ -19,6 +19,7 @@
 #include <node.h>
 #include <v8.h>
 #include "spotify.h"
+#include "session.h"
 
 extern "C" {
     void init (v8::Handle<v8::Object> target)
@@ -26,6 +27,7 @@ extern "C" {
         v8::HandleScope scope;
         NODE_SET_METHOD(target, "hello", hello);
         NODE_SET_METHOD(target, "bidule", bidule);
+        nsp::Session::Init(target);
     }
 }
 
