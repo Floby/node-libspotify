@@ -6,3 +6,6 @@ var s = new sp.Session({
 
 var cred = require('./spotify_key/passwd');
 s.login(cred.login, cred.password);
+s.on('login', function() {
+    console.log('LOGGED FROM JS!')
+});

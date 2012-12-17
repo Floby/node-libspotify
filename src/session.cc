@@ -37,11 +37,21 @@ void Session::Idler(uv_idle_t* idler_handle, int status) {
 
 
 void Session::onLoggedIn(sp_session* spsession, sp_error error) {
+    HandleScope scope;
+
     if(error != SP_ERROR_OK) {
         fprintf(stderr, "Error %s\n", sp_error_message(error));
         exit(1);
     }
     printf("LOGGED IN!\n");
+    
+    Handle<Value> argv[1] = {
+        String::New("login")
+    };
+
+    Session* session = static_cast<Session*>(sp_session_userdata(spsession));
+
+    node::MakeCallback(session->handle_, "emit", 1, argv);
 }
 
 static void process_events_timer_callback(uv_timer_t* handle, int status) {
@@ -150,11 +160,8 @@ Handle<Value> Session::New(const Arguments& args) {
             Exception::TypeError(String::New("Session constructor expects a spotify app key"))
         );
     }
-
     session->Wrap(args.This());
 
-    
-    
     return args.This();
 }
 

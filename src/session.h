@@ -32,7 +32,7 @@ namespace nsp {
         static void Init(v8::Handle<v8::Object> target);
         unsigned int number;
         void processEvents();
-    
+
     private:
         Session (v8::Handle<v8::Object> buffer);
         virtual ~Session ();
