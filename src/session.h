@@ -43,6 +43,7 @@ namespace nsp {
 
         static void onLoggedIn(sp_session* spsession, sp_error error);
         static void onMainThreadNotified(sp_session* spsession);
+        static void Idler(uv_idle_t* idler_handle, int status);
 
         static v8::Handle<v8::Value> Login(const v8::Arguments& args);
 
@@ -54,11 +55,13 @@ namespace nsp {
 
         uv_timer_t process_events_handle;
         uv_timer_t timer_handle;
+        uv_idle_t   idler_handle;
 
         uint8_t* g_appkey;
         size_t g_appkey_size;
 
-        unsigned int processing_scheduled;
+        bool processing_scheduled;
+        unsigned int do_schedule_processing_events;
     };
 
 }

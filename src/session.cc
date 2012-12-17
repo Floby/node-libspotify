@@ -23,7 +23,18 @@ using namespace nsp;
 static unsigned int scount = 0;
 
 void Session::onMainThreadNotified(sp_session* spsession) {
+    Session* session = static_cast<Session*>(sp_session_userdata(spsession));
+    session->do_schedule_processing_events = 5;
 }
+
+void Session::Idler(uv_idle_t* idler_handle, int status) {
+    Session* session = (Session*) idler_handle->data;
+    if(session->do_schedule_processing_events > 0) {
+        session->scheduleProcessingEvents(session->do_schedule_processing_events);
+        session->do_schedule_processing_events = 0;
+    }
+}
+
 
 void Session::onLoggedIn(sp_session* spsession, sp_error error) {
     if(error != SP_ERROR_OK) {
@@ -63,6 +74,13 @@ void Session::scheduleProcessingEvents(unsigned int timeout) {
 Session::Session(v8::Handle<v8::Object> buffer) {
     this->number = ++scount;
     processing_scheduled = false;
+    do_schedule_processing_events = 0;
+
+    // register idle watcher
+    uv_idle_init(uv_default_loop(), &idler_handle);
+    idler_handle.data = this;
+    uv_idle_start(&idler_handle, Idler);
+
 
     g_appkey = (uint8_t*) node::Buffer::Data(buffer);
     g_appkey_size = node::Buffer::Length(buffer);
