@@ -31,7 +31,8 @@
     "vows": "~0.7"
   },
   "scripts": {
-    "install": "node-gyp configure build"
+    "install": "node-gyp configure build",
+    "test": "nodeunit test"
   },
   "main": "lib/libspotify.js"
 }
