@@ -81,7 +81,7 @@ void Session::scheduleProcessingEvents(unsigned int timeout) {
 }
 
 
-Session::Session(v8::Handle<v8::Object> buffer) {
+Session::Session(v8::Handle<v8::Object> buffer) : spsession(NULL) {
     this->number = ++scount;
     processing_scheduled = false;
     do_schedule_processing_events = 0;
@@ -124,6 +124,36 @@ v8::Handle<v8::Value> Session::Login(const v8::Arguments& args) {
     return scope.Close(v8::Undefined());
 }
 
+Handle<Value> Session::Close(const Arguments& args) {
+    HandleScope scope;
+
+    Session* session = node::ObjectWrap::Unwrap<Session>(args.This());
+
+    if(session->processing_scheduled) {
+        uv_timer_stop(&session->process_events_handle);
+    }
+    uv_idle_stop(&session->idler_handle);
+
+    sp_error error = sp_session_release(session->spsession);
+    if(error != SP_ERROR_OK) {
+        return ThrowException(
+            Exception::Error(String::New(sp_error_message(error)))
+        );
+    }
+    session->spsession = NULL;
+
+    return scope.Close(v8::Undefined());
+}
+
+Handle<Value> Session::HasSession(const Arguments& args) {
+    HandleScope scope;
+    
+    Session* session = node::ObjectWrap::Unwrap<Session>(args.This());
+    bool res = NULL == session->spsession;
+
+    return scope.Close(v8::);
+}
+
 static v8::Handle<v8::Value> bidule(const v8::Arguments& args) {
     printf("chose\n");
     return v8::Null();
@@ -142,6 +172,10 @@ void Session::Init(Handle<Object> target) {
     tpl->PrototypeTemplate()->Set(
             String::NewSymbol("login"),
             FunctionTemplate::New(Session::Login)->GetFunction()
+    );
+    tpl->PrototypeTemplate()->Set(
+            String::NewSymbol("close"),
+            FunctionTemplate::New(Session::Close)->GetFunction()
     );
 
     Persistent<Function> constructor = Persistent<Function>::New(tpl->GetFunction());
