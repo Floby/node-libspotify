@@ -28,7 +28,8 @@
     "bindings": "~1.0.0"
   },
   "devDependencies": {
-    "vows": "~0.7"
+    "vows": "~0.7",
+    "colors": "*"
   },
   "scripts": {
     "install": "node-gyp configure build",

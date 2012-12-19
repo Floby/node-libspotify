@@ -149,9 +149,9 @@ Handle<Value> Session::HasSession(const Arguments& args) {
     HandleScope scope;
     
     Session* session = node::ObjectWrap::Unwrap<Session>(args.This());
-    bool res = NULL == session->spsession;
+    bool res = (NULL != session->spsession);
 
-    return scope.Close(v8::);
+    return scope.Close(v8::Boolean::New(res));
 }
 
 static v8::Handle<v8::Value> bidule(const v8::Arguments& args) {
@@ -177,6 +177,10 @@ void Session::Init(Handle<Object> target) {
             String::NewSymbol("close"),
             FunctionTemplate::New(Session::Close)->GetFunction()
     );
+    tpl->PrototypeTemplate()->Set(
+            String::NewSymbol("hasSession"),
+            FunctionTemplate::New(Session::HasSession)->GetFunction()
+    );
 
     Persistent<Function> constructor = Persistent<Function>::New(tpl->GetFunction());
     target->Set(String::NewSymbol("Session"), constructor);
@@ -186,7 +190,6 @@ Handle<Value> Session::New(const Arguments& args) {
     HandleScope scope;
     Session* session;
     if(args.Length() > 0 && args[0]->IsObject()) {
-        fprintf(stderr, "Length: %d\n", node::Buffer::Length(args[0]->ToObject()));
         session = new Session(args[0]->ToObject());
     }
     else {

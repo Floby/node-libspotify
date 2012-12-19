@@ -47,6 +47,7 @@ namespace nsp {
 
         static v8::Handle<v8::Value> Login(const v8::Arguments& args);
         static v8::Handle<v8::Value> Close(const v8::Arguments& args);
+        static v8::Handle<v8::Value> HasSession(const v8::Arguments& args);
 
         static v8::Handle<v8::Value> New(const v8::Arguments& args);
 
