@@ -28,6 +28,9 @@ extern "C" {
         NODE_SET_METHOD(target, "hello", hello);
         NODE_SET_METHOD(target, "bidule", bidule);
         nsp::Session::Init(target);
+
+        // initializing all modules
+        nsp::init_session(target);
     }
 }
 

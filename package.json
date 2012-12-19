@@ -25,7 +25,8 @@
     "node": "~0.8.0"
   },
   "dependencies": {
-    "bindings": "~1.0.0"
+    "bindings": "~1.0.0",
+    "i":"~0.3"
   },
   "devDependencies": {
     "vows": "~0.7",
@@ -33,6 +34,7 @@
   },
   "scripts": {
     "install": "node-gyp configure build",
+    "pretest": "node-gyp clean >/dev/null && node-gyp configure --debug  >/dev/null && node-gyp build >/dev/null",
     "test": "nodeunit test"
   },
   "main": "lib/libspotify.js"

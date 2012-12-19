@@ -19,6 +19,7 @@
 
 #ifndef NSP_SESSION_H
 #define NSP_SESSION_H
+
 #include <node.h>
 #include <node_buffer.h>
 #include <libspotify/api.h>
@@ -65,6 +66,9 @@ namespace nsp {
         bool processing_scheduled;
         unsigned int do_schedule_processing_events;
     };
+
+
+    void init_session(v8::Handle<v8::Object> target);
 
 }
 
