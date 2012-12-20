@@ -291,8 +291,46 @@ static Handle<Value> Session_Create(const Arguments& args) {
     return scope.Close(session->object);
 }
 
+static Handle<Value> Session_Release(const Arguments& args) {
+    HandleScope scope;
+
+    assert(args.Length() == 1);
+
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+    sp_error error = sp_session_release(session->pointer);
+    NSP_THROW_IF_ERROR(error);
+
+    delete session;
+
+    return scope.Close(Undefined());
+}
+
+static Handle<Value> Session_Login(const Arguments& args) {
+    HandleScope scope;
+
+    assert(args.Length() == 3);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsString());
+    assert(args[2]->IsString());
+
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+    sp_error error = sp_session_login(
+        session->pointer,
+        *(String::Utf8Value(args[1]->ToString())),
+        *(String::Utf8Value(args[2]->ToString())),
+        false,
+        NULL
+    );
+    NSP_THROW_IF_ERROR(error);
+
+    delete session;
+
+    return scope.Close(Undefined());
+}
 
 void nsp::init_session(Handle<Object> target) {
     NODE_SET_METHOD(target, "session_config", Session_Config);
     NODE_SET_METHOD(target, "session_create", Session_Create);
+    NODE_SET_METHOD(target, "session_release", Session_Release);
+    NODE_SET_METHOD(target, "session_login", Session_Login);
 }

@@ -1,10 +1,10 @@
-var sp = require('../lib/libspotify');
+var sp = require('../lib/libspotify2');
 var session = null;
 
 exports.testInstanciatingSessionWithAppKeyPath = function(test) {
     test.doesNotThrow(function() {
         session = new sp.Session({
-            appKey: __dirname + '/../spotify_key/spotify_appkey.key'
+            applicationKey: __dirname + '/../spotify_key/spotify_appkey.key'
         });
     }, "Opening a session with a valid spotify_key_app should not throw");
     test.done();
