@@ -222,8 +222,6 @@ void Session::initConfig() {
     spconfig.callbacks = &spcallbacks;
 }
 
-static sp_session_config sconfig;
-
 Handle<Value> nsp::JsNoOp(const Arguments& args) {
     return args.This();
 }
@@ -280,6 +278,7 @@ static Handle<Value> Session_Create(const Arguments& args) {
     HandleScope scope;
 
     assert(args.Length() == 1);
+
 
     ObjectHandle<sp_session>* session = new ObjectHandle<sp_session>("sp_session");
     ObjectHandle<sp_session_config>* session_config = ObjectHandle<sp_session_config>::Unwrap(args[0]);

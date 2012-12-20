@@ -15,7 +15,6 @@ exports.testInstanciatingSessionWithAppKeyPath = function(test) {
     }, 'Closing a session should not throw');
     test.ok(session.isClosed(), 'Session isClosed should return true');
     test.ok(!session.isOpen(), 'Session isOpen should return false');
-    delete session;
 
     test.done();
  }
