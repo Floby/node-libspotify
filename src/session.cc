@@ -78,7 +78,6 @@ static Handle<Value> Session_Create(const Arguments& args) {
 
     assert(args.Length() == 1);
 
-
     ObjectHandle<sp_session>* session = new ObjectHandle<sp_session>("sp_session");
     ObjectHandle<sp_session_config>* session_config = ObjectHandle<sp_session_config>::Unwrap(args[0]);
     session_config->pointer->userdata = session;
@@ -120,8 +119,6 @@ static Handle<Value> Session_Login(const Arguments& args) {
         NULL
     );
     NSP_THROW_IF_ERROR(error);
-
-    delete session;
 
     return scope.Close(Undefined());
 }
