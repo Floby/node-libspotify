@@ -19,6 +19,9 @@
 #ifndef NSP_COMMON_H
 #define NSP_COMMON_H
 
+#include <libspotify/api.h>
+#include <node.h>
+#include <node_buffer.h>
 #include <assert.h>
 
 
@@ -70,6 +73,7 @@ inline int NSP_BUFFERLENGTH_KEY(v8::Handle<v8::Object> o, const char* name) {
 
 namespace nsp {
     v8::Handle<v8::Value> JsNoOp(const v8::Arguments&);
+    void init_session(v8::Handle<v8::Object> target);
 
     template <typename T>
     class ObjectHandle {

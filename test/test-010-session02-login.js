@@ -1,4 +1,4 @@
-var sp = require('../lib/libspotify2');
+var sp = require('../lib/libspotify');
 
 exports.testLoginDoesntThrow = function(test) {
     var session = new sp.Session({

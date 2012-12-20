@@ -18,16 +18,12 @@
 
 #include <node.h>
 #include <v8.h>
-#include "spotify.h"
-#include "session.h"
+#include "common.h"
 
 extern "C" {
     void init (v8::Handle<v8::Object> target)
     {
         v8::HandleScope scope;
-        NODE_SET_METHOD(target, "hello", hello);
-        NODE_SET_METHOD(target, "bidule", bidule);
-        nsp::Session::Init(target);
 
         // initializing all modules
         nsp::init_session(target);
@@ -35,4 +31,4 @@ extern "C" {
 }
 
 
-NODE_MODULE(hello, init);
+NODE_MODULE(libspotify, init);

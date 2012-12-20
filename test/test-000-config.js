@@ -1,5 +1,5 @@
 var fs = require('fs');
-var sp = require('../lib/libspotify2');
+var sp = require('../lib/libspotify');
 
 var key = fs.readFileSync(__dirname + '/../spotify_key/spotify_appkey.key');
 

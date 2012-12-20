@@ -1,4 +1,4 @@
-var sp = require('../lib/libspotify2');
+var sp = require('../lib/libspotify');
 var session = null;
 
 exports.testInstanciatingSessionWithAppKeyPath = function(test) {

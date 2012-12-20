@@ -4,7 +4,6 @@
       "target_name": "libspotify",
       "sources": [
         "src/binding.cc",
-        "src/spotify.cc",
         "src/session.cc"
       ],
       "cflags": ["-Wall"],
