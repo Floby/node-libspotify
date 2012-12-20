@@ -36,7 +36,6 @@ inline bool NSP_BOOL_KEY(v8::Handle<v8::Object> o, const char* name) {
 inline int NSP_INT_KEY(v8::Handle<v8::Object> o, const char* name) {
     assert(o->IsObject());
     v8::Handle<v8::Value> value = o->Get(v8::String::New(name));
-    fprintf(stderr, "testing for string %s:%s\n", name, *(v8::String::Utf8Value(value->ToString())));
     assert(value->IsNumber());
     assert(value->IsUint32());
     return value->Int32Value();
@@ -50,7 +49,7 @@ inline char* NSP_STRING_KEY(v8::Handle<v8::Object> o, const char* name) {
     }
     assert(value->IsString());
 
-    char* v = new char[value->ToString()->Length()];
+    char* v = new char[value->ToString()->Length()+1];
     strcpy(v, *(v8::String::AsciiValue(value)));
     return v;
 }
@@ -70,6 +69,7 @@ inline int NSP_BUFFERLENGTH_KEY(v8::Handle<v8::Object> o, const char* name) {
 }
 
 namespace nsp {
+    v8::Handle<v8::Value> JsNoOp(const v8::Arguments&);
 
     template <typename T>
     class ObjectHandle {
@@ -93,13 +93,13 @@ namespace nsp {
             v8::Handle<v8::Value> New(const v8::Arguments& args) {
                 v8::HandleScope scope;
                 // do nothing;
-                return scope.Close(args.This());
+                return args.This();
             }
     };
 
     template <typename T>
     ObjectHandle<T>::ObjectHandle(const char* name = NULL) : pointer(NULL) {
-        v8::Local<v8::FunctionTemplate> tpl = v8::FunctionTemplate::New();
+        v8::Local<v8::FunctionTemplate> tpl = v8::FunctionTemplate::New(JsNoOp);
         name_ = v8::Persistent<v8::String>::New(
             v8::String::NewSymbol(name == NULL ? "CObject" : name)
         );

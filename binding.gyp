@@ -7,6 +7,7 @@
         "src/spotify.cc",
         "src/session.cc"
       ],
+      "cflags": ["-Wall"],
       "conditions" : [
         [
           'OS!="win"', {

@@ -21,7 +21,7 @@ exports.testInstanciatingSessionWithKey = function(test) {
             applicationKey: key
         });
     });
-    //test.notNull(session, 'session should be a session object');
-    //test.ok(session instanceof sp.Session, 'session should be a session object');
+    test.notDeepEqual(null, session, 'session should be a session object');
+    test.ok(session instanceof sp.Session, 'session should be a session object');
     test.done();
 }

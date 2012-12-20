@@ -222,6 +222,12 @@ void Session::initConfig() {
     spconfig.callbacks = &spcallbacks;
 }
 
+static sp_session_config sconfig;
+
+Handle<Value> nsp::JsNoOp(const Arguments& args) {
+    return args.This();
+}
+
 static Handle<Value> Session_Config(const Arguments& args) {
     HandleScope scope;
 
@@ -232,6 +238,7 @@ static Handle<Value> Session_Config(const Arguments& args) {
     ObjectHandle<sp_session_config>* session_config = new ObjectHandle<sp_session_config>("sp_session_config");
 
     // allocate the data structure
+    //sp_session_config* ptr = &sconfig;
     sp_session_config* ptr = session_config->pointer = new sp_session_config;
 
     // set 0 in every field so that spotify doesn't complain
@@ -256,17 +263,21 @@ static Handle<Value> Session_Config(const Arguments& args) {
     ptr->application_key                = NSP_BUFFER_KEY(obj, "application_key");
     ptr->application_key_size           = NSP_BUFFERLENGTH_KEY(obj, "application_key");
     // TODO callbacks
-    
-    fprintf(stderr, "cache_location %s\n", ptr->cache_location);
 
 
-    return scope.Close(Undefined());
+    Handle<Array> properties = obj->GetOwnPropertyNames();
+    for (unsigned int i = 0; i < properties->Length(); ++i) {
+        session_config->object->Set(
+            properties->Get(i),
+            obj->Get(properties->Get(i))
+        );
+    }
+
     return scope.Close(session_config->object);
 }
 
 static Handle<Value> Session_Create(const Arguments& args) {
     HandleScope scope;
-
 
     assert(args.Length() == 1);
 
@@ -274,7 +285,6 @@ static Handle<Value> Session_Create(const Arguments& args) {
     ObjectHandle<sp_session_config>* session_config = ObjectHandle<sp_session_config>::Unwrap(args[0]);
     session_config->pointer->userdata = session;
 
-    fprintf(stderr, "%s\n", session_config->pointer->cache_location);
     sp_error error = sp_session_create(session_config->pointer, &session->pointer);
     NSP_THROW_IF_ERROR(error);
 
