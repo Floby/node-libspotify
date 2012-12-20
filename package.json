@@ -29,7 +29,7 @@
     "i":"~0.3"
   },
   "devDependencies": {
-    "vows": "~0.7",
+    "nodeunit": "~0.7",
     "colors": "*"
   },
   "scripts": {
