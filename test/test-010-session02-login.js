@@ -21,11 +21,9 @@ exports.testLoginIsSucessful = function(test) {
     session.on('login', function(err) {
         console.log('ON TEST LOGIN CALLBACK');
         test.equal(err, null, 'There should be no error');
-        setTimeout(function() {
-            console.log('closing the session')
+        session.logout(function() {
             session.close();
-            console.log('session closed');
             test.done();
-        }, 10);
+        });
     });
 }

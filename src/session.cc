@@ -48,6 +48,21 @@ static void call_logged_in_callback(sp_session* session, sp_error error) {
     return;
 }
 static void call_logged_out_callback(sp_session* session) {
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    Handle<Object> o = s->object;
+    Handle<Value> cbv = o->Get(String::New("logged_out"));
+    if(!cbv->IsFunction()) {
+        fprintf(stderr, "NOT A FUNCTION\n");
+        return;
+    }
+
+    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+    const unsigned int argc = 0;
+    Local<Value> argv[argc] = {};
+    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+    fprintf(stderr, "KIKOO LOGOUT\n");
+
+    return;
 }
 static void call_metadata_updated_callback(sp_session* session) {
 }
@@ -195,7 +210,6 @@ static Handle<Value> Session_Create(const Arguments& args) {
     //sp_error error = sp_session_create(session_config->pointer, &session->pointer);
     sp_error error = sp_session_create(&spconfig, &(session->pointer));
     NSP_THROW_IF_ERROR(error);
-
     fprintf(stderr, "CREATED SESSION at %x IN HANDLE %x (%x)\n", session->pointer, session, &session->pointer);
 
     return scope.Close(session->object);
@@ -240,6 +254,19 @@ static Handle<Value> Session_Login(const Arguments& args) {
     return scope.Close(Undefined());
 }
 
+static Handle<Value> Session_Logout(const Arguments& args) {
+    HandleScope scope;
+
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+    sp_error error = sp_session_logout(session->pointer);
+    NSP_THROW_IF_ERROR(error);
+
+    return scope.Close(Undefined());
+}
+
 static Handle<Value> Session_Process_Events(const Arguments& args) {
     HandleScope scope;
 
@@ -260,5 +287,6 @@ void nsp::init_session(Handle<Object> target) {
     NODE_SET_METHOD(target, "session_create", Session_Create);
     NODE_SET_METHOD(target, "session_release", Session_Release);
     NODE_SET_METHOD(target, "session_login", Session_Login);
+    NODE_SET_METHOD(target, "session_logout", Session_Logout);
     NODE_SET_METHOD(target, "session_process_events", Session_Process_Events);
 }
