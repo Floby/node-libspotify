@@ -25,6 +25,74 @@ Handle<Value> nsp::JsNoOp(const Arguments& args) {
     return args.This();
 }
 
+static void call_logged_in_callback(sp_session* session, sp_error error) {
+}
+static void call_logged_out_callback(sp_session* session) {
+}
+static void call_metadata_updated_callback(sp_session* session) {
+}
+static void call_connection_error_callback(sp_session* session, sp_error error) {
+}
+static void call_message_to_user_callback(sp_session* session, const char* message) {
+}
+static void call_notify_main_thread_callback(sp_session* session) {
+}
+static int call_music_delivery_callback(sp_session* session, const sp_audioformat *format, const void *frames, int num_frames) {
+    return 0;
+}
+static void call_play_token_lost_callback(sp_session* session) {
+}
+static void call_log_message_callback(sp_session* session, const char* data) {
+}
+static void call_end_of_track_callback(sp_session* session) {
+}
+static void call_streaming_error_callback(sp_session* session, sp_error error) {
+}
+static void call_userinfo_updated_callback(sp_session* session) {
+}
+static void call_start_playback_callback(sp_session* session) {
+}
+static void call_stop_playback_callback(sp_session* session) {
+}
+static void call_get_audio_buffer_stats_callback(sp_session* session, sp_audio_buffer_stats* stats) {
+}
+static void call_offline_status_updated_callback(sp_session* session) {
+}
+static void call_offline_error_callback(sp_session* session, sp_error error) {
+}
+static void call_credentials_blob_updated_callback(sp_session* session, const char* blob) {
+}
+static void call_connectionstate_updated_callback(sp_session* session) {
+}
+static void call_scrobble_error_callback(sp_session* session, sp_error error) {
+}
+static void call_private_session_mode_changed_callback(sp_session* session, bool is_private) {
+}
+
+static sp_session_callbacks spcallbacks = {
+    &call_logged_in_callback,
+    &call_logged_out_callback,
+    &call_metadata_updated_callback,
+    &call_connection_error_callback,
+    &call_message_to_user_callback,
+    &call_notify_main_thread_callback,
+    &call_music_delivery_callback,
+    &call_play_token_lost_callback,
+    &call_log_message_callback,
+    &call_end_of_track_callback,
+    &call_streaming_error_callback,
+    &call_userinfo_updated_callback,
+    &call_start_playback_callback,
+    &call_stop_playback_callback,
+    &call_get_audio_buffer_stats_callback,
+    &call_offline_status_updated_callback,
+    &call_offline_error_callback,
+    &call_credentials_blob_updated_callback,
+    &call_connectionstate_updated_callback,
+    &call_scrobble_error_callback,
+    &call_private_session_mode_changed_callback,
+};
+
 static Handle<Value> Session_Config(const Arguments& args) {
     HandleScope scope;
 
