@@ -17,6 +17,7 @@
  */
 
 #include "common.h"
+#include <stdlib.h>
 
 using namespace v8;
 using namespace nsp;
@@ -26,6 +27,25 @@ Handle<Value> nsp::JsNoOp(const Arguments& args) {
 }
 
 static void call_logged_in_callback(sp_session* session, sp_error error) {
+    fprintf(stderr, "KIKOO\n");
+    exit(1);
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    Handle<Object> o = s->object;
+    Handle<Value> cbv = o->Get(String::New("logged_in"));
+    if(!cbv->IsFunction()) {
+        return;
+    }
+
+    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+    const unsigned int argc = 1;
+    Handle<Value> err = Null();
+    if(error != SP_ERROR_OK) {
+        err = Exception::Error(String::New(sp_error_message(error)));
+    }
+    Local<Value> argv[argc] = { Local<Value>::New(err) };
+    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+
+    return;
 }
 static void call_logged_out_callback(sp_session* session) {
 }
@@ -127,6 +147,7 @@ static Handle<Value> Session_Config(const Arguments& args) {
 
     ptr->application_key                = NSP_BUFFER_KEY(obj, "application_key");
     ptr->application_key_size           = NSP_BUFFERLENGTH_KEY(obj, "application_key");
+    ptr->callbacks = &spcallbacks;
     // TODO callbacks
 
 
@@ -191,9 +212,25 @@ static Handle<Value> Session_Login(const Arguments& args) {
     return scope.Close(Undefined());
 }
 
+static Handle<Value> Session_Process_Events(const Arguments& args) {
+    HandleScope scope;
+
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+    int next_timeout = 0;
+    fprintf(stderr, "processing events from C...\n");
+    sp_error error = sp_session_process_events(session->pointer, &next_timeout);
+    NSP_THROW_IF_ERROR(error);
+
+    return scope.Close(Number::New(next_timeout));
+}
+
 void nsp::init_session(Handle<Object> target) {
     NODE_SET_METHOD(target, "session_config", Session_Config);
     NODE_SET_METHOD(target, "session_create", Session_Create);
     NODE_SET_METHOD(target, "session_release", Session_Release);
     NODE_SET_METHOD(target, "session_login", Session_Login);
+    NODE_SET_METHOD(target, "session_process_events", Session_Process_Events);
 }
