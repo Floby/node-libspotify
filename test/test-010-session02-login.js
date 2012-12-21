@@ -19,8 +19,13 @@ exports.testLoginIsSucessful = function(test) {
     session.name = 'chose';
     session.login(cred.login, cred.password);
     session.on('login', function(err) {
+        console.log('ON TEST LOGIN CALLBACK');
         test.equal(err, null, 'There should be no error');
-        session.close();
-        test.done();
+        setTimeout(function() {
+            console.log('closing the session')
+            session.close();
+            console.log('session closed');
+            test.done();
+        }, 10);
     });
 }

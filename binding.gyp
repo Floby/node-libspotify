@@ -6,7 +6,7 @@
         "src/binding.cc",
         "src/session.cc"
       ],
-      "cflags": ["-Wall"],
+      "cflags": ["-Wall", "-g", "-O0"],
       "conditions" : [
         [
           'OS!="win"', {
