@@ -31,7 +31,6 @@ static void call_logged_in_callback(sp_session* session, sp_error error) {
     Handle<Object> o = s->object;
     Handle<Value> cbv = o->Get(String::New("logged_in"));
     if(!cbv->IsFunction()) {
-        fprintf(stderr, "NOT A FUNCTION\n");
         return;
     }
 
@@ -43,7 +42,6 @@ static void call_logged_in_callback(sp_session* session, sp_error error) {
     }
     Local<Value> argv[argc] = { Local<Value>::New(err) };
     cb->Call(Context::GetCurrent()->Global(), argc, argv);
-    fprintf(stderr, "KIKOO LOGIN\n");
 
     return;
 }
@@ -52,7 +50,6 @@ static void call_logged_out_callback(sp_session* session) {
     Handle<Object> o = s->object;
     Handle<Value> cbv = o->Get(String::New("logged_out"));
     if(!cbv->IsFunction()) {
-        fprintf(stderr, "NOT A FUNCTION\n");
         return;
     }
 
@@ -60,7 +57,6 @@ static void call_logged_out_callback(sp_session* session) {
     const unsigned int argc = 0;
     Local<Value> argv[argc] = {};
     cb->Call(Context::GetCurrent()->Global(), argc, argv);
-    fprintf(stderr, "KIKOO LOGOUT\n");
 
     return;
 }
@@ -177,40 +173,29 @@ static Handle<Value> Session_Config(const Arguments& args) {
     return scope.Close(session_config->object);
 }
 
-static sp_session_config spconfig = {
-    .api_version = SPOTIFY_API_VERSION,
-    .cache_location = "tmp",
-    .settings_location = "tmp",
-    .application_key = NULL,
-    .application_key_size = 0,
-    .user_agent = "spot",
-    .callbacks = &spcallbacks,
-};
+//static sp_session_config spconfig = {
+    //.api_version = SPOTIFY_API_VERSION,
+    //.cache_location = "tmp",
+    //.settings_location = "tmp",
+    //.application_key = NULL,
+    //.application_key_size = 0,
+    //.user_agent = "spot",
+    //.callbacks = &spcallbacks,
+//};
 
 static Handle<Value> Session_Create(const Arguments& args) {
     HandleScope scope;
 
-    fprintf(stderr, "SIZEOF config %d\n", sizeof(sp_session_config));
-    fprintf(stderr, "SIZEOF callbacks %d\n", sizeof(sp_session_callbacks));
-    fprintf(stderr, "SIZEOF config wrapper %d\n", sizeof(ObjectHandle<sp_session_config>));
 
     assert(args.Length() == 1);
 
     ObjectHandle<sp_session>* session = new ObjectHandle<sp_session>("sp_session");
-    fprintf(stderr, "CREATED HANDLE at %x\n", session);
     ObjectHandle<sp_session_config>* session_config = ObjectHandle<sp_session_config>::Unwrap(args[0]);
-
-    spconfig.application_key = session_config->pointer->application_key;
-    spconfig.application_key_size = session_config->pointer->application_key_size;
-    spconfig.userdata = session;
-
 
     session_config->pointer->userdata = session;
 
-    //sp_error error = sp_session_create(session_config->pointer, &session->pointer);
-    sp_error error = sp_session_create(&spconfig, &(session->pointer));
+    sp_error error = sp_session_create(session_config->pointer, &session->pointer);
     NSP_THROW_IF_ERROR(error);
-    fprintf(stderr, "CREATED SESSION at %x IN HANDLE %x (%x)\n", session->pointer, session, &session->pointer);
 
     return scope.Close(session->object);
 }
@@ -222,13 +207,10 @@ static Handle<Value> Session_Release(const Arguments& args) {
 
     ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
     assert(NULL != session->pointer);
-    fprintf(stderr, "RELEASING %x FROM HANDLE %x (%x)\n", session->pointer, session, &session->pointer);
     sp_error error = sp_session_release(session->pointer);
-    fprintf(stderr, "RELEAED %x\n", session->pointer);
     NSP_THROW_IF_ERROR(error);
 
     session->pointer = NULL;
-    fprintf(stderr, "NEW VALUE %x\n", session->pointer);
 
     return scope.Close(Undefined());
 }
