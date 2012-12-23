@@ -16,18 +16,11 @@ exports.testLoginIsSucessful = function(test) {
     var session = new sp.Session({
         applicationKey: __dirname + '/../spotify_key/spotify_appkey.key'
     });
-    session.name = 'chose';
     session.login(cred.login, cred.password);
     console.log('trying to login, this may take a while');
-    var log_timeout = setTimeout(function() {
-        if(!session.isLoggedIn()) {
-            test.done(new Error("Waited too long for login"));
-        }
-    }, 10000);
-    session.on('login', function(err) {
+    session.once('login', function(err) {
         if(err) test.done(err);
         test.ok(session.isLoggedIn(), 'session should now it is now logged in');
-        clearTimeout(log_timeout);
         session.logout(function() {
             session.close();
             test.done();
