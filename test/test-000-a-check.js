@@ -1,4 +1,12 @@
 var fs = require('fs');
+require('trycatch');
+
+/**
+ * We don't actually export any tests. We only check that all the data needed for the
+ * tests to run are here
+ * TODO test connectivity
+ */
+
 
 var exists = false;
 try {

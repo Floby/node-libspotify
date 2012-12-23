@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "nodeunit": "~0.7",
+    "trycatch": "*",
     "colors": "*"
   },
   "scripts": {

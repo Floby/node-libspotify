@@ -18,8 +18,16 @@ exports.testLoginIsSucessful = function(test) {
     });
     session.name = 'chose';
     session.login(cred.login, cred.password);
+    console.log('trying to login, this may take a while');
+    var logged = false;
+    setTimeout(function() {
+        if(!logged) {
+            test.fail("Waited too long to login");
+        }
+    }, 8000);
     session.on('login', function(err) {
-        test.equal(err, null, 'There should be no error');
+        test.equal(null, err, err + ' occured on login');
+        logged = true;
         session.logout(function() {
             session.close();
             test.done();

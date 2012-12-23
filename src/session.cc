@@ -26,6 +26,10 @@ Handle<Value> nsp::JsNoOp(const Arguments& args) {
     return args.This();
 }
 
+/**
+ * spotify callback for the logged_in event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_logged_in_callback(sp_session* session, sp_error error) {
     ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
     Handle<Object> o = s->object;
@@ -45,6 +49,11 @@ static void call_logged_in_callback(sp_session* session, sp_error error) {
 
     return;
 }
+
+/**
+ * spotify callback for the logged_out event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_logged_out_callback(sp_session* session) {
     ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
     Handle<Object> o = s->object;
@@ -60,43 +69,168 @@ static void call_logged_out_callback(sp_session* session) {
 
     return;
 }
+
+/**
+ * spotify callback for the metadata_updated event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_metadata_updated_callback(sp_session* session) {
 }
+
+/**
+ * spotify callback for the connection_error event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_connection_error_callback(sp_session* session, sp_error error) {
 }
+
+/**
+ * spotify callback for the message_to_user event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_message_to_user_callback(sp_session* session, const char* message) {
 }
-static void call_notify_main_thread_callback(sp_session* session) {
+
+
+uv_timer_t do_notify_handle; ///> uv loop handle for notifying main thread
+
+/**
+ * since the notify_main_thread is not called from the main thread
+ * we have to set a timer in order to execute the JS callback at the right moment
+ */
+static void do_call_notify_main_thread_callback(uv_timer_t* handle, int status) {
+    sp_session* session = (sp_session*) handle->data;
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    Handle<Object> o = s->object;
+    Handle<Value> cbv = o->Get(String::New("notify_main_thread"));
+    if(!cbv->IsFunction()) {
+        return;
+    }
+
+    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+    const unsigned int argc = 0;
+    Local<Value> argv[argc] = {};
+    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+
+    return;
 }
+
+/**
+ * spotify callback for the notify_main_thread event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
+static void call_notify_main_thread_callback(sp_session* session) {
+    uv_timer_init(uv_default_loop(), &do_notify_handle);
+    do_notify_handle.data = session;
+
+    // set the loop to call our JS callback in 3 ms
+    // TODO how about next tick ?
+    uv_timer_start(&do_notify_handle, &do_call_notify_main_thread_callback, 3, 0);
+}
+
+/**
+ * spotify callback for the music_delivery event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static int call_music_delivery_callback(sp_session* session, const sp_audioformat *format, const void *frames, int num_frames) {
     return 0;
 }
+
+/**
+ * spotify callback for the play_token_lost event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_play_token_lost_callback(sp_session* session) {
 }
+
+/**
+ * spotify callback for the log_message event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_log_message_callback(sp_session* session, const char* data) {
 }
+
+/**
+ * spotify callback for the end_of_track event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_end_of_track_callback(sp_session* session) {
 }
+
+/**
+ * spotify callback for the streaming_error event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_streaming_error_callback(sp_session* session, sp_error error) {
 }
+
+/**
+ * spotify callback for the userinfo_updated event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_userinfo_updated_callback(sp_session* session) {
 }
+
+/**
+ * spotify callback for the start_playback event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_start_playback_callback(sp_session* session) {
 }
+
+/**
+ * spotify callback for the stop_playback event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_stop_playback_callback(sp_session* session) {
 }
+
+/**
+ * spotify callback for the get_audio_buffer_stats event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_get_audio_buffer_stats_callback(sp_session* session, sp_audio_buffer_stats* stats) {
 }
+
+/**
+ * spotify callback for the offline_status_updated event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_offline_status_updated_callback(sp_session* session) {
 }
+
+/**
+ * spotify callback for the offline_error event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_offline_error_callback(sp_session* session, sp_error error) {
 }
+
+/**
+ * spotify callback for the credentials_blob_updated event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_credentials_blob_updated_callback(sp_session* session, const char* blob) {
 }
+
+/**
+ * spotify callback for the connectionstate_updated event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_connectionstate_updated_callback(sp_session* session) {
 }
+
+/**
+ * spotify callback for the scrobble_error event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_scrobble_error_callback(sp_session* session, sp_error error) {
 }
+
+/**
+ * spotify callback for the private_session_mode_changed event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
 static void call_private_session_mode_changed_callback(sp_session* session, bool is_private) {
 }
 
@@ -124,6 +258,10 @@ static sp_session_callbacks spcallbacks = {
     &call_private_session_mode_changed_callback,
 };
 
+/**
+ * JS session_config implementation. This just creates a sp_session_config struct
+ * from a JS object values and wraps it in a new JS object
+ */
 static Handle<Value> Session_Config(const Arguments& args) {
     HandleScope scope;
 
@@ -134,7 +272,6 @@ static Handle<Value> Session_Config(const Arguments& args) {
     ObjectHandle<sp_session_config>* session_config = new ObjectHandle<sp_session_config>("sp_session_config");
 
     // allocate the data structure
-    //sp_session_config* ptr = &sconfig;
     sp_session_config* ptr = session_config->pointer = new sp_session_config;
 
     // set 0 in every field so that spotify doesn't complain
@@ -159,9 +296,10 @@ static Handle<Value> Session_Config(const Arguments& args) {
     ptr->application_key                = NSP_BUFFER_KEY(obj, "application_key");
     ptr->application_key_size           = NSP_BUFFERLENGTH_KEY(obj, "application_key");
     ptr->callbacks = &spcallbacks;
-    // TODO callbacks
 
 
+    // copy everything from the original JS object into the new one
+    // so that it can be read later
     Handle<Array> properties = obj->GetOwnPropertyNames();
     for (unsigned int i = 0; i < properties->Length(); ++i) {
         session_config->object->Set(
@@ -173,57 +311,74 @@ static Handle<Value> Session_Config(const Arguments& args) {
     return scope.Close(session_config->object);
 }
 
-//static sp_session_config spconfig = {
-    //.api_version = SPOTIFY_API_VERSION,
-    //.cache_location = "tmp",
-    //.settings_location = "tmp",
-    //.application_key = NULL,
-    //.application_key_size = 0,
-    //.user_agent = "spot",
-    //.callbacks = &spcallbacks,
-//};
-
+/**
+ * JS session_create implementation. This unwraps the config argument and calls
+ * sp_session_create. The session is then wrapped in a JS object for use in JS land
+ */
 static Handle<Value> Session_Create(const Arguments& args) {
     HandleScope scope;
 
-
     assert(args.Length() == 1);
 
+    // create a new handle for the session struct
     ObjectHandle<sp_session>* session = new ObjectHandle<sp_session>("sp_session");
+
+    // unwraps config struct from the first arguments
     ObjectHandle<sp_session_config>* session_config = ObjectHandle<sp_session_config>::Unwrap(args[0]);
 
+    // set the current session ObjectHandle as session userdata for later retrieval
     session_config->pointer->userdata = session;
 
+    // actually call session_create
     sp_error error = sp_session_create(session_config->pointer, &session->pointer);
     NSP_THROW_IF_ERROR(error);
 
     return scope.Close(session->object);
 }
 
+/**
+ * JS session_release implementation. This function unwraps the session for the given object
+ * and calls sp_session_release on it
+ */
 static Handle<Value> Session_Release(const Arguments& args) {
     HandleScope scope;
 
     assert(args.Length() == 1);
 
+    // unwrap the ObjectHandle for the session
     ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+
+    // that would be unfortunate...
     assert(NULL != session->pointer);
+
+    // actually call sp_session_release
     sp_error error = sp_session_release(session->pointer);
     NSP_THROW_IF_ERROR(error);
 
+    // make sure we won't be used this pointer ever again
     session->pointer = NULL;
 
     return scope.Close(Undefined());
 }
 
+/*
+ * JS session_login implementation. This function unwraps the session from the given object
+ * and calls sp_session_login with the given credentials
+ * TODO support for remember_me and credential blobs
+ */
 static Handle<Value> Session_Login(const Arguments& args) {
     HandleScope scope;
 
+    // check parameters sanity
     assert(args.Length() == 3);
     assert(args[0]->IsObject());
     assert(args[1]->IsString());
     assert(args[2]->IsString());
 
+    // unwrap the session from the given object
     ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+
+    // actually call sp_session_login
     sp_error error = sp_session_login(
         session->pointer,
         *(String::Utf8Value(args[1]->ToString())),
@@ -236,6 +391,9 @@ static Handle<Value> Session_Login(const Arguments& args) {
     return scope.Close(Undefined());
 }
 
+/**
+ * JS session_logout implementation
+ */
 static Handle<Value> Session_Logout(const Arguments& args) {
     HandleScope scope;
 
@@ -249,6 +407,12 @@ static Handle<Value> Session_Logout(const Arguments& args) {
     return scope.Close(Undefined());
 }
 
+/**
+ * JS session_process_events implementation. This function unwraps the session handle
+ * and calls sp_session_process_events. libspotify uses this to process all pending events
+ * from the main thread
+ * @return next_timeout when in milliseconds to call this function again
+ */
 static Handle<Value> Session_Process_Events(const Arguments& args) {
     HandleScope scope;
 
@@ -257,7 +421,6 @@ static Handle<Value> Session_Process_Events(const Arguments& args) {
 
     ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
     int next_timeout = 0;
-    fprintf(stderr, "processing events from C...\n");
     sp_error error = sp_session_process_events(session->pointer, &next_timeout);
     NSP_THROW_IF_ERROR(error);
 
