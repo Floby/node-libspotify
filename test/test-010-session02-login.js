@@ -22,9 +22,9 @@ exports.testLoginIsSucessful = function(test) {
     var logged = false;
     setTimeout(function() {
         if(!logged) {
-            test.fail("Waited too long to login");
+            test.done(new Error("Waited too long for login"));
         }
-    }, 8000);
+    }, 10000);
     session.on('login', function(err) {
         test.equal(null, err, err + ' occured on login');
         logged = true;
