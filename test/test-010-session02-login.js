@@ -19,15 +19,15 @@ exports.testLoginIsSucessful = function(test) {
     session.name = 'chose';
     session.login(cred.login, cred.password);
     console.log('trying to login, this may take a while');
-    var logged = false;
-    setTimeout(function() {
-        if(!logged) {
+    var log_timeout = setTimeout(function() {
+        if(!session.isLoggedIn()) {
             test.done(new Error("Waited too long for login"));
         }
     }, 10000);
     session.on('login', function(err) {
-        test.equal(null, err, err + ' occured on login');
-        logged = true;
+        if(err) test.done(err);
+        test.ok(session.isLoggedIn(), 'session should now it is now logged in');
+        clearTimeout(log_timeout);
         session.logout(function() {
             session.close();
             test.done();

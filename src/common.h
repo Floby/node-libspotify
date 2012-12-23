@@ -123,6 +123,10 @@ namespace nsp {
      * init the session related functions to the target module exports
      */
     void init_session(v8::Handle<v8::Object> target);
+    /**
+     * init the search related functions to the target module exports
+     */
+    void init_search(v8::Handle<v8::Object> target);
 
     /**
      * This utility class allows to keep track of a C pointer that we attached
