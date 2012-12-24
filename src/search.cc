@@ -106,7 +106,34 @@ static Handle<Value> Search_Num_Tracks(const Arguments& args) {
     return scope.Close(Number::New(num));
 }
 
+/**
+ * JS search_track implementation. gets a track a the given index in a search result
+ */
+static Handle<Value> Search_Track(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 2);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsNumber());
+
+    // gets sp_search pointer from given object
+    ObjectHandle<sp_search>* search = ObjectHandle<sp_search>::Unwrap(args[0]);
+    int index = args[1]->ToNumber()->Int32Value();
+
+    // check index is within search results range
+    assert(index >= 0);
+    assert(index < sp_search_num_tracks(search->pointer));
+
+    // create new handle for this track
+    ObjectHandle<sp_track>* track = new ObjectHandle<sp_track>("sp_track");
+    track->pointer = sp_search_track(search->pointer, index);
+
+    return scope.Close(track->object);
+}
+
 void nsp::init_search(Handle<Object> target) {
     NODE_SET_METHOD(target, "search_create", Search_Create);
     NODE_SET_METHOD(target, "search_num_tracks", Search_Num_Tracks);
+    NODE_SET_METHOD(target, "search_track", Search_Track);
 }

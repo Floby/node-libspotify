@@ -28,6 +28,7 @@ extern "C" {
         // initializing all modules
         nsp::init_session(target);
         nsp::init_search(target);
+        nsp::init_track(target);
     }
 }
 

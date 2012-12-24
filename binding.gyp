@@ -6,6 +6,7 @@
         "src/binding.cc",
         "src/session.cc",
         "src/search.cc",
+        "src/track.cc",
       ],
       "cflags": ["-Wall", "-g", "-O0"],
       "conditions" : [
