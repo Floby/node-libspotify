@@ -7,6 +7,7 @@
         "src/session.cc",
         "src/search.cc",
         "src/track.cc",
+        "src/player.cc",
       ],
       "cflags": ["-Wall", "-g", "-O0"],
       "conditions" : [
@@ -14,6 +15,7 @@
           'OS!="win"', {
             "libraries" : [
               '-lspotify',
+              '-lm'
             ],
           }
         ],

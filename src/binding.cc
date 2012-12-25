@@ -29,6 +29,7 @@ extern "C" {
         nsp::init_session(target);
         nsp::init_search(target);
         nsp::init_track(target);
+        nsp::init_player(target);
     }
 }
 

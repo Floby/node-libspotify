@@ -131,10 +131,9 @@ static void call_notify_main_thread_callback(sp_session* session) {
 /**
  * spotify callback for the music_delivery event.
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ * implemented in player.cc
  */
-static int call_music_delivery_callback(sp_session* session, const sp_audioformat *format, const void *frames, int num_frames) {
-    return 0;
-}
+extern int call_music_delivery_callback(sp_session* session, const sp_audioformat *format, const void *frames, int num_frames);
 
 /**
  * spotify callback for the play_token_lost event.

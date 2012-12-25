@@ -131,6 +131,10 @@ namespace nsp {
      * init the track related functions to the target module exports
      */
     void init_track(v8::Handle<v8::Object> target);
+    /**
+     * init the player related functions to the target module exports
+     */
+    void init_player(v8::Handle<v8::Object> target);
 
 
     /**

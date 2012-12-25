@@ -1,6 +1,6 @@
 var u = require('./util');
 
-exports.cleanup = function(test) {
+exports["Not actually a test, just cleaning up"] = function(test) {
     u.getDefaultTestSession(function(s) {
         s.logout(function() {
             s.close();
