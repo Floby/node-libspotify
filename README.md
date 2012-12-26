@@ -23,3 +23,50 @@ or pipe the audio data to another process like [play](http://linux.about.com/lib
 
 
 The main goal is now achieved. Audio data is exposed as the Player object which behaves like a readable stream
+
+Snippet
+-------
+
+Here is a code snippet of how to play a track from spotify
+
+```js
+
+var sp = require('../lib/libspotify');
+var cred = require('../spotify_key/passwd');
+
+var session = new sp.Session({
+    applicationKey: __dirname + '/../spotify_key/spotify_appkey.key'
+});
+session.login(cred.login, cred.password);
+session.once('login', function(err) {
+    if(err) this.emit('error', err);
+
+    var search = new sp.Search('artist:"rick astley" track:"never gonna give you up"');
+    search.trackCount = 1; // we're only interested in the first result;
+    search.execute();
+    search.once('ready', function() {
+        if(!search.tracks.length) {
+            console.log('there is no track to play :[');
+            session.logout();
+        }
+
+        var track = search.tracks[0];
+        var player = session.getPlayer();
+        player.load(track);
+        player.play();
+        console.log('playing track. end in %s', track.humanDuration);
+        player.on('data', function(buffer) {
+            // buffer.length
+            // buffer.rate
+            // buffer.channels
+            // 16bit samples
+        });
+        player.once('track-end', function() {
+            console.log('track ended');
+            player.stop();
+            session.logout();
+        });
+    });
+});
+
+```
