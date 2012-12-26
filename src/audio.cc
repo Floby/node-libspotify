@@ -28,23 +28,31 @@
 #include "audio.h"
 #include <stdlib.h>
 
+/**
+ * get an audio data chunk from the fifo
+ */
 audio_fifo_data_t* audio_get(audio_fifo_t *af)
 {
+    // if the queue is empty, do nothing
     if(af->qlen == 0) {
         return 0;
     }
     audio_fifo_data_t *afd;
+    // make sure we're the only one using the queue right now
     pthread_mutex_lock(&af->mutex);
   
+    // if the queue is empty, do nothing
     afd = TAILQ_FIRST(&af->q);
     if(!afd) {
         pthread_mutex_unlock(&af->mutex);
         return NULL;
     }
   
+    // get the data at the head of the queue
     TAILQ_REMOVE(&af->q, afd, link);
     af->qlen -= afd->nsamples;
   
+    // we're done using the queue
     pthread_mutex_unlock(&af->mutex);
     return afd;
 }

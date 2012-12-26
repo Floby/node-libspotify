@@ -28,45 +28,41 @@ using namespace node;
 // one second buffer
 
 
-// we make a circular buffer
-static int16_t buffer[BUFFER_SIZE];
-static unsigned int read_index = 0;
-static unsigned int write_index = 0;
-static bool buffer_full = false;
 static audio_fifo_t g_audiofifo;
-
-static sp_session* current_session = NULL;
 
 
 /**
  * spotify callback for the music_delivery event.
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ * In this, we are called from an internal spotify thread. We buffer the data in the audio_fifo structure
  */
 extern int call_music_delivery_callback(sp_session* session, const sp_audioformat *format, const void *frames, int num_frames) {
 	audio_fifo_t *af = &g_audiofifo;
 	audio_fifo_data_t *afd;
 	size_t s;
-    current_session = session;
 
 	if (num_frames == 0)
 		return 0; // Audio discontinuity, do nothing
 
+    // make sure we're the only one using the queue
 	pthread_mutex_lock(&af->mutex);
 
 	/* Buffer one second of audio */
+    // if more, tell spotify we didn't use any samples
 	if (af->qlen > format->sample_rate) {
 		pthread_mutex_unlock(&af->mutex);
 
 		return 0;
 	}
 
+    // we calculate the memory we need to allocate for these samples
 	s = num_frames * sizeof(int16_t) * format->channels;
 
 	afd = (audio_fifo_data_t*) malloc(sizeof(*afd) + s);
 	memcpy(afd->samples, frames, s);
 
 	afd->nsamples = num_frames;
-
+    afd->session = session;
 	afd->rate = format->sample_rate;
 	afd->channels = format->channels;
 
@@ -91,20 +87,20 @@ static void read_delivered_music(uv_idle_t* handle, int status) {
         return;
     }
 
-    sp_session* spsession = current_session;
-    ObjectHandle<sp_session>* session = (ObjectHandle<sp_session>*) sp_session_userdata(spsession);
-
-    Handle<Value> cbv = session->object->Get(String::New("music_delivery"));
-    if(!cbv->IsFunction()) {
-        return;
-    }
-    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
-
     while(af->qlen > 0) {
         afd = audio_get(af);
         if(!afd) {
             break;
         }
+
+        sp_session* spsession = afd->session;
+        ObjectHandle<sp_session>* session = (ObjectHandle<sp_session>*) sp_session_userdata(spsession);
+
+        Handle<Value> cbv = session->object->Get(String::New("music_delivery"));
+        if(!cbv->IsFunction()) {
+            return;
+        }
+        Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
 
         Buffer* buffer = Buffer::New((char*) afd->samples, afd->nsamples * sizeof(int16_t)* afd->channels, free_music_data, afd);
         buffer->handle_->Set(String::New("channels"), Number::New(afd->channels));

@@ -26,6 +26,11 @@ Handle<Value> nsp::JsNoOp(const Arguments& args) {
     return args.This();
 }
 
+/*
+ * The following callback function do nothing more than getting the session object and calling their
+ * Javascript counterparts
+ */
+
 /**
  * spotify callback for the logged_in event.
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
@@ -154,6 +159,19 @@ static void call_log_message_callback(sp_session* session, const char* data) {
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  */
 static void call_end_of_track_callback(sp_session* session) {
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    Handle<Object> o = s->object;
+    Handle<Value> cbv = o->Get(String::New("end_of_track"));
+    if(!cbv->IsFunction()) {
+        return;
+    }
+
+    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+    const unsigned int argc = 0;
+    Local<Value> argv[argc] = {};
+    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+
+    return;
 }
 
 /**

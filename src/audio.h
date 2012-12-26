@@ -32,12 +32,17 @@
 #include "queue.h"
 
 
+// we don't need much more about spotify session than what a pointer looks like
+typedef struct sp_session sp_session;
+
+
 /* --- Types --- */
 typedef struct audio_fifo_data {
 	TAILQ_ENTRY(audio_fifo_data) link;
 	int channels;
 	int rate;
 	int nsamples;
+    sp_session* session;
 	int16_t samples[0];
 } audio_fifo_data_t;
 
