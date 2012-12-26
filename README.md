@@ -70,3 +70,10 @@ session.once('login', function(err) {
 });
 
 ```
+
+
+TODO
+====
+
+* Bind to the rest of the API...
+* PERFORMANCE !!
