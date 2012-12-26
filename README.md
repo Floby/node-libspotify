@@ -64,7 +64,7 @@ session.once('login', function(err) {
         player.once('track-end', function() {
             console.log('track ended');
             player.stop();
-            session.logout();
+            session.close();
         });
     });
 });
