@@ -8,6 +8,7 @@
         "src/search.cc",
         "src/track.cc",
         "src/player.cc",
+        "src/audio.cc",
       ],
       "cflags": ["-Wall", "-g", "-O0"],
       "conditions" : [
