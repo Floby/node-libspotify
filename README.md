@@ -33,6 +33,10 @@ Here is a code snippet of how to play a track from spotify
 
 var sp = require('../lib/libspotify');
 var cred = require('../spotify_key/passwd');
+var fs = require('fs');
+var spawn = require('child_process').spawn;
+
+var f = fs.createWriteStream('/tmp/bidule.raw');
 
 var session = new sp.Session({
     applicationKey: __dirname + '/../spotify_key/spotify_appkey.key'
@@ -54,6 +58,10 @@ session.once('login', function(err) {
         var player = session.getPlayer();
         player.load(track);
         player.play();
+
+        var play = spawn('aplay', ['-c', 2, '-f', 'S16_LE', '-r', '44100']);
+        player.pipe(play.stdin);
+
         console.log('playing track. end in %s', track.humanDuration);
         player.on('data', function(buffer) {
             // buffer.length
@@ -63,6 +71,7 @@ session.once('login', function(err) {
         });
         player.once('track-end', function() {
             console.log('track ended');
+            f.end();
             player.stop();
             session.close();
         });
