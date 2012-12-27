@@ -130,7 +130,7 @@ static void call_notify_main_thread_callback(sp_session* session) {
 
     // set the loop to call our JS callback in 3 ms
     // TODO how about next tick ?
-    uv_timer_start(&do_notify_handle, &do_call_notify_main_thread_callback, 3, 0);
+    uv_timer_start(&do_notify_handle, &do_call_notify_main_thread_callback, 1, 0);
 }
 
 /**
