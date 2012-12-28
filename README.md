@@ -5,6 +5,17 @@ Node bindings for the libspotify C library
 
 _/!\ Early development version, don't use just yet /!\_
 
+Install & test
+--------------
+
+Please note that you must have the libspotify library installed on your system
+you can get it from [here](https://developer.spotify.com/technologies/libspotify/).
+
+You must provide your own spotify application key, because I'm not giving mine away :]
+You also must provide valid credentials for a spotify account.
+
+Once you cloned the repository
+run `npm install` then test the module with `npm test`
 
 Main objectives
 ---------------
