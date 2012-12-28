@@ -79,7 +79,7 @@ static void free_music_data(char* data, void* hint) {
     free(hint);
 }
 
-static void read_delivered_music(uv_idle_t* handle, int status) {
+static void read_delivered_music(uv_timer_t* handle, int status) {
     audio_fifo_t* af = &g_audiofifo;
     audio_fifo_data_t* afd;
 
@@ -152,7 +152,7 @@ static Handle<Value> Session_Player_Play(const Arguments& args) {
     return scope.Close(Undefined());
 }
 
-static uv_idle_t read_music_handle;
+static uv_timer_t read_music_handle;
 
 void nsp::init_player(Handle<Object> target) {
     NODE_SET_METHOD(target, "session_player_load", Session_Player_Load);
@@ -165,7 +165,7 @@ void nsp::init_player(Handle<Object> target) {
 	pthread_mutex_init(&af->mutex, NULL);
 	pthread_cond_init(&af->cond, NULL);
 
-    uv_idle_init(uv_default_loop(), &read_music_handle);
-    uv_idle_start(&read_music_handle, read_delivered_music);
+    uv_timer_init(uv_default_loop(), &read_music_handle);
+    uv_timer_start(&read_music_handle, read_delivered_music, 100, 100);
     uv_unref((uv_handle_t*) &read_music_handle);
 }
