@@ -135,6 +135,10 @@ namespace nsp {
      * init the player related functions to the target module exports
      */
     void init_player(v8::Handle<v8::Object> target);
+    /**
+     * init the artist related functions to the target module exports
+     */
+    void init_artist(v8::Handle<v8::Object> target);
 
 
     /**

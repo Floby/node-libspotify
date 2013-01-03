@@ -7,6 +7,7 @@
         "src/session.cc",
         "src/search.cc",
         "src/track.cc",
+        "src/artist.cc",
         "src/player.cc",
         "src/audio.cc",
       ],
