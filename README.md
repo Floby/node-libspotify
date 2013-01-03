@@ -3,7 +3,7 @@ node-libspotify
 
 Node bindings for the libspotify C library
 
-_/!\ Early development version, don't use just yet /!\_
+_This is still very alpha, but you can already play around I suppose_
 
 Install & test
 --------------
@@ -96,4 +96,3 @@ TODO
 ====
 
 * Bind to the rest of the API...
-* PERFORMANCE !!
