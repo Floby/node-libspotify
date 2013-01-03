@@ -22,6 +22,21 @@ exports.track = {
             test.equal('Guillemots', first.artist, "the track should be a guillemots song");
             test.equal('Fleet', first.title, "the track should be a guillemots song");
             test.ok(first.duration > 0, 'The track should have a non zero duration');
+            test.ok(first.isAvailable(), 'The track should be available');
+            test.equal('AVAILABLE', first.availability);
+            test.equal(typeof first.isStarred(), 'boolean', 'isStarred should return a boolean');
+            test.equal(typeof first.popularity, 'number', 'Popularity should be a number');
+            test.ok(first.popularity >= 0, 'Popularity should be greater than zero');
+            test.ok(first.popularity <= 100, 'Popularity should be less than 100');
+            
+            test.doesNotThrow(function() {
+                var starred = first.isStarred();
+                first.star();
+                test.ok(first.isStarred(), 'Track should be starred');
+                first.unstar();
+                test.ok(!first.isStarred(), 'Track should not be starred');
+                if(starred) first.star();
+            }, 'starring and unstarring a track should not throw');
             return test.done();
         });
     }

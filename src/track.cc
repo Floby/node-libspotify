@@ -119,10 +119,110 @@ static Handle<Value> Track_Artist(const Arguments& args) {
     return scope.Close(artist->object);
 }
 
+/**
+ * JS track_get_availability implementation. checks if a given track is loaded
+ */
+static Handle<Value> Track_Get_Availability(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 2);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsObject());
+
+    // gets sp_track pointer from given object
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+    ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[1]);
+
+    sp_availability availability = sp_track_get_availability(session->pointer, track->pointer);
+    Handle<Value> res;
+    switch (availability) {
+        case SP_TRACK_AVAILABILITY_AVAILABLE:
+            res = String::New("AVAILABLE");
+            break;
+        case SP_TRACK_AVAILABILITY_NOT_STREAMABLE:
+            res = String::New("NOT_STREAMABLE");
+            break;
+        case SP_TRACK_AVAILABILITY_BANNED_BY_ARTIST:
+            res = String::New("BANNED_BY_ARTIST");
+            break;
+        case SP_TRACK_AVAILABILITY_UNAVAILABLE:
+        default:
+            res = String::New("UNAVAILABLE");
+            break;
+    }
+
+    return scope.Close(res);
+}
+
+static Handle<Value> Track_Is_Starred(const Arguments& args) {
+    HandleScope scope;
+    
+    // test arguments sanity
+    assert(args.Length() == 2);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsObject());
+
+    // get session and track pointers from object
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+    ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[1]);
+
+    bool starred = sp_track_is_starred(session->pointer, track->pointer);
+
+    return scope.Close(Boolean::New(starred));
+}
+
+static Handle<Value> Track_Set_Starred(const Arguments& args) {
+    HandleScope scope;
+    
+    // test arguments sanity
+    assert(args.Length() == 3);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsArray());
+    assert(args[2]->IsBoolean());
+
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+
+    Handle<Array> arr = Local<Array>(Array::Cast(*args[1]));
+    unsigned int length = arr->Length();
+    sp_track* tracks[length];
+    for(unsigned int i=0; i<length; ++i) {
+        tracks[i] = ObjectHandle<sp_track>::Unwrap(arr->Get(i))->pointer;
+    }
+
+    sp_error error = sp_track_set_starred(session->pointer, tracks, length, args[2]->ToBoolean()->BooleanValue());
+    NSP_THROW_IF_ERROR(error);
+
+    return scope.Close(Undefined());
+}
+
+/**
+ * JS track_popularity implementation. checks if a given track is loaded
+ */
+static Handle<Value> Track_Popularity(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    // gets sp_track pointer from given object
+    ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[0]);
+
+    // actually call sp_track_popularity
+    int popularity = sp_track_popularity(track->pointer);
+
+    return scope.Close(Number::New(popularity));
+}
+
 void nsp::init_track(Handle<Object> target) {
     NODE_SET_METHOD(target, "track_is_loaded", Track_Is_Loaded);
     NODE_SET_METHOD(target, "track_duration", Track_Duration);
     NODE_SET_METHOD(target, "track_num_artists", Track_Num_Artists);
     NODE_SET_METHOD(target, "track_name", Track_Name);
     NODE_SET_METHOD(target, "track_artist", Track_Artist);
+    NODE_SET_METHOD(target, "track_get_availability", Track_Get_Availability);
+    NODE_SET_METHOD(target, "track_is_starred", Track_Is_Starred);
+    NODE_SET_METHOD(target, "track_popularity", Track_Popularity);
+    NODE_SET_METHOD(target, "track_set_starred", Track_Set_Starred);
 }
