@@ -18,7 +18,7 @@ exports.testLoginIsSucessful = function(test) {
     });
     session.login(cred.login, cred.password);
     console.log('trying to login, this may take a while');
-    session.once('login', function(err) {
+    session.on('login', function(err) {
         if(err) test.done(err);
         test.ok(session.isLoggedIn(), 'session should now it is now logged in');
         session.logout(function() {
