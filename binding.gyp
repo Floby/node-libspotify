@@ -10,6 +10,7 @@
         "src/artist.cc",
         "src/player.cc",
         "src/audio.cc",
+        "src/link.cc",
       ],
       "cflags": ["-Wall", "-g", "-O0"],
       "conditions" : [

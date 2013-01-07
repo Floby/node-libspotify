@@ -31,6 +31,7 @@ extern "C" {
         nsp::init_track(target);
         nsp::init_artist(target);
         nsp::init_player(target);
+        nsp::init_link(target);
     }
 }
 
