@@ -3,22 +3,21 @@
     {
       "target_name": "libspotify",
       "sources": [
-        "src/binding.cc",
-        "src/session.cc",
-        "src/search.cc",
-        "src/track.cc",
         "src/artist.cc",
-        "src/player.cc",
         "src/audio.cc",
+        "src/binding.cc",
         "src/link.cc",
+        "src/player.cc",
+        "src/search.cc",
+        "src/session.cc",
+        "src/track.cc",
       ],
-      "cflags": ["-Wall", "-g", "-O0"],
+      "cflags": ["-Wall"],
       "conditions" : [
         [
           'OS!="win"', {
             "libraries" : [
-              '-lspotify',
-              '-lm'
+              '-lspotify'
             ],
           }
         ],
