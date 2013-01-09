@@ -10,7 +10,7 @@
     "player",
     "music"
   ],
-  "version": "0.0.0",
+  "version": "0.0.1",
   "maintainers": [
     { "name": "Florent Jaby", "email": "florent.jaby@gmail.com" }
   ],
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/floby/node-libspotify.git"
+    "url": "https://github.com/Floby/node-libspotify.git"
   },
   "engines": {
     "node": "~0.8.0"
