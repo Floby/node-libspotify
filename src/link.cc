@@ -36,7 +36,7 @@ static Handle<Value> Link_Create_From_Track(const Arguments& args) {
     sp_link* link = sp_link_create_from_track(track->pointer, 0);
     char url[256];
     // TODO handle truncated urls
-    int length = sp_link_as_string(link, url, 256);
+    sp_link_as_string(link, url, 256);
 
     return scope.Close(String::New(url));
 }
@@ -54,7 +54,7 @@ static Handle<Value> Link_Create_From_Artist(const Arguments& args) {
     sp_link* link = sp_link_create_from_artist(artist->pointer);
     char url[256];
     // TODO handle truncated urls
-    int length = sp_link_as_string(link, url, 256);
+    sp_link_as_string(link, url, 256);
 
     return scope.Close(String::New(url));
 }
