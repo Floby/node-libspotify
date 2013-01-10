@@ -10,7 +10,7 @@ exports.track = {
             cb();
         })
     },
-    testAttributesAreMapped: function(test) {
+    'attributes are mapped': function(test) {
         var search = new sp.Search('artist:"Guillemots" track:"Fleet"');
         search.execute(function() {
             test.ok(search.tracks.length > 0, "the search should return at least one result");

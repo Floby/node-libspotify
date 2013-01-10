@@ -60,6 +60,58 @@ static Handle<Value> Album_Name(const Arguments& args) {
 }
 
 /**
+ * JS album_year implementation. checks if a given album is loaded
+ */
+static Handle<Value> Album_Year(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    // gets sp_album pointer from given object
+    ObjectHandle<sp_album>* album = ObjectHandle<sp_album>::Unwrap(args[0]);
+
+    const int year = sp_album_year(album->pointer);
+
+    return scope.Close(Number::New(year));
+}
+
+/**
+ * JS album_type implementation. checks if a given album is loaded
+ */
+static Handle<Value> Album_Type(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    // gets sp_album pointer from given object
+    ObjectHandle<sp_album>* album = ObjectHandle<sp_album>::Unwrap(args[0]);
+
+    sp_albumtype type = sp_album_type(album->pointer);
+    Handle<Value> res;
+    switch (type) {
+        case SP_ALBUMTYPE_ALBUM:
+            res = String::New("ALBUM");
+            break;
+        case SP_ALBUMTYPE_SINGLE:
+            res = String::New("SINGLE");
+            break;
+        case SP_ALBUMTYPE_COMPILATION:
+            res = String::New("COMPILATION");
+            break;
+        case SP_ALBUMTYPE_UNKNOWN:
+        default:
+            res = String::New("UNKNOWN");
+            break;
+    }
+
+    return scope.Close(res);
+}
+
+/**
  * JS album_artist implementation. checks if a given album is loaded
  */
 static Handle<Value> Album_Artist(const Arguments& args) {
@@ -83,6 +135,8 @@ static Handle<Value> Album_Artist(const Arguments& args) {
 void nsp::init_album(Handle<Object> target) {
     NODE_SET_METHOD(target, "album_is_loaded", Album_Is_Loaded);
     NODE_SET_METHOD(target, "album_name", Album_Name);
+    NODE_SET_METHOD(target, "album_year", Album_Year);
+    NODE_SET_METHOD(target, "album_type", Album_Type);
     NODE_SET_METHOD(target, "album_artist", Album_Artist);
 }
 
