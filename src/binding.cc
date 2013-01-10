@@ -26,12 +26,13 @@ extern "C" {
         v8::HandleScope scope;
 
         // initializing all modules
-        nsp::init_session(target);
-        nsp::init_search(target);
-        nsp::init_track(target);
+        nsp::init_album(target);
         nsp::init_artist(target);
-        nsp::init_player(target);
         nsp::init_link(target);
+        nsp::init_player(target);
+        nsp::init_search(target);
+        nsp::init_session(target);
+        nsp::init_track(target);
     }
 }
 

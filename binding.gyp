@@ -3,6 +3,7 @@
     {
       "target_name": "libspotify",
       "sources": [
+        "src/album.cc",
         "src/artist.cc",
         "src/audio.cc",
         "src/binding.cc",

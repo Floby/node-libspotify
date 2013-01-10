@@ -119,6 +119,27 @@ static Handle<Value> Track_Artist(const Arguments& args) {
     return scope.Close(artist->object);
 }
 
+
+/**
+ * JS track_album implementation. checks if a given track is loaded
+ */
+static Handle<Value> Track_Album(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    // gets sp_track pointer from given object
+    ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[0]);
+
+    sp_album* spalbum = sp_track_album(track->pointer);
+    ObjectHandle<sp_album>* album = new ObjectHandle<sp_album>("sp_album");
+    album->pointer = spalbum;
+
+    return scope.Close(album->object);
+}
+
 /**
  * JS track_get_availability implementation. checks if a given track is loaded
  */
@@ -221,6 +242,7 @@ void nsp::init_track(Handle<Object> target) {
     NODE_SET_METHOD(target, "track_num_artists", Track_Num_Artists);
     NODE_SET_METHOD(target, "track_name", Track_Name);
     NODE_SET_METHOD(target, "track_artist", Track_Artist);
+    NODE_SET_METHOD(target, "track_album", Track_Album);
     NODE_SET_METHOD(target, "track_get_availability", Track_Get_Availability);
     NODE_SET_METHOD(target, "track_is_starred", Track_Is_Starred);
     NODE_SET_METHOD(target, "track_popularity", Track_Popularity);

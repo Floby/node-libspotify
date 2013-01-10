@@ -20,8 +20,9 @@ exports.testGetTrackFromSearchResult = function(test) {
             var first = search.tracks[0];
             test.ok(first instanceof sp.Track, "the track results should be loaded track objects");
             test.ok(first.isReady());
-            //test.equal('Guillemots', first.artist, "the track should be a guillemots song");
-            //test.equal('Fleet', first.title, "the track should be a guillemots song");
+            test.equal('Guillemots', first.artist, "the track should be a guillemots song");
+            test.equal('Fleet', first.title, "the track should be a guillemots song");
+            test.equal('Hello Land!', first.album, "the album should be Hello land");
         });
         test.done();
     });
