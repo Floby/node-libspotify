@@ -207,7 +207,7 @@ namespace nsp {
     };
 
     template <typename T>
-    ObjectHandle<T>::ObjectHandle(const char* name = NULL) : pointer(NULL) {
+    ObjectHandle<T>::ObjectHandle(const char* name) : pointer(NULL) {
         v8::Local<v8::FunctionTemplate> tpl = v8::FunctionTemplate::New(JsNoOp);
         name_ = v8::Persistent<v8::String>::New(
             v8::String::NewSymbol(name == NULL ? "CObject" : name)
