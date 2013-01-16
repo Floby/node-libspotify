@@ -307,7 +307,7 @@ static Handle<Value> Session_Config(const Arguments& args) {
     ptr->proxy                          = NSP_STRING_KEY(obj, "proxy");
     ptr->proxy_username                 = NSP_STRING_KEY(obj, "proxy_username");
     ptr->proxy_password                 = NSP_STRING_KEY(obj, "proxy_password");
-    ptr->ca_certs_filename              = NSP_STRING_KEY(obj, "ca_certs_filename");
+    // ptr->ca_certs_filename              = NSP_STRING_KEY(obj, "ca_certs_filename");
     ptr->tracefile                      = NSP_STRING_KEY(obj, "tracefile");
 
     ptr->application_key                = NSP_BUFFER_KEY(obj, "application_key");
