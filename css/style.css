@@ -1,5 +1,6 @@
 img.picture {
     background:url('../images/picture.png') center center no-repeat #eee;
+    box-shadow: 0px 4px 10px #ddd;
 }
 .footer {
     font-size: 75%;
