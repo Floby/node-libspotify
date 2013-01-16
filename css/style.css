@@ -1,0 +1,10 @@
+img.picture {
+    background:url('../images/picture.png') center center no-repeat #eee;
+}
+.footer {
+    font-size: 75%;
+    opacity: 0.75;
+}
+ .footer .copyright {
+    text-align: right;
+ }
