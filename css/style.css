@@ -2,6 +2,24 @@ img.picture {
     background:url('../images/picture.png') center center no-repeat #eee;
     box-shadow: 0px 4px 10px #ddd;
 }
+
+.head {
+    position: fixed;
+    background: #ddd;
+    top:0;
+    left:0;
+    width: 100%;
+    opacity: 0.6;
+    text-align: center;
+    font-size: 90%;
+    padding-top: 0.5em;
+}
+
+.main {
+    margin-top: 4em;
+}
+
+
 .footer {
     font-size: 75%;
     opacity: 0.75;
