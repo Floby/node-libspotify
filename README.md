@@ -61,7 +61,7 @@ session.once('login', function(err) {
     search.execute();
     search.once('ready', function() {
         if(!search.tracks.length) {
-            console.log('there is no track to play :[');
+            console.error('there is no track to play :[');
             session.logout();
         }
 
@@ -70,10 +70,14 @@ session.once('login', function(err) {
         player.load(track);
         player.play();
 
+        // linux
         var play = spawn('aplay', ['-c', 2, '-f', 'S16_LE', '-r', '44100']);
+        // osx with `brew install sox`
+        var play = spawn('play', ['-r', 44100, '-b', 16, '-L', '-c', 2, '-e', 'signed-integer', '-t', 'raw', '-']);
+
         player.pipe(play.stdin);
 
-        console.log('playing track. end in %s', track.humanDuration);
+        console.error('playing track. end in %s', track.humanDuration);
         player.on('data', function(buffer) {
             // buffer.length
             // buffer.rate
@@ -81,7 +85,7 @@ session.once('login', function(err) {
             // 16bit samples
         });
         player.once('track-end', function() {
-            console.log('track ended');
+            console.error('track ended');
             f.end();
             player.stop();
             session.close();
