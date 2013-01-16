@@ -25,6 +25,13 @@
             <div class="span3">
                 <h1><a href="/">Flo.by</a></h1>
             </div>
+            <div class="span7 offset2">
+                <ul class="nav nav-pills menu">
+                    <li class="active"><a href="/">Home</a></li>
+                    <li class="disabled"><a rel="comingsoon" href="#">Resume</a></li>
+                    <li class="disabled"><a rel="comingsoon" href="#">Work</a></li>
+                </ul>
+            </div>
         </div>
         <div class="row">
             <hr />
@@ -59,6 +66,10 @@
     <script type="text/javascript" charset="utf-8" src="bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" charset="utf-8">
         $('[rel=tooltip]').tooltip();
+        $('[rel=comingsoon]').tooltip({
+            title: 'Coming soon!',
+            placement: 'bottom'
+        });
     </script>
 </body>
 

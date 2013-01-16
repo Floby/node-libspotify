@@ -19,6 +19,11 @@ img.picture {
     margin-top: 4em;
 }
 
+.main .menu {
+    margin-top: 15px;
+    margin-bottom:0;
+}
+
 
 .footer {
     font-size: 75%;
