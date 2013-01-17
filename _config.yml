@@ -1,4 +1,5 @@
-url: "http://projects.flo.by/node-libspotify"
+url: "http://projects.flo.by/"
+base_url:"http://projects.flo.by/node-libspotify/"
 pygments: true
 exclude: [/bin, Gemfile, Gemfile.lock]
 markdown: kramdown
