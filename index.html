@@ -20,7 +20,7 @@
         	</div>
         </div>
     </div>
-    <div class="container main">
+    <div class="container banner">
         <div class="row">
             <div class="span3">
                 <h1><a href="/">Flo.by</a></h1>
@@ -33,6 +33,8 @@
                 </ul>
             </div>
         </div>
+    </div><!-- .banner -->
+    <div class="container main">
         <div class="row">
             <hr />
             <div class="span8">
@@ -50,7 +52,7 @@
                 <img src="images/portrait.jpg" class="img-circle picture" title="Florent" alt="Florent" />
             </div>
         </div>
-    </div>
+    </div><!-- .main -->
     <div class="container footer">
         <hr />
         <div class="row">
@@ -61,15 +63,21 @@
                 <em>Copyright © 2013 Florent Jaby</em>
             </div>
         </div>
-    </div>
+    </div><!-- .footer -->
     <script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-latest.js"></script>
     <script type="text/javascript" charset="utf-8" src="bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/prefixfree.min.js"></script>
     <script type="text/javascript" charset="utf-8">
         $('[rel=tooltip]').tooltip();
         $('[rel=comingsoon]').tooltip({
             title: 'Coming soon!',
             placement: 'bottom'
         });
+        $(function() {
+            setTimeout(function() {
+                $(document.body).addClass('loaded');
+            }, 100);
+        })
     </script>
 </body>
 
