@@ -1,0 +1,12 @@
+url: "http://www.flo.by"
+pygments: true
+exclude: [/bin, Gemfile, Gemfile.lock]
+markdown: kramdown
+#markdown: rdiscount
+permalink: pretty
+paginate: 5
+
+kramdown:
+  entity_output: symbolic
+rdiscount:
+  entity_output: symbolic
