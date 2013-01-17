@@ -1,3 +1,32 @@
+/* font faces */
+@font-face {
+    font-family: century-gothic;
+    src: url(../fonts/century-gothic-regular.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: century-gothic;
+    src: url(../fonts/century-gothic-bold.ttf);
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: century-gothic;
+    src: url(../fonts/century-gothic-italic.ttf);
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: century-gothic;
+    src: url(../fonts/century-gothic-bolditalic.ttf);
+    font-weight: bold;
+    font-style: italic;
+}
+
+
+
+
 img.picture {
     background:url('../images/picture.png') center center no-repeat #eee;
     box-shadow: 0px 4px 10px #ddd;
