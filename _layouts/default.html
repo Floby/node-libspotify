@@ -31,21 +31,18 @@
             </div>
             <div class="span6">
                 <ul class="nav nav-pills menu">
-                    {% if menu_item == NULL %}
-                        {% assign menu_item == page.menu_item %}
-                    {% endif %}
-                    {% if menu_item == 'home' %}
+                    {% if page.menu_item == 'home' %}
                         <li class="active"><a href="/">Home</a></li>
                     {% else %}
                         <li class=""><a href="http://www.flo.by/">Home</a></li>
                     {% endif%}
-                    {% if menu_item == 'projects' %}
+                    {% if page.menu_item == 'projects' %}
                         <li class="active"><a href="http://projects.flo.by/">Projects</a></li>
                     {% else %}
                         <li class="disabled"><a href="#">Projects</a></li>
                     {% endif%}
                     <li class="disabled"><a rel="comingsoon" href="#">Work</a></li>
-                    {% if menu_item == 'resume' %}
+                    {% if page.menu_item == 'resume' %}
                         <li class="active"><a href="files/Florent-Jaby-CV.pdf">Resume</a></li>
                     {% else %}
                         <li class=""><a href="files/Florent-Jaby-CV.pdf">Resume</a></li>
