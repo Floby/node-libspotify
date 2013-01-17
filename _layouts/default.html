@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    <title>Flo.by</title>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8">
+</head>
+
+<body>
+    <div class="head">
+        <div class="container">
+        	<div class="row">
+        		<div class="span12">
+                    <p><em>This website is still under construction. Be advised!</em></p>
+                </div>
+        	</div>
+        </div>
+    </div>
+    <div class="container banner">
+        <div class="row">
+            <div class="span3">
+                <h1><a href="/">Flo.by</a></h1>
+            </div>
+            <div class="span7 offset2">
+                <ul class="nav nav-pills menu">
+                    {% if page.menu_item == 'home' %}
+                        <li class="active"><a href="/">Home</a></li>
+                    {% else %}
+                        <li class=""><a href="/">Home</a></li>
+                    {% endif%}
+                    <li class="disabled"><a rel="comingsoon" href="#">Work</a></li>
+                    {% if page.menu_item == 'resume' %}
+                        <li class="active"><a href="files/Florent-Jaby-CV.pdf">Resume</a></li>
+                    {% else %}
+                        <li class=""><a href="files/Florent-Jaby-CV.pdf">Resume</a></li>
+                    {% endif%}
+                </ul>
+            </div>
+        </div>
+    </div><!-- .banner -->
+
+    <div class="main">
+         {{ content }}
+    </div>
+    <div class="container footer">
+        <hr />
+        <div class="row">
+            <div class="span3 aknowledgement">
+                <em>Website created using <a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a></em>
+            </div>
+            <div class="span3 offset6 copyright">
+                <em>Copyright © 2013 Florent Jaby</em>
+            </div>
+        </div>
+    </div><!-- .footer -->
+    <script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript" charset="utf-8" src="bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/prefixfree.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $('[rel=tooltip]').tooltip();
+        $('[rel=comingsoon]').tooltip({
+            title: 'Coming soon!',
+            placement: 'bottom'
+        });
+        $(function() {
+            setTimeout(function() {
+                $(document.body).addClass('loaded');
+            }, 100);
+        })
+    </script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37756010-1']);
+  _gaq.push(['_setDomainName', 'flo.by']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+
+</html>
+

@@ -1,98 +1,23 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-
-    <title>Flo.by</title>
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css" media="screen" charset="utf-8">
-    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8">
-</head>
-
-<body>
-    <div class="head">
-        <div class="container">
-        	<div class="row">
-        		<div class="span12">
-                    <p><em>This website is still under construction. Be advised!</em></p>
-                </div>
-        	</div>
+---
+layout: default
+menu_item: home
+---
+<div class="container">
+    <div class="row">
+        <hr />
+        <div class="span8">
+            <p>
+                <strong>There is a lot of stuff yet to be done around here, but there are still these few things you can already check out</strong>
+            </p>
+            <ul>
+                <li><a href="http://flo.by/short">My own url shortener</a>: Just my own installation of Yourls</li>
+                <li><a href="http://gitlab.flo.by:8080/">My Gitlab</a>: My git projects, hosted with Gitlab</li>
+                <li><a href="http://github.com/floby">My Github</a>: My repositories on Github</li>
+                <li><a class="muted" rel="tooltip" data-placement="bottom" data-title="Coming soon!" href="#">My projects</a></li>
+            </ul>
+        </div>
+        <div class="span2 offset2 portrait">
+            <img src="images/portrait.jpg" class="img-circle picture" title="Florent" alt="Florent" />
         </div>
     </div>
-    <div class="container banner">
-        <div class="row">
-            <div class="span3">
-                <h1><a href="/">Flo.by</a></h1>
-            </div>
-            <div class="span7 offset2">
-                <ul class="nav nav-pills menu">
-                    <li class="active"><a href="/">Home</a></li>
-                    <li class="disabled"><a rel="comingsoon" href="#">Work</a></li>
-                    <li class=""><a href="files/Florent-Jaby-CV.pdf">Resume</a></li>
-                </ul>
-            </div>
-        </div>
-    </div><!-- .banner -->
-    <div class="container main">
-        <div class="row">
-            <hr />
-            <div class="span8">
-                <p>
-                    <strong>There is a lot of stuff yet to be done around here, but there are still these few things you can already check out</strong>
-                </p>
-                <ul>
-                    <li><a href="http://flo.by/short">My own url shortener</a>: Just my own installation of Yourls</li>
-                    <li><a href="http://gitlab.flo.by:8080/">My Gitlab</a>: My git projects, hosted with Gitlab</li>
-                    <li><a href="http://github.com/floby">My Github</a>: My repositories on Github</li>
-                    <li><a class="muted" rel="tooltip" data-placement="bottom" data-title="Coming soon!" href="#">My projects</a></li>
-                </ul>
-            </div>
-            <div class="span2 offset2 portrait">
-                <img src="images/portrait.jpg" class="img-circle picture" title="Florent" alt="Florent" />
-            </div>
-        </div>
-    </div><!-- .main -->
-    <div class="container footer">
-        <hr />
-        <div class="row">
-            <div class="span3 aknowledgement">
-                <em>Website created using <a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a></em>
-            </div>
-            <div class="span3 offset6 copyright">
-                <em>Copyright © 2013 Florent Jaby</em>
-            </div>
-        </div>
-    </div><!-- .footer -->
-    <script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-latest.js"></script>
-    <script type="text/javascript" charset="utf-8" src="bootstrap/js/bootstrap.js"></script>
-    <script type="text/javascript" charset="utf-8" src="js/prefixfree.min.js"></script>
-    <script type="text/javascript" charset="utf-8">
-        $('[rel=tooltip]').tooltip();
-        $('[rel=comingsoon]').tooltip({
-            title: 'Coming soon!',
-            placement: 'bottom'
-        });
-        $(function() {
-            setTimeout(function() {
-                $(document.body).addClass('loaded');
-            }, 100);
-        })
-    </script>
-
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-37756010-1']);
-  _gaq.push(['_setDomainName', 'flo.by']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-</body>
-
-</html>
+</div>
