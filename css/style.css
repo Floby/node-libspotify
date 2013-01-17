@@ -48,8 +48,13 @@ img.picture {
     margin-top: 4em;
 }
 
+.banner .project h3 {
+    margin-top: 16px;
+    margin-bottom: 0px;
+}
+
 .banner .menu {
-    margin-top: 15px;
+    margin-top: 20px;
     margin-bottom:0;
 }
 

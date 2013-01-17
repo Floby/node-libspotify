@@ -21,10 +21,15 @@
     </div>
     <div class="container banner">
         <div class="row">
-            <div class="span3">
+            <div class="span2">
                 <h1><a href="/">Flo.by</a></h1>
             </div>
-            <div class="span7 offset2">
+            <div class="span4 project">
+                {% if page.project != NULL %}
+                <h3 class="muted">{{ page.project }}</h3>
+                {% endif %}
+            </div>
+            <div class="span6">
                 <ul class="nav nav-pills menu">
                     {% if page.menu_item == 'home' %}
                         <li class="active"><a href="/">Home</a></li>
