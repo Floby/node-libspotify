@@ -36,6 +36,11 @@
                     {% else %}
                         <li class=""><a href="/">Home</a></li>
                     {% endif%}
+                    {% if page.menu_item == 'projects' %}
+                        <li class="active"><a href="http://projects.flo.by/">Projects</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">Projects</a></li>
+                    {% endif%}
                     <li class="disabled"><a rel="comingsoon" href="#">Work</a></li>
                     {% if page.menu_item == 'resume' %}
                         <li class="active"><a href="files/Florent-Jaby-CV.pdf">Resume</a></li>
