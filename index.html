@@ -45,7 +45,7 @@
                     <li><a href="http://flo.by/short">My own url shortener</a>: Just my own installation of Yourls</li>
                     <li><a href="http://gitlab.flo.by:8080/">My Gitlab</a>: My git projects, hosted with Gitlab</li>
                     <li><a href="http://github.com/floby">My Github</a>: My repositories on Github</li>
-                    <li><a rel="tooltip" data-placement="bottom" data-title="Coming soon!" href="#">My projects</a></li>
+                    <li><a class="muted" rel="tooltip" data-placement="bottom" data-title="Coming soon!" href="#">My projects</a></li>
                 </ul>
             </div>
             <div class="span2 offset2 portrait">
@@ -79,6 +79,21 @@
             }, 100);
         })
     </script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37756010-1']);
+  _gaq.push(['_setDomainName', 'flo.by']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 </body>
 
 </html>
