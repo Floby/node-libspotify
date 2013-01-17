@@ -5,6 +5,8 @@ markdown: kramdown
 #markdown: rdiscount
 permalink: pretty
 paginate: 5
+project: node-libspotify
+menu_item: projects
 
 kramdown:
   entity_output: symbolic
