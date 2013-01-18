@@ -1,7 +1,8 @@
-url: "http://projects.flo.by/node-libspotify"
+url: "http://projects.flo.by/node-libspotify/"
 pygments: true
 exclude: [/bin, Gemfile, Gemfile.lock]
-markdown: kramdown
+markdown: redcarpet
+#markdown: kramdown
 #markdown: rdiscount
 permalink: pretty
 paginate: 5
@@ -11,4 +12,6 @@ menu_item: projects
 kramdown:
   entity_output: symbolic
 rdiscount:
+  entity_output: symbolic
+redcarpet:
   entity_output: symbolic
