@@ -4,8 +4,8 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
     {% assign head_title = "Flo.by" %}
-    {% if title != NULL %}
-        {% capture head_title %}{{ title }} - {{ head_title }}{% endcapture %}
+    {% if site.title != NULL %}
+        {% capture head_title %}{{ site.title }} - {{ head_title }}{% endcapture %}
     {% endif %}
     {% if page.title != NULL %}
         {% capture head_title %}{{ page.title }} - {{ head_title }}{% endcapture %}
@@ -32,28 +32,37 @@
                 <h1><a href="http://www.flo.by/">Flo.by</a></h1>
             </div>
             <div class="span4 project">
-                {% if page.project != NULL %}
+                {% if site.project != NULL %}
+                <h3 class="muted">{{ site.project }}</h3>
+                {% else if page.project != NULL %}
                 <h3 class="muted">{{ page.project }}</h3>
                 {% endif %}
             </div>
             <div class="span6">
+                {% assign menu_item = '' %}
+                {% if site.menu_item != NULL %}
+                    {% assign menu_item = site.menu_item %}
+                {% endif %}
+                {% if page.menu_item != NULL %}
+                    {% assign menu_item = page.menu_item %}
+                {% endif %}
                 <ul class="nav nav-pills menu">
-                    {% if page.menu_item == 'home' %}
+                    {% if menu_item == 'home' %}
                         <li class="active"><a href="http://www.flo.by/">Home</a></li>
                     {% else %}
                         <li class=""><a href="http://www.flo.by/">Home</a></li>
-                    {% endif%}
-                    {% if page.menu_item == 'projects' %}
+                    {% endif %}
+                    {% if menu_item == 'projects' %}
                         <li class="active"><a href="http://projects.flo.by/">Projects</a></li>
                     {% else %}
                         <li class=""><a href="#">Projects</a></li>
-                    {% endif%}
+                    {% endif %}
                     <li class="disabled"><a rel="comingsoon" href="#">Work</a></li>
-                    {% if page.menu_item == 'resume' %}
+                    {% if menu_item == 'resume' %}
                         <li class="active"><a href="http://www.flo.by/files/Florent-Jaby-CV.pdf">Resume</a></li>
                     {% else %}
                         <li><a href="http://www.flo.by/files/Florent-Jaby-CV.pdf">Resume</a></li>
-                    {% endif%}
+                    {% endif %}
                 </ul>
             </div>
         </div>
