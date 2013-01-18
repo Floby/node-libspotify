@@ -71,6 +71,7 @@ img.picture {
 .footer {
     font-size: 75%;
     opacity: 0.75;
+    padding-bottom: 1em;
 }
  .footer .copyright {
     text-align: right;
