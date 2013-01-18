@@ -3,7 +3,14 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-    <title>Flo.by</title>
+    {% assign head_title = "Flo.by" %}
+    {% if title != NULL %}
+        {% capture head_title %}{{ title }} - {{ head_title }}{% endcapture %}
+    {% endif %}
+    {% if page.title != NULL %}
+        {% capture head_title %}{{ page.title }} - {{ head_title }}{% endcapture %}
+    {% endif %}
+    <title>{{ head_title }}</title>
     <!-- bootstrap -->
     <link rel="stylesheet" href="{{ url }}/bootstrap/css/bootstrap.css" type="text/css" media="screen" charset="utf-8">
     <link rel="stylesheet" href="{{ url }}/css/style.css" type="text/css" media="screen" charset="utf-8">
