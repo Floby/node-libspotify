@@ -8,6 +8,7 @@ permalink: pretty
 paginate: 5
 project: node-libspotify
 menu_item: projects
+title: node-libspotify
 
 kramdown:
   entity_output: symbolic
