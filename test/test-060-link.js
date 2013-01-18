@@ -32,6 +32,11 @@ exports.links = {
             test.done();
         });
     },
+    'get http url from track': function(test) {
+        var track = sp.Track.getFromUrl('spotify:track:2Uqs7Gi9F0BHg3H7yhbpWm');
+        test.equal(track.getHttpUrl(), 'http://open.spotify.com/track/2Uqs7Gi9F0BHg3H7yhbpWm');
+        test.done();
+    },
     'get artist link from artist': function(test) {
         var track = sp.Track.getFromUrl('spotify:track:2Uqs7Gi9F0BHg3H7yhbpWm');
         track.on('ready', function() {
