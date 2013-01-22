@@ -111,7 +111,12 @@
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-37756010-1']);
   _gaq.push(['_setDomainName', 'flo.by']);
-  _gaq.push(['_trackPageview']);
+  if(window._flobyVirtualPageName) {
+      _gaq.push(['_trackPageview', window._flobyVirtualPageName]);
+  }
+  else {
+      _gaq.push(['_trackPageview']);
+  }
 
   (function() {
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
