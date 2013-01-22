@@ -111,6 +111,11 @@
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-37756010-1']);
   _gaq.push(['_setDomainName', window.location.hostname]);
+{% if page.analytics_url != NULL %}
+  if(!window._flobyVirtualPageName) {
+      window._flobyVirtualPageName = '{{ page.analytics_url }}';
+  }
+{% endif %}
   if(window._flobyVirtualPageName) {
       _gaq.push(['_trackPageview', window._flobyVirtualPageName]);
   }
