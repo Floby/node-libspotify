@@ -14,9 +14,17 @@
     <!-- bootstrap -->
     <link rel="stylesheet" href="{{ url }}/bootstrap/css/bootstrap.css" type="text/css" media="screen" charset="utf-8">
     <link rel="stylesheet" href="{{ url }}/css/style.css" type="text/css" media="screen" charset="utf-8">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+    </script>
 </head>
 
 <body>
+    {% if site.project != NULL %}
+        {% assign page_project = site.project %}
+    {% else if page.project != NULL %}
+        {% assign page_project = page.project %}
+    {% endif %}
     <div class="head">
         <div class="container">
         	<div class="row">
@@ -29,7 +37,7 @@
     <div class="container banner">
         <div class="row">
             <div class="span2">
-                <h1><a href="http://www.flo.by/">Flo.by</a></h1>
+                <h1 class="floby-primary"><a href="http://www.flo.by/">Flo.by</a></h1>
             </div>
             <div class="span4 project">
                 {% if site.project != NULL %}
@@ -59,7 +67,7 @@
                     {% endif %}
                     <li class="disabled"><a rel="comingsoon" href="#">Work</a></li>
                     {% if menu_item == 'resume' %}
-                        <li class="active"><a href="http://www.flo.by/files/Florent-Jaby-CV.pdf">Resume</a></li>
+                        <li class="active"><a target="_blank" onclick="javascript:_gaq.push(['_trackPageview', this.href]);" href="http://www.flo.by/files/Florent-Jaby-CV.pdf">Resume</a></li>
                     {% else %}
                         <li><a href="http://www.flo.by/files/Florent-Jaby-CV.pdf">Resume</a></li>
                     {% endif %}
