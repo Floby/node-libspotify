@@ -1,16 +1,74 @@
----
-layout: default
----
-<div class="container">
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    
+    
+    
+    <title>404 File not found - Flo.by</title>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" charset="utf-8">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+    </script>
+</head>
+
+<body>
+    
+        
+    
+    <div class="head">
+        <div class="container">
+        	<div class="row">
+        		<div class="span12">
+                    <p><em>This website is still under construction. Be advised!</em></p>
+                </div>
+        	</div>
+        </div>
+    </div>
+    <div class="container banner">
+        <div class="row">
+            <div class="span2">
+                <h1 class="floby-primary"><a href="http://www.flo.by/">Flo.by</a></h1>
+            </div>
+            <div class="span4 project">
+                
+                <h3 class="muted"></h3>
+                
+            </div>
+            <div class="span6">
+                
+                
+                
+                <ul class="nav nav-pills menu">
+                    
+                        <li class=""><a href="http://www.flo.by/">Home</a></li>
+                    
+                    
+                        <li class=""><a href="http://projects.flo.by">Projects</a></li>
+                    
+                    <li class="disabled"><a rel="comingsoon" href="#">Work</a></li>
+                    
+                        <li><a target="_blank" onclick="javascript:_gaq.push(['_trackPageview', '/resume.pdf']);" href="http://www.flo.by/files/Florent-Jaby-CV.pdf">Resume</a></li>
+                    
+                </ul>
+            </div>
+        </div>
+    </div><!-- .banner -->
+
+    <div class="main">
+         <div class="container">
     <div class="row">
         <hr />
-        <div class="span8">
+        <div class="span12">
             <p>
                 <strong>An abandonned pig is all that there is here.</strong>
             </p>
 
 <!-- BEGIN bunnyhero labs pet code -->
-<div style="width: 250px; padding: 0; margin: 0; text-align: center"><div>
+<div style="text-align: center"><div>
   <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" height="300" width="250">
   <param name="movie" value="http://petswf.bunnyherolabs.com/adopt/pig.swf" />
   <param name="loop" value="false" />
@@ -27,12 +85,63 @@ layout: default
     </object>
   <!--> <![endif]-->
   </object></div>
-  <a href="http://bunnyherolabs.com/adopt/" style="font-size: small">adopt your own virtual pet!</a>
+  <a href="http://bunnyherolabs.com/adopt/" style="font-size: small">adopt your own virtual pet</a>
 </div>
 <!-- END bunnyhero labs pet code -->
 
         </div>
-        <div class="span2 offset2 portrait">
-        </div>
     </div>
 </div>
+
+    </div>
+    <div class="container footer">
+        <hr />
+        <div class="row">
+            <div class="span3 aknowledgement">
+                <em>Website created using <a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a></em>
+            </div>
+            <div class="span3 offset6 copyright">
+                <em>Copyright © 2013 Florent Jaby</em>
+            </div>
+        </div>
+    </div><!-- .footer -->
+    <script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/js/prefixfree.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $('[rel=tooltip]').tooltip();
+        $('[rel=comingsoon]').tooltip({
+            title: 'Coming soon!',
+            placement: 'bottom'
+        });
+        $(function() {
+            setTimeout(function() {
+                $(document.body).addClass('loaded');
+            }, 100);
+        })
+    </script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37756010-1']);
+  _gaq.push(['_setDomainName', window.location.hostname]);
+
+  if(window._flobyVirtualPageName) {
+      _gaq.push(['_trackPageview', window._flobyVirtualPageName]);
+  }
+  else {
+      _gaq.push(['_trackPageview']);
+  }
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+
+</html>
+
