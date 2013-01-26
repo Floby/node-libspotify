@@ -86,7 +86,16 @@
             <div class="span3 aknowledgement">
                 <em>Website created using <a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a></em>
             </div>
-            <div class="span3 offset6 copyright">
+            <div class="span2 offset4">
+                {% if page.last-updated != NULL %}
+                <i>Last updated: {{ page.last-updated | date_to_string }}</i>
+                {% elseif site.last-updated != NULL%}
+                <i>Last updated: {{ site.last-updated | date_to_string }}</i>
+                {% else %}
+                <i>Last updated: {{ site.time | date_to_string }}</i>
+                {% endif %}
+            </div>
+            <div class="span3 copyright">
                 <em>Copyright © 2013 Florent Jaby</em>
             </div>
         </div>
