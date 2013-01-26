@@ -1,7 +1,9 @@
 ---
+last-updated: 2013-01-26
 submenu_item: home
 layout: project
 ---
+
 <p class="lead">
 <strong>Node-libspotify</strong> is a <a href="http://nodejs.org">Node.js</a> module which allows the use from Javascript of the low-level Spotify API.
 </p>
