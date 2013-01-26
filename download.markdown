@@ -1,6 +1,7 @@
 ---
 submenu_item: download
 layout: project
+title: Download
 ---
 
 #### Github repository
@@ -20,7 +21,7 @@ Or add it as a dependency of your Node.js project:
 {
     ...
     "dependencies": {
-        "libspotify":"~0.0"
+        "libspotify":"~0.1"
     }
 }
 ```

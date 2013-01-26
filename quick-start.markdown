@@ -1,6 +1,7 @@
 ---
 submenu_item: tuto
 layout: project
+title: Quick Start
 ---
 
 Because Spotify is far from being an open technology, there are certain limitations while using

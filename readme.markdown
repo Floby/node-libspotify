@@ -1,6 +1,7 @@
 ---
 submenu_item: readme
 layout: project
+title: Read me
 ---
 
 Node bindings for the libspotify C library
