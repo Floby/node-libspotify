@@ -1,10 +1,13 @@
+---
+submenu_item: readme
+layout: project
+---
 
 Node bindings for the libspotify C library
 
 _This is still very alpha, but you can already play around I suppose_
 
-Install & test
---------------
+#### Install & test
 
 Please note that you must have the libspotify library installed on your system
 you can get it from [here](https://developer.spotify.com/technologies/libspotify/).
@@ -15,8 +18,7 @@ You also must provide valid credentials for a spotify account.
 Once you cloned the repository
 run `npm install` then test the module with `npm test`
 
-Main objectives
----------------
+#### Main objectives
 
 As there are already a number of spotify bindings or modules for the REST API, the main goal
 of this module is not to give access to the artist and tracks catalog. It's main purpose is
@@ -33,12 +35,11 @@ or pipe the audio data to another process like [play](http://linux.about.com/lib
 
 The main goal is now achieved. Audio data is exposed as the Player object which behaves like a readable stream
 
-Snippet
--------
+#### Snippet
 
 Here is a code snippet of how to play a track from spotify
 
-```js
+```javascript
 
 var sp = require('../lib/libspotify');
 var cred = require('../spotify_key/passwd');
@@ -94,7 +95,6 @@ session.once('login', function(err) {
 ```
 
 
-TODO
----
+#### TODO
 
 * Bind to the rest of the API...
