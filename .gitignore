@@ -1,3 +1,7 @@
 .*.un~
 .*.sw[a-z]
 _site/
+
+build/
+node_modules/
+spotify_key/
