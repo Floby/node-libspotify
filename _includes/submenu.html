@@ -1,0 +1,9 @@
+<ul class="nav nav-tabs">
+    {% for item in site.submenu %}
+        {% if item.slug == page.submenu_item %}
+            <li class="active"><a href="{{ url }}{{ item.slug }}">{{ item.name }}</a></li>
+        {% else %}
+            <li><a href="{{ site.url }}{{ item.link }}">{{ item.name }}</a></li>
+        {% endif %}
+    {% endfor %}
+</ul>

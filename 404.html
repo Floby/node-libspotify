@@ -3,29 +3,22 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-    {% assign head_title = "Flo.by" %}
-    {% if site.title != NULL %}
-        {% capture head_title %}{{ site.title }} - {{ head_title }}{% endcapture %}
-    {% endif %}
-    {% if page.title != NULL %}
-        {% capture head_title %}{{ page.title }} - {{ head_title }}{% endcapture %}
-    {% endif %}
-    <title>{{ head_title }}</title>
+    
+    
+    
+    <title>404 File not found - Flo.by</title>
     <!-- bootstrap -->
-    <link rel="stylesheet" href="{{ url }}/bootstrap/css/bootstrap.css" type="text/css" media="screen" charset="utf-8">
-    <link rel="stylesheet" href="{{ url }}/css/style.css" type="text/css" media="screen" charset="utf-8">
-    <link rel="stylesheet" href="{{ url }}/css/pygments_style.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" charset="utf-8">
     <script type="text/javascript">
       var _gaq = _gaq || [];
     </script>
 </head>
 
 <body>
-    {% if site.project != NULL %}
-        {% assign page_project = site.project %}
-    {% else if page.project != NULL %}
-        {% assign page_project = page.project %}
-    {% endif %}
+    
+        
+    
     <div class="head">
         <div class="container">
         	<div class="row">
@@ -41,44 +34,65 @@
                 <h1 class="floby-primary"><a href="http://www.flo.by/">Flo.by</a></h1>
             </div>
             <div class="span4 project">
-                {% if site.project != NULL %}
-                <h3 class="muted">{{ site.project }}</h3>
-                {% else if page.project != NULL %}
-                <h3 class="muted">{{ page.project }}</h3>
-                {% endif %}
+                
+                <h3 class="muted"></h3>
+                
             </div>
             <div class="span6">
-                {% assign menu_item = '' %}
-                {% if site.menu_item != NULL %}
-                    {% assign menu_item = site.menu_item %}
-                {% endif %}
-                {% if page.menu_item != NULL %}
-                    {% assign menu_item = page.menu_item %}
-                {% endif %}
+                
+                
+                
                 <ul class="nav nav-pills menu">
-                    {% if menu_item == 'home' %}
-                        <li class="active"><a href="http://www.flo.by/">Home</a></li>
-                    {% else %}
+                    
                         <li class=""><a href="http://www.flo.by/">Home</a></li>
-                    {% endif %}
-                    {% if menu_item == 'projects' %}
-                        <li class="active"><a href="http://projects.flo.by/">Projects</a></li>
-                    {% else %}
-                        <li><a href="http://projects.flo.by/">Projects</a></li>
-                    {% endif %}
+                    
+                    
+                        <li class=""><a href="http://projects.flo.by">Projects</a></li>
+                    
                     <li class="disabled"><a rel="comingsoon" href="#">Work</a></li>
-                    {% if menu_item == 'resume' %}
-                        <li class="active"><a target="_blank" onclick="javascript:_gaq.push(['_trackPageview', '/resume.pdf']);" href="http://www.flo.by/files/Florent-Jaby-CV.pdf">Resume</a></li>
-                    {% else %}
+                    
                         <li><a target="_blank" onclick="javascript:_gaq.push(['_trackPageview', '/resume.pdf']);" href="http://www.flo.by/files/Florent-Jaby-CV.pdf">Resume</a></li>
-                    {% endif %}
+                    
                 </ul>
             </div>
         </div>
     </div><!-- .banner -->
 
     <div class="main">
-         {{ content }}
+         <div class="container">
+    <div class="row">
+        <hr />
+        <div class="span12">
+            <p>
+                <strong>An abandonned pig is all that there is here.</strong>
+            </p>
+
+<!-- BEGIN bunnyhero labs pet code -->
+<div style="text-align: center"><div>
+  <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" height="300" width="250">
+  <param name="movie" value="http://petswf.bunnyherolabs.com/adopt/pig.swf" />
+  <param name="loop" value="false" />
+  <param name="quality" value="high" />
+  <param name="bgcolor" value="#ffffff" />
+  <param name="FlashVars" value="cn=error+404&amp;an=flo.by&amp;clr=0xf4c6c4" />
+  <!--[if !IE]> <-->
+    <object data="http://petswf.bunnyherolabs.com/adopt/pig.swf" width="250" height="300" type="application/x-shockwave-flash">
+      <param name="quality" value="high" />
+      <param name="bgcolor" value="#ffffff" />
+      <param name="pluginurl" value="http://www.macromedia.com/go/getflashplayer" />
+      <param name="FlashVars" value="cn=error+404&amp;an=flo.by&amp;clr=0xf4c6c4" />
+      <a href="http://bunnyherolabs.com/adopt/showpet.php?b=bWM9cGlnLnN3ZiZjbHI9MHhmNGM2YzQmY249ZXJyb3IgNDA0JmFuPWZsby5ieQ%3D%3D"><img src="http://petimage.bunnyherolabs.com/adopt/petimage/bWM9cGlnLnN3ZiZjbHI9MHhmNGM2YzQmY249ZXJyb3IgNDA0JmFuPWZsby5ieQ%3D%3D.png" width="250" height="300" alt="my pet!" style="border: 0" /></a>
+    </object>
+  <!--> <![endif]-->
+  </object></div>
+  <a href="http://bunnyherolabs.com/adopt/" style="font-size: small">adopt your own virtual pet</a>
+</div>
+<!-- END bunnyhero labs pet code -->
+
+        </div>
+    </div>
+</div>
+
     </div>
     <div class="container footer">
         <hr />
@@ -92,8 +106,8 @@
         </div>
     </div><!-- .footer -->
     <script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-latest.js"></script>
-    <script type="text/javascript" charset="utf-8" src="{{ url }}/bootstrap/js/bootstrap.js"></script>
-    <script type="text/javascript" charset="utf-8" src="{{ url }}/js/prefixfree.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/js/prefixfree.min.js"></script>
     <script type="text/javascript" charset="utf-8">
         $('[rel=tooltip]').tooltip();
         $('[rel=comingsoon]').tooltip({
@@ -112,11 +126,7 @@
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-37756010-1']);
   _gaq.push(['_setDomainName', window.location.hostname]);
-{% if page.analytics_url != NULL %}
-  if(!window._flobyVirtualPageName) {
-      window._flobyVirtualPageName = '{{ page.analytics_url }}';
-  }
-{% endif %}
+
   if(window._flobyVirtualPageName) {
       _gaq.push(['_trackPageview', window._flobyVirtualPageName]);
   }
