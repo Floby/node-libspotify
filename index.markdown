@@ -24,7 +24,7 @@ something without the ability to read the actual code, because libspotify is sti
 
 
 #### Try it out
-I suggest you start by reading the [Read me]({{ site.html_pages[0].url }}). Note the you will need to install libspotify
+I suggest you start by reading the [Read me]({{ site.html_pages[0].url }}). Note that you will need to install libspotify
 globally on your system so that node-libspotify can link to it during compilation.
 
 
