@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
+    <url>
+        <loc>http://projects.flo.by/node-libspotify/readme/</loc>
+        <lastmod>2013-01-26T22:17:01+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://projects.flo.by/node-libspotify/</loc>
+        <lastmod>2013-01-26T22:17:01+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://projects.flo.by/node-libspotify/download/</loc>
+        <lastmod>2013-01-26T22:17:01+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://projects.flo.by/node-libspotify/quick-start/</loc>
+        <lastmod>2013-01-26T22:17:01+01:00</lastmod>
+    </url>
+</urlset>
