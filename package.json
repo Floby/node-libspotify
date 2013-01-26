@@ -10,10 +10,11 @@
     "player",
     "music"
   ],
-  "version": "0.0.1",
+  "version": "0.1.0",
   "maintainers": [
     { "name": "Florent Jaby", "email": "florent.jaby@gmail.com" }
   ],
+  "homepage":"http://projects.flo.by/node-libspotify/",
   "bugs": {
     "url": "https://github.com/floby/node-libspotify/issues"
   },
