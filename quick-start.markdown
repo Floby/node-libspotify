@@ -15,7 +15,7 @@ this module. Namely:
 #### Getting a Spotify application key
 
 As I said just before, you can get a spotify application key only if you are yourself a premium spotify
-user (9.90€/month). I like so spotify so it's not really a problem for me.
+user (9.90€/month). I like Spotify so it's not really a problem for me.
 
 Go to [My Keys](https://developer.spotify.com/technologies/libspotify/keys/)
 and make sure you are logged in.
