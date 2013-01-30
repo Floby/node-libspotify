@@ -30,8 +30,8 @@ What the user can do with the audio stream is up to him/her. As it is raw PCM da
 some kind of encoder (like gstreamer) in order to broadcast music or stream it to a web user (as long as it complies
 with the Spotify terms of service ;).
 
-The user can also choose to play the song locally with a node module like [node-portaudio](https://github.com/joeferner/node-portaudio)
-or pipe the audio data to another process like [play](http://linux.about.com/library/cmd/blcmdl1_play.htm)
+The user can also choose to play the song locally with a node module like [speaker](http://github.com/TooTallNate/node-speaker)
+or pipe the audio data to another process like [aplay](http://linux.die.net/man/1/aplay)
 
 
 The main goal is now achieved. Audio data is exposed as the Player object which behaves like a readable stream
