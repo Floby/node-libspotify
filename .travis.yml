@@ -1,0 +1,18 @@
+---
+language: node_js
+pre_install: uname -a && lsb_release --all
+node_js:
+- 0.8
+
+login:
+- secure: ! 'LnoTDSKNNHCICj8jFRVGNj3h/r/KzuFj9D3SvmuKkHA8ugzFdx9OailbEpo5
+
+    Z7Fe4tnlHcVyMboXn+caP5oY/o3T2Qd7yg+NuDC3MYVD8Vb9V0Rg1cz5MugM
+
+    iakbeDwCV+TKnU4sU6fQaNX6PgcmEtv0lqMY2DHL2ab/qYCLwpQ='
+password:
+- secure: ! 'Qe9JfzKnDUL/sz3e41aVpA0p8wM39z2eMp8Zsl9Wu19SGNSQr27WiZPbJqYZ
+
+    oGhRDa4zacIpi2kp4EK+FqKLTYFi8NMG3KrHkOqO4K2/uCsOeRSELtn8UpzP
+
+    H0PTd8ioCPt8tnMkx6Y9PpNWOHozyJfcm7LfoILGaLuj/3YkBOw='
