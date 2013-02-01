@@ -1,6 +1,6 @@
 ---
 language: node_js
-pre_install: uname -a && lsb_release --all
+before_install: uname -a && lsb_release --all
 node_js:
 - 0.8
 
