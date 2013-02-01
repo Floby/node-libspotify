@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.org/Floby/node-libspotify.png)](https://travis-ci.org/Floby/node-libspotify)
 
-
-
 node-libspotify
 ===============
 
