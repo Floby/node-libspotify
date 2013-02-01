@@ -4,6 +4,4 @@ before_install: sh scripts/travis-install.sh
 node_js:
 - 0.8
 env:
-    LOGIN: FlobyIV
-    PASSWORD:
-        - secure: Uj79st0WGcrSgty36CeRrF2pVfhFd2ghFgjY+nScc4gHSKF64jT+6nSmpkzveKxMwu4oXbl+yV7GWQUnDjYp6BcRpBeE56gf3dkqS2PniXMdga12lKrAC5aJ8BOfuMMK+xDLhREHl3f4RIxE40OgoUmdaxzOia2oRXD9eck48t8=
+    secure: "CqgEg9mBxqeiwcpqLqWj+bkCfFLjJSamJo8UWuLlNLSrY5hMYLT8JWRlBOti\nDNJOHaXpnYR4/hzI622aSbrC/wXfT//v4UQBhwpnSnxXeJdy4xoTIKChpE0L\nF0N5JZEcw4VejsZAJq9+iQ9KNNIVGPpZSdmmxa6sZa5lbJV6IXQ="
