@@ -29,5 +29,7 @@ globally on your system so that node-libspotify can link to it during compilatio
 
 
 #### Current state
+[![Build Status](https://travis-ci.org/Floby/node-libspotify.png)](https://travis-ci.org/Floby/node-libspotify)
+
 I wouldn't call node-libspotify a "finished" project. There are still some parts of the API that are not accessible from
 the Node side. But I'm still actively working on it, so it should be there soon enough.

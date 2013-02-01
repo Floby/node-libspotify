@@ -6,6 +6,7 @@ last-updated: 2013-01-30
 ---
 
 Node bindings for the libspotify C library
+[![Build Status](https://travis-ci.org/Floby/node-libspotify.png)](https://travis-ci.org/Floby/node-libspotify)
 
 _This is still very alpha, but you can already play around I suppose_
 
