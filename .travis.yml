@@ -1,18 +1,13 @@
 ---
 language: node_js
-before_install: uname -a && lsb_release --all
+before_install: sh scripts/travis-install.sh
 node_js:
 - 0.8
+env:
+  login: FlobyIV
+  SPPASS:
+  - secure: ! 'Uj79st0WGcrSgty36CeRrF2pVfhFd2ghFgjY+nScc4gHSKF64jT+6nSmpkzv
 
-login:
-- secure: ! 'LnoTDSKNNHCICj8jFRVGNj3h/r/KzuFj9D3SvmuKkHA8ugzFdx9OailbEpo5
+      eKxMwu4oXbl+yV7GWQUnDjYp6BcRpBeE56gf3dkqS2PniXMdga12lKrAC5aJ
 
-    Z7Fe4tnlHcVyMboXn+caP5oY/o3T2Qd7yg+NuDC3MYVD8Vb9V0Rg1cz5MugM
-
-    iakbeDwCV+TKnU4sU6fQaNX6PgcmEtv0lqMY2DHL2ab/qYCLwpQ='
-password:
-- secure: ! 'Qe9JfzKnDUL/sz3e41aVpA0p8wM39z2eMp8Zsl9Wu19SGNSQr27WiZPbJqYZ
-
-    oGhRDa4zacIpi2kp4EK+FqKLTYFi8NMG3KrHkOqO4K2/uCsOeRSELtn8UpzP
-
-    H0PTd8ioCPt8tnMkx6Y9PpNWOHozyJfcm7LfoILGaLuj/3YkBOw='
+      8BOfuMMK+xDLhREHl3f4RIxE40OgoUmdaxzOia2oRXD9eck48t8='
