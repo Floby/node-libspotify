@@ -16,11 +16,3 @@ cd libspotify-12.1.51-Linux-x86_64-release
 sudo make install
 
 
-cd $base_dir
-mkdir spotify_key
-echo "exports.login = '$LOGIN'" > spotify_key/passwd.js
-echo "exports.password = '$PASSWORD'" >> spotify_key/passwd.js
-pwd
-cd spotify_key
-pwd
-wget $SPKEY

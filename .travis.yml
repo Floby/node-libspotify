@@ -1,6 +1,7 @@
 ---
 language: node_js
 before_install: sh scripts/travis-install.sh
+before_script: sh scripts/travis-setup.sh
 node_js:
 - 0.8
 env:
