@@ -13,7 +13,7 @@ $base_dir = `pwd`
 cd /opt
 sudo wget https://developer.spotify.com/download/libspotify/libspotify-12.1.51-Linux-x86_64-release.tar.gz
 sudo tar xzf libspotify-12.1.51-Linux-x86_64-release.tar.gz
-sudo cd libspotify-12.1.51-Linux-x86_64-release
+cd libspotify-12.1.51-Linux-x86_64-release
 sudo make install
 
 
