@@ -94,6 +94,6 @@ player.on('data', function(buffer) {
 
 As you can see, libspotify only feeds the client with raw audio data. All processing and decompressing is done by libspotify
 under the hood. You can see an example of how to actually play music from spotify in the
-[example folder](http://github.com/Floby/node-libspotify/blob/master/example/play.js)
+[example folder](http://github.com/Floby/node-libspotify/blob/master/example/speakers.js)
 of the repository
 
