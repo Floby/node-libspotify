@@ -27,9 +27,25 @@ using namespace node;
 #define BUFFER_SIZE 44100
 // one second buffer
 
-
 static audio_fifo_t g_audiofifo;
 
+/**
+ * spotify callback for the end_of_track event. It's in here because at some point we'll need to be able to check the audio buffer to see if it's been sent fully before sending the end_of_track event
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
+extern void call_end_of_track_callback(sp_session* session) {
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    Handle<Object> o = s->object;
+    Handle<Value> cbv = o->Get(String::New("end_of_track"));
+    if(!cbv->IsFunction()) {
+        return;
+    }
+
+    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+    const unsigned int argc = 0;
+    Local<Value> argv[argc] = {};
+    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+}
 
 /**
  * spotify callback for the music_delivery event.
@@ -41,9 +57,10 @@ extern int call_music_delivery_callback(sp_session* session, const sp_audioforma
 	audio_fifo_data_t *afd;
 	size_t s;
 
-	if (num_frames == 0)
-		return 0; // Audio discontinuity, do nothing
-
+	if (num_frames == 0) {		
+        return 0; // Audio discontinuity, do nothing
+	}
+	
     // make sure we're the only one using the queue
 	pthread_mutex_lock(&af->mutex);
 
@@ -83,8 +100,8 @@ static void read_delivered_music(uv_timer_t* handle, int status) {
     audio_fifo_t* af = &g_audiofifo;
     audio_fifo_data_t* afd;
 
-    if(af->qlen == 0) {
-        return;
+    if (af->qlen == 0) {
+		return;
     }
 
     while(af->qlen > 0) {
