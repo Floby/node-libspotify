@@ -5,4 +5,8 @@ before_script: sh scripts/travis-setup.sh
 node_js:
 - 0.8
 env:
-    secure: "XcoNZObaenCa6E5z8KnCmmoz17nA0Ha5V3dMAr0K9Nb9G47ISyiNQF98UnPX\ny1k4F/yYE33wzOI9e2NXdHGSSd3px93KAwCsBiAEsoddJ4Wi5MBVb8e03SRc\nu9rT6L8lQxK+CeJJ4h/R96nhD3I/KvHQO0bk9w/jo9bq0LqloDg="
+- [
+    { secure: "kp+fKUY8GqjvIQpEK4VGf8bjVJj6jAYJ+FzPRj9ArgNNpANtuiXusvKkFHyo\nDkowpc0/2Kw6KO0Mqn6boVzK2XkIaxI92c0MUi7/OiwtkBfiYwhMWot6Aedf\nT6feSVpqIrvTOmDZiZxz3zeDfBf+0f7ilToy/eKwcIGxdr5secI=" },
+    { secure: "s927iD19yYYnGTrq9KzgTaxSG9pBqRmtzfb2vONc77cCWv6F7tiqhxCTyoUD\nG6NI5iVQBsrW0ZeItnWMW4X1/1FTyenXaMuSqOzT/Ierybddl1Or+Tw7tXFR\ni17q8d5gwE3Q4JCvKS83FXyR5eNBw9vr4eCQjrFJg+n9o3ugpWw=" },
+    { secure: "Uu1oa8XgTQXaJyeKXQDMa+Kw3N1PMwa8BzMP3aW1MWt5Kb8RGUikB0kvMOo6\nWBSTxHAttOfQMgipavE2FKFbPqKq3eVgFAvmm7E/ks4vLVmSGDikas/J2Pun\njZB8aDPyiLqg70XC6Yh8HVoGB1DlTl2H3smisIQAzekFlA0L3No=" }
+]
