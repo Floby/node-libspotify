@@ -198,9 +198,53 @@ static Handle<Value> Playlist_Track(const Arguments& args) {
 	return scope.Close(track->object);
 }
 
+/**
+ * JS playlist num subscribers. Gets the number of subscribers for the playlist
+ */
+static Handle<Value> Playlist_Update_Subscribers(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 2);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsObject());
+
+	// gets sp_session pointer from given object
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+
+	// gets sp_playlist pointer from given object
+    ObjectHandle<sp_playlist>* playlist = ObjectHandle<sp_playlist>::Unwrap(args[1]);
+
+	sp_error error = sp_playlist_update_subscribers(session->pointer, playlist->pointer);
+	NSP_THROW_IF_ERROR(error);
+	
+	return scope.Close(Undefined());
+}
+
+/**
+ * JS playlist num subscribers. Gets the number of subscribers for the playlist
+ */
+static Handle<Value> Playlist_Num_Subscribers(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+	// gets sp_playlist pointer from given object
+    ObjectHandle<sp_playlist>* playlist = ObjectHandle<sp_playlist>::Unwrap(args[0]);
+
+	int numSubscribers = sp_playlist_num_subscribers(playlist->pointer);
+
+	return scope.Close(Number::New(numSubscribers));
+}
+
+
 void nsp::init_playlist(Handle<Object> target) {
 	NODE_SET_METHOD(target, "playlist_is_loaded", Playlist_Is_Loaded);
 	NODE_SET_METHOD(target, "playlist_name", Playlist_Name);
 	NODE_SET_METHOD(target, "playlist_num_tracks", Playlist_Num_Tracks);
 	NODE_SET_METHOD(target, "playlist_track", Playlist_Track);
+	NODE_SET_METHOD(target, "playlist_update_subscribers", Playlist_Update_Subscribers);
+	NODE_SET_METHOD(target, "playlist_num_subscribers", Playlist_Num_Subscribers);
 }
