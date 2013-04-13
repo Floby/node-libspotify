@@ -286,7 +286,7 @@ static sp_session_callbacks spcallbacks = {
     &call_credentials_blob_updated_callback,
     &call_connectionstate_updated_callback,
     &call_scrobble_error_callback,
-    &call_private_session_mode_changed_callback,
+    &call_private_session_mode_changed_callback
 };
 
 
