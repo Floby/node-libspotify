@@ -110,7 +110,9 @@ static void read_delivered_music(uv_timer_t* handle, int status) {
         if(!afd) {
             break;
         }
-
+		
+		HandleScope scope;
+		
         sp_session* spsession = afd->session;
         ObjectHandle<sp_session>* session = (ObjectHandle<sp_session>*) sp_session_userdata(spsession);
 
@@ -125,14 +127,16 @@ static void read_delivered_music(uv_timer_t* handle, int status) {
         buffer->handle_->Set(String::New("rate"), Number::New(afd->rate));
 
         Local<Value> argv[1] = { Local<Value>::New(buffer->handle_) };
-        Handle<Value> consumed = cb->Call(Context::GetCurrent()->Global(), 1, argv);
+        Handle<Value> send_more_data = cb->Call(Context::GetCurrent()->Global(), 1, argv);
         
-		assert(consumed->IsNumber());
+		assert(send_more_data->IsBoolean());
         
         // Pause the delivery of data because we have been told that no more data can be handled, it's up to whoever told us to stop to call Session_Player_Stream_Resume to resume data
-        if (consumed->ToNumber()->Int32Value() == 0) {
+        if (!send_more_data->ToBoolean()->Value()) {
 			pause_delivery = 1;
         }
+        
+        scope.Close(Undefined());
     }
 
     return;
