@@ -12,9 +12,12 @@
   ],
   "version": "0.1.0",
   "maintainers": [
-    { "name": "Florent Jaby", "email": "florent.jaby@gmail.com" }
+    {
+      "name": "Florent Jaby",
+      "email": "florent.jaby@gmail.com"
+    }
   ],
-  "homepage":"http://projects.flo.by/node-libspotify/",
+  "homepage": "http://projects.flo.by/node-libspotify/",
   "bugs": {
     "url": "https://github.com/floby/node-libspotify/issues"
   },
@@ -26,10 +29,10 @@
     "node": "~0.8.0"
   },
   "dependencies": {
-    "bindings": "~1.0.0",
-    "i":"~0.3",
-    "format":"0.1",
-    "backoff":"~2.0"
+    "bindings": "~1.1.0",
+    "i": "~0.3",
+    "format": "0.1",
+    "backoff": "~2.0"
   },
   "devDependencies": {
     "nodeunit": "~0.7",

@@ -40,4 +40,4 @@ extern "C" {
 }
 
 
-NODE_MODULE(libspotify, init);
+NODE_MODULE(spotify, init);

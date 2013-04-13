@@ -3,7 +3,7 @@ language: node_js
 before_install: sh scripts/travis-install.sh
 before_script: sh scripts/travis-setup.sh
 node_js:
-- 0.8
+- '0.10'
 env:
 - [
     { secure: "kp+fKUY8GqjvIQpEK4VGf8bjVJj6jAYJ+FzPRj9ArgNNpANtuiXusvKkFHyo\nDkowpc0/2Kw6KO0Mqn6boVzK2XkIaxI92c0MUi7/OiwtkBfiYwhMWot6Aedf\nT6feSVpqIrvTOmDZiZxz3zeDfBf+0f7ilToy/eKwcIGxdr5secI=" },

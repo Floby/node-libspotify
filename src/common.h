@@ -19,6 +19,7 @@
 #ifndef NSP_COMMON_H
 #define NSP_COMMON_H
 
+#include <string.h>
 #include <libspotify/api.h>
 #include <node.h>
 #include <node_buffer.h>
