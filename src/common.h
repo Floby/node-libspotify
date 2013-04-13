@@ -148,8 +148,15 @@ namespace nsp {
      * init the link related functions to the target module exports
      */
     void init_link(v8::Handle<v8::Object> target);
-
-
+    /**
+     * init the playlistcontainer related functions to the target module exports
+     */
+    void init_playlistcontainer(v8::Handle<v8::Object> target);
+	/**
+	 * init the playlist related functions to the target module exports
+	 */
+    void init_playlist(v8::Handle<v8::Object> target);
+    
     /**
      * This utility class allows to keep track of a C pointer that we attached
      * to a JS object. It differs from node's ObjectWrap in the fact that it
@@ -230,7 +237,6 @@ namespace nsp {
         ObjectHandle<T>* ptr = node::ObjectWrap::Unwrap<ObjectHandle<T> >(handle);
         return ptr;
     }
-
 }
 
 #endif /* NSP_COMMON_H */
