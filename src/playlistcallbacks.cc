@@ -217,6 +217,18 @@ static void call_track_message_changed_callback(sp_playlist* pl, int position, c
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__playlist__callbacks.html
  */
 static void call_subscribers_changed_callback(sp_playlist* pl, void* userdata) {
+	ObjectHandle<sp_playlist>* playlist = (ObjectHandle<sp_playlist>*)userdata;
+    
+    Handle<Object> o = playlist->object;
+    Handle<Value> cbv = o->Get(String::New("subscribers_changed"));
+    if(!cbv->IsFunction()) {
+        return;
+    }
+
+    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+    const unsigned int argc = 0;
+    Local<Value> argv[argc] = {};
+    cb->Call(Context::GetCurrent()->Global(), argc, argv);
 }
 
 static sp_playlist_callbacks nsp_playlist_callbacks = {
