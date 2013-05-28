@@ -12,10 +12,10 @@ exports.links = {
         })
     },
     'test ready fired': timed(20000, function(test) {
-        var track = sp.Track.getFromUrl('spotify:track:6H5NpNmdThi0mp6oRFMu5p');
-        test.ok(!track.isReady(), 'Track should not be loaded yet');
-        track.on('ready', function() {
+        var track = sp.Track.getFromUrl('spotify:track:1PtgkkCdJ9rGNN2vHkBDdp');
+        track.whenReady(function() {
             test.ok(true);
+            test.equal(track.name, 'Qwerty Finger', "Track should be Qwerty Finger");
             test.done();
         });
     })
