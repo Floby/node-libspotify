@@ -11,7 +11,7 @@ exports.links = {
             cb();
         })
     },
-    'test ready fired': timed(20000, function(test) {
+    'test ready fired': timed(15000, function(test) {
         var track = sp.Track.getFromUrl('spotify:track:1PtgkkCdJ9rGNN2vHkBDdp');
         track.whenReady(function() {
             test.ok(true);
