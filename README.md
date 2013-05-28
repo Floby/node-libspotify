@@ -102,3 +102,10 @@ TODO
 ====
 
 * Bind to the rest of the API...
+
+
+
+Credits
+=======
+
+Thanks to [IainCole](https://github.com/IainCole/node-libspotify) for is help on the playlist subsystem.
