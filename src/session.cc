@@ -17,6 +17,7 @@
  */
 
 #include "common.h"
+#include "playlistcallbacks.cc"
 #include <stdlib.h>
 
 using namespace v8;
@@ -80,6 +81,19 @@ static void call_logged_out_callback(sp_session* session) {
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  */
 static void call_metadata_updated_callback(sp_session* session) {
+  	ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    Handle<Object> o = s->object;
+    Handle<Value> cbv = o->Get(String::New("metadata_updated"));
+    if(!cbv->IsFunction()) {
+        return;
+    }
+
+    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+    const unsigned int argc = 0;
+    Local<Value> argv[argc] = {};
+    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+
+    return;
 }
 
 /**
@@ -145,6 +159,19 @@ extern int call_music_delivery_callback(sp_session* session, const sp_audioforma
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  */
 static void call_play_token_lost_callback(sp_session* session) {
+	ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    Handle<Object> o = s->object;
+    Handle<Value> cbv = o->Get(String::New("play_token_lost"));
+    if(!cbv->IsFunction()) {
+        return;
+    }
+
+    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+    const unsigned int argc = 0;
+    Local<Value> argv[argc] = {};
+    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+
+    return;
 }
 
 /**
@@ -157,22 +184,9 @@ static void call_log_message_callback(sp_session* session, const char* data) {
 /**
  * spotify callback for the end_of_track event.
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ * implemented in player.cc
  */
-static void call_end_of_track_callback(sp_session* session) {
-    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
-    Handle<Object> o = s->object;
-    Handle<Value> cbv = o->Get(String::New("end_of_track"));
-    if(!cbv->IsFunction()) {
-        return;
-    }
-
-    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
-    const unsigned int argc = 0;
-    Local<Value> argv[argc] = {};
-    cb->Call(Context::GetCurrent()->Global(), argc, argv);
-
-    return;
-}
+extern void call_end_of_track_callback(sp_session* session);
 
 /**
  * spotify callback for the streaming_error event.
@@ -272,8 +286,11 @@ static sp_session_callbacks spcallbacks = {
     &call_credentials_blob_updated_callback,
     &call_connectionstate_updated_callback,
     &call_scrobble_error_callback,
-    &call_private_session_mode_changed_callback,
+    &call_private_session_mode_changed_callback
 };
+
+
+
 
 /**
  * JS session_config implementation. This just creates a sp_session_config struct
@@ -444,6 +461,30 @@ static Handle<Value> Session_Process_Events(const Arguments& args) {
     return scope.Close(Number::New(next_timeout));
 }
 
+/**
+ * JS session_playlistcontainer implementation. This function unwraps the session handle
+ * and calls sp_session_playlistcontainer. this will return the sp_playlistcontainer for the currently logged in user
+ */
+static Handle<Value> Session_PlaylistContainer(const Arguments& args) {
+    HandleScope scope;
+
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+
+    sp_playlistcontainer* spplaylistcontainer = sp_session_playlistcontainer(session->pointer);
+       
+    ObjectHandle<sp_playlistcontainer>* playlistcontainer = new ObjectHandle<sp_playlistcontainer>("sp_playlistcontainer");
+    playlistcontainer->pointer = spplaylistcontainer;
+       
+	// actually call sp_playlistcontainer_add_callbacks
+    sp_error error = sp_playlistcontainer_add_callbacks(spplaylistcontainer, &nsp_playlistcontainer_callbacks, playlistcontainer);
+	NSP_THROW_IF_ERROR(error);
+   
+    return scope.Close(playlistcontainer->object);
+}
+
 void nsp::init_session(Handle<Object> target) {
     NODE_SET_METHOD(target, "session_config", Session_Config);
     NODE_SET_METHOD(target, "session_create", Session_Create);
@@ -451,4 +492,5 @@ void nsp::init_session(Handle<Object> target) {
     NODE_SET_METHOD(target, "session_login", Session_Login);
     NODE_SET_METHOD(target, "session_logout", Session_Logout);
     NODE_SET_METHOD(target, "session_process_events", Session_Process_Events);
+    NODE_SET_METHOD(target, "session_playlistcontainer", Session_PlaylistContainer);
 }

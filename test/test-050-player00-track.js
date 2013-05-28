@@ -37,12 +37,6 @@ exports.setUp = function(cb) {
     }
 };
 
-//exports.setUp = function(cb) {
-    //testutil.getDefaultTestSession(function(s) {
-        //session = s;
-        //cb();
-    //})
-//};
 exports.testPlaySingleGuillemotsTrack = function(test) {
     var search = new sp.Search('artist:"Guillemots" track:"Fleet"');
     var f = fs.createWriteStream('/tmp/node-libspotify/guillemots.raw');
@@ -73,7 +67,7 @@ exports.testPlaySingleGuillemotsTrack = function(test) {
                     f.end();
                     test.ok(got_data, "we should have received some data from the player");
                     test.done();
-                }, 2000);
+                }, 5000);
             });
         }, /* catch */ function(e) {
             test.done(e);
@@ -110,7 +104,7 @@ exports.testPlaySingleAlJArreauTrack = function(test) {
                     f.end();
                     test.ok(got_data, "we should have received some data from the player");
                     test.done();
-                }, 2000);
+                }, 5000);
             });
         }, /* catch */ function(e) {
             test.done(e);

@@ -12,6 +12,7 @@
         "src/search.cc",
         "src/session.cc",
         "src/track.cc",
+		"src/playlist.cc"
       ],
       "cflags": ["-Wall"],
       "conditions" : [

@@ -33,6 +33,9 @@ extern "C" {
         nsp::init_search(target);
         nsp::init_session(target);
         nsp::init_track(target);
+        nsp::init_playlistcontainer(target);
+        nsp::init_playlist(target);
+
     }
 }
 
