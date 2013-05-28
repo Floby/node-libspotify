@@ -31,7 +31,9 @@ static audio_fifo_t g_audiofifo;
 static int pause_delivery;
 
 /**
- * spotify callback for the end_of_track event. It's in here because at some point we'll need to be able to check the audio buffer to see if it's been sent fully before sending the end_of_track event
+ * spotify callback for the end_of_track event. It's in here because at some point we'll need
+ * to be able to check the audio buffer to see if it's been sent fully before
+ * sending the end_of_track event
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  */
 extern void call_end_of_track_callback(sp_session* session) {
@@ -131,7 +133,8 @@ static void read_delivered_music(uv_timer_t* handle, int status) {
         
 		assert(send_more_data->IsBoolean());
         
-        // Pause the delivery of data because we have been told that no more data can be handled, it's up to whoever told us to stop to call Session_Player_Stream_Resume to resume data
+        // Pause the delivery of data because we have been told that no more data can be handled,
+        // it's up to whoever told us to stop to call Session_Player_Stream_Resume to resume data
         if (!send_more_data->ToBoolean()->Value()) {
 			pause_delivery = 1;
         }
