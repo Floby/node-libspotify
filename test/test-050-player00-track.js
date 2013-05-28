@@ -37,12 +37,6 @@ exports.setUp = function(cb) {
     }
 };
 
-//exports.setUp = function(cb) {
-    //testutil.getDefaultTestSession(function(s) {
-        //session = s;
-        //cb();
-    //})
-//};
 exports.testPlaySingleGuillemotsTrack = function(test) {
     var search = new sp.Search('artist:"Guillemots" track:"Fleet"');
     var f = fs.createWriteStream('/tmp/node-libspotify/guillemots.raw');

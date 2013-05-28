@@ -24,6 +24,7 @@ exports.testEndOfShortTrack = function(test) {
             called_end = true;
             player.stop();
         });
+        player.on('data', function() {});
         setTimeout(function() {
             test.ok(called_end);
             player.stop();
