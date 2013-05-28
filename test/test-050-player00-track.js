@@ -67,7 +67,7 @@ exports.testPlaySingleGuillemotsTrack = function(test) {
                     f.end();
                     test.ok(got_data, "we should have received some data from the player");
                     test.done();
-                }, 2000);
+                }, 5000);
             });
         }, /* catch */ function(e) {
             test.done(e);
@@ -104,7 +104,7 @@ exports.testPlaySingleAlJArreauTrack = function(test) {
                     f.end();
                     test.ok(got_data, "we should have received some data from the player");
                     test.done();
-                }, 2000);
+                }, 5000);
             });
         }, /* catch */ function(e) {
             test.done(e);

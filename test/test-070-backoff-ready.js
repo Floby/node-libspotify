@@ -1,5 +1,6 @@
 var sp = require('../lib/libspotify');
 var testutil = require('./util');
+var timed = testutil.timed;
 
 var session = null;
 
@@ -10,18 +11,14 @@ exports.links = {
             cb();
         })
     },
-    'test ready fired': function(test) {
-        var track = sp.Track.getFromUrl('spotify:track:0UTb7djhwT0nUqcSFs1ITT');
+    'test ready fired': timed(20000, function(test) {
+        var track = sp.Track.getFromUrl('spotify:track:6H5NpNmdThi0mp6oRFMu5p');
         test.ok(!track.isReady(), 'Track should not be loaded yet');
-        var ready = false;
         track.on('ready', function() {
-            ready = true;
-        });
-        setTimeout(function() {
-            test.ok(ready, 'track should be loaded');
+            test.ok(true);
             test.done();
-        }, 1000);
-    },
+        });
+    })
 };
 
 

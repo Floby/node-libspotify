@@ -22,3 +22,20 @@ exports.getDefaultTestSession = function(cb) {
         cb(session);
     });
 }
+
+exports.timed = function(timeout, cb) {
+    return function(test) {
+        var to = setTimeout(function() {
+            test.fail('test timed out after ' + timeout.toLocaleString() + 'ms');
+            test.done();
+        }, timeout);
+
+        var fakeTest = Object.create(test, {});
+        fakeTest.done = function() {
+            clearTimeout(to);
+            test.done();
+        }
+
+        cb(fakeTest);
+    } 
+}
