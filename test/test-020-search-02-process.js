@@ -9,7 +9,7 @@ exports.setUp = function(cb) {
     testutil.getDefaultTestSession(function(s) {
         session = s;
         cb();
-    })
+    });
 };
 
 exports.testGetTrackFromSearchResult = function(test) {
@@ -26,5 +26,4 @@ exports.testGetTrackFromSearchResult = function(test) {
         });
         test.done();
     });
-}
-
+};

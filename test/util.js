@@ -1,7 +1,8 @@
 var sp = require('../lib/libspotify');
 var cred = require('../spotify_key/passwd');
 
-var session = null
+var session = null;
+
 exports.getDefaultTestSession = function(cb) {
     if(session instanceof sp.Session) {
         if(session.isLoggedIn()) {
@@ -21,7 +22,7 @@ exports.getDefaultTestSession = function(cb) {
         if(err) throw err;
         cb(session);
     });
-}
+};
 
 exports.timed = function(timeout, cb) {
     return function(test) {
@@ -34,8 +35,8 @@ exports.timed = function(timeout, cb) {
         fakeTest.done = function() {
             clearTimeout(to);
             test.done();
-        }
+        };
 
         cb(fakeTest);
-    } 
-}
+    };
+};

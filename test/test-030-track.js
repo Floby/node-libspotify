@@ -8,7 +8,7 @@ exports.track = {
         testutil.getDefaultTestSession(function(s) {
             session = s;
             cb();
-        })
+        });
     },
     'attributes are mapped': function(test) {
         var search = new sp.Search('artist:"Guillemots" track:"Fleet"');
@@ -28,7 +28,7 @@ exports.track = {
             test.equal(typeof first.popularity, 'number', 'Popularity should be a number');
             test.ok(first.popularity >= 0, 'Popularity should be greater than zero');
             test.ok(first.popularity <= 100, 'Popularity should be less than 100');
-            
+
             test.doesNotThrow(function() {
                 var starred = first.isStarred();
                 first.star();
@@ -41,5 +41,3 @@ exports.track = {
         });
     }
 };
-
-

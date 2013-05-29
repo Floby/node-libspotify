@@ -8,7 +8,7 @@ exports.links = {
         testutil.getDefaultTestSession(function(s) {
             session = s;
             cb();
-        })
+        });
     },
     'track link from search': function(test) {
         var search = new sp.Search('artist:"Guillemots" track:"Fleet"');
@@ -17,7 +17,7 @@ exports.links = {
             var first = search.tracks[0];
             test.doesNotThrow(function() {
                 first.getUrl();
-            }, URIError, 'getting a url from a track should not throw')
+            }, URIError, 'getting a url from a track should not throw');
             test.equal(typeof first.getUrl(), 'string', 'the url should be a string');
             test.equal(first.getUrl(), 'spotify:track:2Uqs7Gi9F0BHg3H7yhbpWm', 'the track should be this one');
             test.done();
@@ -41,7 +41,7 @@ exports.links = {
         var track = sp.Track.getFromUrl('spotify:track:2Uqs7Gi9F0BHg3H7yhbpWm');
         track.on('ready', function() {
             var artist = track.artist;
-            test.ok(artist instanceof sp.Artist, 'artist should be an instance of Artist')
+            test.ok(artist instanceof sp.Artist, 'artist should be an instance of Artist');
             test.equal('Guillemots', artist.name, 'this should be Guillemots');
             test.equal(typeof artist.getUrl(), 'string', 'url should be a string');
             test.done();
@@ -54,8 +54,5 @@ exports.links = {
             test.equal('Guillemots', track.name, 'this should be a guillemots track');
             test.done();
         });
-    },
+    }
 };
-
-
-

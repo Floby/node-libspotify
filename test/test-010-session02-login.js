@@ -8,10 +8,10 @@ exports.testLoginDoesntThrow = function(test) {
     session.name = 'bidule';
     test.doesNotThrow(function() {
         session.login('login', 'password');
-    })
+    });
     session.close();
     test.done();
-}
+};
 exports.testLoginIsSucessful = function(test) {
     var session = new sp.Session({
         applicationKey: __dirname + '/../spotify_key/spotify_appkey.key'
@@ -26,4 +26,4 @@ exports.testLoginIsSucessful = function(test) {
             test.done();
         });
     });
-}
+};

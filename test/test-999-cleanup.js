@@ -5,8 +5,7 @@ exports["Not actually a test, just cleaning up"] = function(test) {
         s.logout(function() {
             s.close();
             test.done();
-        })
+        });
     });
 
-}
-
+};

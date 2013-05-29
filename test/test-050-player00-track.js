@@ -26,14 +26,14 @@ exports.setUp = function(cb) {
             testutil.getDefaultTestSession(function(s) {
                 session = s;
                 cb();
-            })
+            });
         });
     }
     else {
         testutil.getDefaultTestSession(function(s) {
             session = s;
             cb();
-        })
+        });
     }
 };
 
@@ -71,6 +71,6 @@ exports.testPlaySingleAlJArreauTrack = function(test) {
             });
         }, /* catch */ function(e) {
             test.done(e);
-        })
+        });
     });
-}
+};
