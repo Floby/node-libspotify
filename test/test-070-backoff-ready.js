@@ -9,7 +9,7 @@ exports.links = {
         testutil.getDefaultTestSession(function(s) {
             session = s;
             cb();
-        })
+        });
     },
     'test ready fired': timed(15000, function(test) {
         var track = sp.Track.getFromUrl('spotify:track:1PtgkkCdJ9rGNN2vHkBDdp');
@@ -20,7 +20,3 @@ exports.links = {
         });
     })
 };
-
-
-
-

@@ -8,13 +8,13 @@ exports.testInstanciatingSessionWithAppKeyPath = function(test) {
         });
     }, "Opening a session with a valid spotify_key_app should not throw");
     test.done();
-}
+};
 exports.testOnlyOneSession = function(test) {
     test.throws(function() {
         var s = new sp.Session({});
     });
     test.done();
-}
+};
 exports.testStopSession = function(test) {
    test.doesNotThrow(function() {
        session.close();
@@ -23,5 +23,4 @@ exports.testStopSession = function(test) {
    test.ok(!session.isOpen(), 'Session isOpen should return false');
 
    test.done();
-}
-
+};
