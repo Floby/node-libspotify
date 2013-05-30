@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Floby/node-libspotify.png)](https://travis-ci.org/Floby/node-libspotify)
+[![Build Status](https://travis-ci.org/Floby/node-libspotify.png?branch=master)](https://travis-ci.org/Floby/node-libspotify?branch=master)
 
 node-libspotify
 ===============
