@@ -141,6 +141,40 @@ static Handle<Value> Link_As_Playlist(const Arguments& args) {
 }
 
 
+static Handle<Value> Link_Type(const Arguments& args) {
+    HandleScope scope;
+    char* type = NULL;
+
+    // test arguments sanity
+    assert(args.Length() == 1);
+    assert(args[0]->IsString());
+
+    String::Utf8Value url(args[0]);
+    sp_link* link = sp_link_create_from_string(*url);
+    if(!link) {
+        return scope.Close(Boolean::New(false));
+    }
+
+    switch(sp_link_type(link)) {
+        case SP_LINKTYPE_PLAYLIST:
+            type = "playlist";
+            break;
+        case SP_LINKTYPE_ARTIST:
+            type = "artist";
+            break;
+        case SP_LINKTYPE_TRACK:
+            type = "track";
+            break;
+        default:
+            return scope.Close(Boolean::New(false));
+            break;
+    }
+
+    return scope.Close(String::New(type));
+}
+
+
+
 void nsp::init_link(Handle<Object> target) {
     NODE_SET_METHOD(target, "link_create_from_track", Link_Create_From_Track);
     NODE_SET_METHOD(target, "link_create_from_artist", Link_Create_From_Artist);
@@ -148,5 +182,5 @@ void nsp::init_link(Handle<Object> target) {
     NODE_SET_METHOD(target, "link_as_track", Link_As_Track);
     NODE_SET_METHOD(target, "link_as_artist", Link_As_Artist);
     NODE_SET_METHOD(target, "link_as_playlist", Link_As_Playlist);
-
+    NODE_SET_METHOD(target, "link_type", Link_Type);
 }
