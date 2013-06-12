@@ -143,7 +143,7 @@ static Handle<Value> Link_As_Playlist(const Arguments& args) {
 
 static Handle<Value> Link_Type(const Arguments& args) {
     HandleScope scope;
-    char* type = NULL;
+    const char* type = NULL;
 
     // test arguments sanity
     assert(args.Length() == 1);
