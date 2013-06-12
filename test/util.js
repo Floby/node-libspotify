@@ -40,3 +40,16 @@ exports.timed = function(timeout, cb) {
         cb(fakeTest);
     };
 };
+
+Function.prototype.timed = function(timeout) {
+    return exports.timed(timeout, this);
+}
+
+Function.prototype.caught = function() {
+    var self = this;
+    return function(test) {
+        test.doesNotThrow(function() {
+            self(test);
+        });
+    }
+}
