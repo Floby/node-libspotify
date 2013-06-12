@@ -26,7 +26,7 @@ exports.links = {
     'get track from link': function(test) {
         var track = sp.Track.getFromUrl('spotify:track:2Uqs7Gi9F0BHg3H7yhbpWm');
         test.ok(track instanceof sp.Track, 'the returned object should be a track');
-        track.on('ready', function() {
+        track.whenReady(function() {
             test.equal('Guillemots', track.artist, 'this should be a guillemots track');
             test.equal('Fleet', track.name, 'this should be a guillemots track named Fleet');
             test.done();
@@ -34,8 +34,10 @@ exports.links = {
     },
     'get http url from track': function(test) {
         var track = sp.Track.getFromUrl('spotify:track:2Uqs7Gi9F0BHg3H7yhbpWm');
-        test.equal(track.getHttpUrl(), 'http://open.spotify.com/track/2Uqs7Gi9F0BHg3H7yhbpWm');
-        test.done();
+        track.whenReady(function () {
+            test.equal(track.getHttpUrl(), 'http://open.spotify.com/track/2Uqs7Gi9F0BHg3H7yhbpWm');
+            test.done();
+        })
     },
     'throws when getting object from wrong type url': function(test) {
         test.throws(function() {
