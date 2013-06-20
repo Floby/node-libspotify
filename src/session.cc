@@ -252,6 +252,13 @@ static void call_connectionstate_updated_callback(sp_session* session) {
 }
 
 /**
+ * spotify callback for the connectionstate_updated event.
+ * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
+ */
+static void call_unaccepted_licenses_updated_callback(sp_session* session) {
+}
+
+/**
  * spotify callback for the scrobble_error event.
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  */
@@ -285,6 +292,7 @@ static sp_session_callbacks spcallbacks = {
     &call_offline_error_callback,
     &call_credentials_blob_updated_callback,
     &call_connectionstate_updated_callback,
+    &call_unaccepted_licenses_updated_callback,
     &call_scrobble_error_callback,
     &call_private_session_mode_changed_callback
 };
