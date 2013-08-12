@@ -10,7 +10,7 @@ _This is still very alpha, but you can already play around I suppose_
 Install & test
 --------------
 
-Please note that you must have the libspotify library installed on your system
+Please note that you must have node  v0.10.0 or above, and the libspotify library installed on your system
 you can get it from [here](https://developer.spotify.com/technologies/libspotify/).
 
 You must provide your own spotify application key, because I'm not giving mine away :]
