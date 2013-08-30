@@ -81,7 +81,7 @@ static void call_logged_out_callback(sp_session* session) {
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  */
 static void call_metadata_updated_callback(sp_session* session) {
-  	ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
     Handle<Object> o = s->object;
     Handle<Value> cbv = o->Get(String::New("metadata_updated"));
     if(!cbv->IsFunction()) {
@@ -159,7 +159,7 @@ extern int call_music_delivery_callback(sp_session* session, const sp_audioforma
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  */
 static void call_play_token_lost_callback(sp_session* session) {
-	ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
     Handle<Object> o = s->object;
     Handle<Value> cbv = o->Get(String::New("play_token_lost"));
     if(!cbv->IsFunction()) {
@@ -404,10 +404,11 @@ static Handle<Value> Session_Login(const Arguments& args) {
     HandleScope scope;
 
     // check parameters sanity
-    assert(args.Length() == 3);
+    assert(args.Length() == 4);
     assert(args[0]->IsObject());
     assert(args[1]->IsString());
     assert(args[2]->IsString());
+    assert(args[3]->IsBoolean());
 
     // unwrap the session from the given object
     ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
@@ -417,9 +418,31 @@ static Handle<Value> Session_Login(const Arguments& args) {
         session->pointer,
         *(String::Utf8Value(args[1]->ToString())),
         *(String::Utf8Value(args[2]->ToString())),
-        false,
+        args[3]->BooleanValue(),
         NULL
     );
+    NSP_THROW_IF_ERROR(error);
+
+    return scope.Close(Undefined());
+}
+
+/*
+ * JS session_login implementation. This function unwraps the session from the given object
+ * and calls sp_session_login with the given credentials
+ * TODO support for remember_me and credential blobs
+ */
+static Handle<Value> Session_Relogin(const Arguments& args) {
+    HandleScope scope;
+
+    // check parameters sanity
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    // unwrap the session from the given object
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+
+    // actually call sp_session_relogin
+    sp_error error = sp_session_relogin( session->pointer );
     NSP_THROW_IF_ERROR(error);
 
     return scope.Close(Undefined());
@@ -490,6 +513,7 @@ void nsp::init_session(Handle<Object> target) {
     NODE_SET_METHOD(target, "session_create", Session_Create);
     NODE_SET_METHOD(target, "session_release", Session_Release);
     NODE_SET_METHOD(target, "session_login", Session_Login);
+    NODE_SET_METHOD(target, "session_relogin", Session_Relogin);
     NODE_SET_METHOD(target, "session_logout", Session_Logout);
     NODE_SET_METHOD(target, "session_process_events", Session_Process_Events);
     NODE_SET_METHOD(target, "session_playlistcontainer", Session_PlaylistContainer);
