@@ -26,10 +26,10 @@
     "url": "https://github.com/Floby/node-libspotify.git"
   },
   "engines": {
-    "node": "~0.8.0"
+    "node": ">0.10.0"
   },
   "dependencies": {
-    "bindings": "~1.1.0",
+    "bindings": "~1.1.1",
     "i": "~0.3",
     "format": "0.1",
     "backoff": "~2.0"
