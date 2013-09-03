@@ -25,5 +25,44 @@ exports.album = {
 
             return test.done();
         });
+    },
+    'cover image - normal size': function(test) {
+        var search = new sp.Search('artist:"Guillemots" track:"Fleet"');
+        search.execute(function() {
+            test.ok(search.tracks.length > 0, "the search should return at least one result");
+            var first = search.tracks[0];
+            var album = first.album;
+
+            album.coverImage(function(buffer) {
+                test.ok(buffer.length > 0);
+                return test.done();
+            });
+        });
+    },
+    'cover image - small size': function(test) {
+        var search = new sp.Search('artist:"Guillemots" track:"Fleet"');
+        search.execute(function() {
+            test.ok(search.tracks.length > 0, "the search should return at least one result");
+            var first = search.tracks[0];
+            var album = first.album;
+
+            album.smallCoverImage(function(buffer) {
+                test.ok(buffer.length > 0);
+                return test.done();
+            });
+        });
+    },
+    'cover image - large size': function(test) {
+        var search = new sp.Search('artist:"Guillemots" track:"Fleet"');
+        search.execute(function() {
+            test.ok(search.tracks.length > 0, "the search should return at least one result");
+            var first = search.tracks[0];
+            var album = first.album;
+
+            album.largeCoverImage(function(buffer) {
+                test.ok(buffer.length > 0);
+                return test.done();
+            });
+        });
     }
 };
