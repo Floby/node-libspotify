@@ -173,32 +173,25 @@ static Handle<Value> Album_Cover(const Arguments& args) {
     assert(args.Length() == 4);
     assert(args[0]->IsObject());  // sp_session
     assert(args[1]->IsObject());  // sp_album
-    assert(args[2]->IsFunction()); // callback after cover image was loaded
-    assert(args[3]->IsNumber());  // sp_image_size
+    assert(args[2]->IsNumber());  // sp_image_size
+    assert(args[3]->IsFunction()); // callback after cover image was loaded
 
     ObjectHandle<sp_session> *session = ObjectHandle<sp_session>::Unwrap(args[0]);
     ObjectHandle<sp_album> *album = ObjectHandle<sp_album>::Unwrap(args[1]);
-    Handle<Function> callback = Persistent<Function>::New(Handle<Function>::Cast(args[2]));
-    Handle<Integer> requestedImageSize = Local<Integer>::Cast(args[3]);
+    Handle<Integer> requestedImageSize = Local<Integer>::Cast(args[2]);
+    Handle<Function> callback = Persistent<Function>::New(Handle<Function>::Cast(args[3]));
 
-    sp_image_size imageSize = SP_IMAGE_SIZE_NORMAL;
-    switch(requestedImageSize->Value()) {
-        case 1:
-            imageSize = SP_IMAGE_SIZE_SMALL;
-            break;
-        case 2:
-            imageSize = SP_IMAGE_SIZE_LARGE;
-            break;
-    }
-
+    sp_image_size imageSize = static_cast<sp_image_size>(requestedImageSize->Uint32Value());
     const byte *imageId = sp_album_cover(album->pointer, imageSize);
 
     if(imageId) {
         sp_image *image = sp_image_create(session->pointer, imageId);
         sp_image_add_load_callback(image, &cb_image_loaded_album, *callback);
+        return scope.Close(Boolean::New(true));
+    } else {
+        return scope.Close(Boolean::New(false));
     }
 
-    return scope.Close(Undefined());
 }
 
 void nsp::init_album(Handle<Object> target) {
@@ -208,5 +201,8 @@ void nsp::init_album(Handle<Object> target) {
     NODE_SET_METHOD(target, "album_type", Album_Type);
     NODE_SET_METHOD(target, "album_artist", Album_Artist);
     NODE_SET_METHOD(target, "album_cover", Album_Cover);
+    target->Set(v8::String::NewSymbol("SP_IMAGE_SIZE_SMALL"), v8::Int32::New(static_cast<int>(SP_IMAGE_SIZE_SMALL)), ReadOnly);
+    target->Set(v8::String::NewSymbol("SP_IMAGE_SIZE_NORMAL"), v8::Int32::New(static_cast<int>(SP_IMAGE_SIZE_NORMAL)), ReadOnly);
+    target->Set(v8::String::NewSymbol("SP_IMAGE_SIZE_LARGE"), v8::Int32::New(static_cast<int>(SP_IMAGE_SIZE_LARGE)), ReadOnly);
 }
 
