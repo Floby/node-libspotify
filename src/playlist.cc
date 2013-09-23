@@ -61,8 +61,76 @@ static Handle<Value> PlaylistContainer_Num_Playlists(const Arguments& args) {
 
     // actually call sp_playlistcontainer_num_playlists
     int numPlaylists = sp_playlistcontainer_num_playlists(playlistcontainer->pointer);
-	
-	return scope.Close(Number::New(numPlaylists));
+
+    return scope.Close(Number::New(numPlaylists));
+}
+
+/**
+ * JS playlist type implementation.
+ */
+static Handle<Value> PlaylistContainer_Playlist_Type(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 2);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsNumber());
+
+    // gets sp_playlistcontainer pointer from given object
+    ObjectHandle<sp_playlistcontainer>* playlistcontainer = ObjectHandle<sp_playlistcontainer>::Unwrap(args[0]);
+
+    int index = args[1]->ToNumber()->Int32Value();
+
+    // actually call sp_playlistcontainer_playlist_type
+    sp_playlist_type playlistType = sp_playlistcontainer_playlist_type(playlistcontainer->pointer, index);
+
+    return scope.Close(Number::New(static_cast<int>(playlistType)));
+}
+
+/**
+ * JS playlist folder id implementation.
+ */
+static Handle<Value> PlaylistContainer_Playlist_Folder_ID(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 2);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsNumber());
+
+    // gets sp_playlistcontainer pointer from given object
+    ObjectHandle<sp_playlistcontainer>* playlistcontainer = ObjectHandle<sp_playlistcontainer>::Unwrap(args[0]);
+
+    int index = args[1]->ToNumber()->Int32Value();
+
+    // actually call sp_playlistcontainer_playlist_folder_id
+    sp_uint64 playlistFolderId = sp_playlistcontainer_playlist_folder_id(playlistcontainer->pointer, index);
+
+    return scope.Close(Number::New(playlistFolderId));
+}
+
+/**
+ * JS playlist folder name implementation.
+ */
+static Handle<Value> PlaylistContainer_Playlist_Folder_Name(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 2);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsNumber());
+
+    // gets sp_playlistcontainer pointer from given object
+    ObjectHandle<sp_playlistcontainer>* playlistcontainer = ObjectHandle<sp_playlistcontainer>::Unwrap(args[0]);
+
+    int index = args[1]->ToNumber()->Int32Value();
+    char nameChars[256];
+
+    // actually call sp_playlistcontainer_playlist_folder_name
+    sp_error error = sp_playlistcontainer_playlist_folder_name(playlistcontainer->pointer, index, nameChars, sizeof(nameChars));
+    NSP_THROW_IF_ERROR(error);
+
+    return scope.Close(String::New(nameChars));
 }
 
 /**
@@ -90,23 +158,30 @@ static Handle<Value> PlaylistContainer_Playlist(const Arguments& args) {
 
     // actually call sp_playlistcontainer_playlist
     sp_playlist* spplaylist = sp_playlistcontainer_playlist(playlistcontainer->pointer, index);
-    
+
     // Set the playlist in RAM
     sp_playlist_set_in_ram(session->pointer, spplaylist, true);
-    
+
     ObjectHandle<sp_playlist>* playlist = new ObjectHandle<sp_playlist>("sp_playlist");
     playlist->pointer = spplaylist;
-    
+
     sp_error error = sp_playlist_add_callbacks(spplaylist, &nsp_playlist_callbacks, playlist);
 	NSP_THROW_IF_ERROR(error);
-	
+
 	return scope.Close(playlist->object);
 }
 
 void nsp::init_playlistcontainer(Handle<Object> target) {
-  NODE_SET_METHOD(target, "playlistcontainer_is_loaded", PlaylistContainer_Is_Loaded);  
+  NODE_SET_METHOD(target, "playlistcontainer_is_loaded", PlaylistContainer_Is_Loaded);
   NODE_SET_METHOD(target, "playlistcontainer_num_playlists", PlaylistContainer_Num_Playlists);
+  NODE_SET_METHOD(target, "playlistcontainer_playlist_type", PlaylistContainer_Playlist_Type);
+  NODE_SET_METHOD(target, "playlistcontainer_playlist_folder_id", PlaylistContainer_Playlist_Folder_ID);
+  NODE_SET_METHOD(target, "playlistcontainer_playlist_folder_name", PlaylistContainer_Playlist_Folder_Name);
   NODE_SET_METHOD(target, "playlistcontainer_playlist", PlaylistContainer_Playlist);
+  target->Set(v8::String::NewSymbol("SP_PLAYLIST_TYPE_PLAYLIST"), v8::Int32::New(static_cast<int>(SP_PLAYLIST_TYPE_PLAYLIST)), ReadOnly);
+  target->Set(v8::String::NewSymbol("SP_PLAYLIST_TYPE_START_FOLDER"), v8::Int32::New(static_cast<int>(SP_PLAYLIST_TYPE_START_FOLDER)), ReadOnly);
+  target->Set(v8::String::NewSymbol("SP_PLAYLIST_TYPE_END_FOLDER"), v8::Int32::New(static_cast<int>(SP_PLAYLIST_TYPE_END_FOLDER)), ReadOnly);
+  target->Set(v8::String::NewSymbol("SP_PLAYLIST_TYPE_PLACEHOLDER"), v8::Int32::New(static_cast<int>(SP_PLAYLIST_TYPE_PLACEHOLDER)), ReadOnly);
 }
 
 /*
@@ -166,7 +241,7 @@ static Handle<Value> Playlist_Num_Tracks(const Arguments& args) {
 
     // actually call sp_playlist_num_tracks
     int numTracks = sp_playlist_num_tracks(playlist->pointer);
-	
+
 	return scope.Close(Number::New(numTracks));
 }
 
@@ -191,10 +266,10 @@ static Handle<Value> Playlist_Track(const Arguments& args) {
 
     // actually call sp_playlist_track
     sp_track* sptrack = sp_playlist_track(playlist->pointer, index);
-    
+
     ObjectHandle<sp_track>* track = new ObjectHandle<sp_track>("sp_track");
     track->pointer = sptrack;
-    
+
 	return scope.Close(track->object);
 }
 
@@ -217,7 +292,7 @@ static Handle<Value> Playlist_Update_Subscribers(const Arguments& args) {
 
 	sp_error error = sp_playlist_update_subscribers(session->pointer, playlist->pointer);
 	NSP_THROW_IF_ERROR(error);
-	
+
 	return scope.Close(Undefined());
 }
 
