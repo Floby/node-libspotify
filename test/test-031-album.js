@@ -26,7 +26,7 @@ exports.album = {
             return test.done();
         });
     },
-    'cover image - normal size': function(test) {
+    'cover image - default size': function(test) {
         var search = new sp.Search('artist:"Guillemots" track:"Fleet"');
         search.execute(function() {
             test.ok(search.tracks.length > 0, "the search should return at least one result");
@@ -35,6 +35,21 @@ exports.album = {
 
             test.doesNotThrow(function () {
                 album.coverImage(function(err, buffer) {
+                    test.ok(err === null);
+                    return test.done();
+                });
+            });
+        });
+    },
+    'cover image - normal size (function)': function(test) {
+        var search = new sp.Search('artist:"Guillemots" track:"Fleet"');
+        search.execute(function() {
+            test.ok(search.tracks.length > 0, "the search should return at least one result");
+            var first = search.tracks[0];
+            var album = first.album;
+
+            test.doesNotThrow(function () {
+                album.normalCoverImage(function(err, buffer) {
                     test.ok(err === null);
                     return test.done();
                 });
