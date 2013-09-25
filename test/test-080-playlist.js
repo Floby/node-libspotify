@@ -30,7 +30,7 @@ exports.playlist = {
             }, "getting attributes should not throw");
         });
     },
-    'get tracks': timed(10000, function(test) {
+    'get tracks': function(test) {
         var playlist = sp.Playlist.getFromUrl('spotify:user:flobyiv:playlist:5ZMnMnJWGXZ9qm4gacHpQF');
         playlist.whenReady(function() {
             playlist.getTracks(function(tracks) {
@@ -43,5 +43,5 @@ exports.playlist = {
                 test.done();
             });
         });
-    })
+    }.timed(10000)
 };

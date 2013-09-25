@@ -53,3 +53,18 @@ Function.prototype.caught = function() {
         });
     }
 }
+Function.prototype.withDomain = function(withStack) {
+  var fn = this;
+  return function(test) {
+    var d = domain.create();
+    d.on('error', function(e) {
+      test.fail('test failed with ' + e.message);
+      if(withStack) {
+        console.error(e.stack)
+      }
+      test.done();
+    });
+    d.run(fn.bind(this, test));
+  }
+}
+
