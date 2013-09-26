@@ -27,6 +27,7 @@ exports.links = {
         });
     },
     "get link from track": testLink(sp.Track, 'spotify:track:4BdSLkzKO6iMVCgw7A7JBl'),
+    "get link from album": testLink(sp.Album, 'spotify:album:2UGJa9DjYhXpBDKsCTyhSh'),
     "get link from artist": testLink(sp.Artist, 'spotify:artist:4ZCLbhEKI7019HKbk5RsUq'),
     "get link from playlist": testLink(sp.Playlist, 'spotify:user:flobyiv:playlist:2t8yWR57SFWSKHtOlWr095'),
     'get artist link from artist': function(test) {
@@ -40,13 +41,21 @@ exports.links = {
         });
     },
     'get artist from link': function(test) {
-        var track = sp.Artist.getFromUrl('spotify:artist:3zD5liDjbqljSRorrrcEjs');
-        test.ok(track instanceof sp.Artist, 'the returned object should be an artist');
-        track.on('ready', function() {
-            test.equal('Guillemots', track.name, 'this should be a guillemots track');
+        var artist = sp.Artist.getFromUrl('spotify:artist:3zD5liDjbqljSRorrrcEjs');
+        test.ok(artist instanceof sp.Artist, 'the returned object should be an artist');
+        artist.on('ready', function() {
+            test.equal('Guillemots', artist.name, 'this should be the Guillemots artist');
             test.done();
         });
     },
+    'get album from link': function(test) {
+        var album = sp.Album.getFromUrl('spotify:album:2UGJa9DjYhXpBDKsCTyhSh');
+        test.ok(album instanceof sp.Album, 'the returned object should be an album');
+        album.on('ready', function () {
+            test.equal('Exile (Deluxe)', album.name, 'this should be the Exile (Deluxe) album');
+            test.done();
+        });
+    }
 };
 
 
