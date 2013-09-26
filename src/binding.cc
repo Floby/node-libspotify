@@ -27,6 +27,7 @@ extern "C" {
 
         // initializing all modules
         nsp::init_album(target);
+        nsp::init_albumbrowse(target);
         nsp::init_artist(target);
         nsp::init_link(target);
         nsp::init_player(target);
