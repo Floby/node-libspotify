@@ -145,6 +145,7 @@ namespace nsp {
      * init the artist related functions to the target module exports
      */
     void init_artist(v8::Handle<v8::Object> target);
+    void init_artistbrowse(v8::Handle<v8::Object> target);
     /**
      * init the link related functions to the target module exports
      */

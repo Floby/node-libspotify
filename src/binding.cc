@@ -29,6 +29,7 @@ extern "C" {
         nsp::init_album(target);
         nsp::init_albumbrowse(target);
         nsp::init_artist(target);
+        nsp::init_artistbrowse(target);
         nsp::init_link(target);
         nsp::init_player(target);
         nsp::init_search(target);

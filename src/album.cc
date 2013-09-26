@@ -42,6 +42,25 @@ static Handle<Value> Album_Is_Loaded(const Arguments& args) {
 }
 
 /**
+ * JS album_is_available implementation. checks if a given album is available
+ */
+static Handle<Value> Album_Is_Available(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    // gets sp_album pointer from given object
+    ObjectHandle<sp_album>* album = ObjectHandle<sp_album>::Unwrap(args[0]);
+
+    // actually call sp_album_is_available
+    bool available = sp_album_is_available(album->pointer);
+
+    return scope.Close(Boolean::New(available));
+}
+
+/**
  * JS album_name implementation. checks if a given album is loaded
  */
 static Handle<Value> Album_Name(const Arguments& args) {
@@ -196,6 +215,7 @@ static Handle<Value> Album_Cover(const Arguments& args) {
 
 void nsp::init_album(Handle<Object> target) {
     NODE_SET_METHOD(target, "album_is_loaded", Album_Is_Loaded);
+    NODE_SET_METHOD(target, "album_is_available", Album_Is_Available);
     NODE_SET_METHOD(target, "album_name", Album_Name);
     NODE_SET_METHOD(target, "album_year", Album_Year);
     NODE_SET_METHOD(target, "album_type", Album_Type);

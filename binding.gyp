@@ -6,6 +6,7 @@
         "src/album.cc",
         "src/albumbrowse.cc",
         "src/artist.cc",
+        "src/artistbrowse.cc",
         "src/audio.cc",
         "src/binding.cc",
         "src/link.cc",
