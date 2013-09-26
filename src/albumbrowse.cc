@@ -70,7 +70,7 @@ static Handle<Value> AlbumBrowse_Track(const Arguments& args) {
 
     // input
     ObjectHandle<sp_albumbrowse> *albumbrowse = ObjectHandle<sp_albumbrowse>::Unwrap(args[0]);
-    int index = args[2]->ToNumber()->Int32Value();
+    int index = args[1]->ToNumber()->Int32Value();
 
     // output
     sp_track* sptrack = sp_albumbrowse_track(albumbrowse->pointer, index);
