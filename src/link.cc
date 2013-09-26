@@ -3,7 +3,7 @@
  *
  *       Filename:  link.cc
  *
- *    Description: bindings for links subsystem 
+ *    Description: bindings for links subsystem
  *
  *        Version:  1.0
  *        Created:  07/01/2013 12:37:03
@@ -35,6 +35,24 @@ static Handle<Value> Link_Create_From_Track(const Arguments& args) {
 
     // TODO handle length in ms
     sp_link* link = sp_link_create_from_track(track->pointer, 0);
+    char url[256];
+    // TODO handle truncated urls
+    sp_link_as_string(link, url, 256);
+
+    return scope.Close(String::New(url));
+}
+
+static Handle<Value> Link_Create_From_Album(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    // gets sp_album pointer from given object
+    ObjectHandle<sp_album>* album = ObjectHandle<sp_album>::Unwrap(args[0]);
+
+    sp_link* link = sp_link_create_from_album(album->pointer);
     char url[256];
     // TODO handle truncated urls
     sp_link_as_string(link, url, 256);
@@ -96,6 +114,24 @@ static Handle<Value> Link_As_Track(const Arguments& args) {
     return scope.Close(track->object);
 }
 
+static Handle<Value> Link_As_Album(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 1);
+    assert(args[0]->IsString());
+
+    String::Utf8Value url(args[0]);
+
+    sp_link* link = sp_link_create_from_string(*url);
+    assert(sp_link_type(link) == SP_LINKTYPE_ALBUM);
+
+    ObjectHandle<sp_album>* album = new ObjectHandle<sp_album>("sp_album");
+    album->pointer = sp_link_as_album(link);
+
+    return scope.Close(album->object);
+}
+
 static Handle<Value> Link_As_Artist(const Arguments& args) {
     HandleScope scope;
 
@@ -132,7 +168,7 @@ static Handle<Value> Link_As_Playlist(const Arguments& args) {
 
     ObjectHandle<sp_playlist>* playlist = new ObjectHandle<sp_playlist>("sp_playlist");
     playlist->pointer = sp_playlist_create(session->pointer, link);
-    
+
     // Add callbacks
     sp_error error = sp_playlist_add_callbacks(playlist->pointer, &nsp_playlist_callbacks, playlist);
 	NSP_THROW_IF_ERROR(error);
@@ -162,6 +198,9 @@ static Handle<Value> Link_Type(const Arguments& args) {
         case SP_LINKTYPE_ARTIST:
             type = "artist";
             break;
+        case SP_LINKTYPE_ALBUM:
+            type = "album";
+            break;
         case SP_LINKTYPE_TRACK:
             type = "track";
             break;
@@ -177,9 +216,11 @@ static Handle<Value> Link_Type(const Arguments& args) {
 
 void nsp::init_link(Handle<Object> target) {
     NODE_SET_METHOD(target, "link_create_from_track", Link_Create_From_Track);
+    NODE_SET_METHOD(target, "link_create_from_album", Link_Create_From_Album);
     NODE_SET_METHOD(target, "link_create_from_artist", Link_Create_From_Artist);
     NODE_SET_METHOD(target, "link_create_from_playlist", Link_Create_From_Playlist);
     NODE_SET_METHOD(target, "link_as_track", Link_As_Track);
+    NODE_SET_METHOD(target, "link_as_album", Link_As_Album);
     NODE_SET_METHOD(target, "link_as_artist", Link_As_Artist);
     NODE_SET_METHOD(target, "link_as_playlist", Link_As_Playlist);
     NODE_SET_METHOD(target, "link_type", Link_Type);

@@ -28,10 +28,12 @@ exports.links = {
         }, "Getting link type from anything else than string should throw");
 
         var track_link = 'spotify:track:4BdSLkzKO6iMVCgw7A7JBl';
+        var album_link = 'spotify:album:2UGJa9DjYhXpBDKsCTyhSh';
         var artist_link = 'spotify:artist:3zD5liDjbqljSRorrrcEjs';
         var playlist_link = 'spotify:user:flobyiv:playlist:5ZMnMnJWGXZ9qm4gacHpQF';
         test.doesNotThrow(function() {
             test.equal('track', sp.getLinkType(track_link), "Link type should be 'track'");
+            test.equal('album', sp.getLinkType(album_link), "Link type should be 'album'");
             test.equal('artist', sp.getLinkType(artist_link), "Link type should be 'artist'");
             test.equal('playlist', sp.getLinkType(playlist_link), "Link type should be 'playlist'");
         }, "Getting link types should not throw");
