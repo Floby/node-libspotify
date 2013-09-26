@@ -104,3 +104,4 @@ Credits
 =======
 
 Thanks to [IainCole](https://github.com/IainCole/node-libspotify) for his help on the playlist subsystem.
+Thanks to [LinusU](https://github.com/LinusU) and [swissmanu](https://github.com/swissmanu) for their help on album cover retreivals

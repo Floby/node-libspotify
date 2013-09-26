@@ -38,7 +38,7 @@ exports.playlist = {
             }, "getting attributes should not throw");
         });
     },
-    'get tracks from URI': timed(10000, function(test) {
+    'get tracks from URI': function(test) {
         var playlist = sp.Playlist.getFromUrl('spotify:user:flobyiv:playlist:5ZMnMnJWGXZ9qm4gacHpQF');
         playlist.whenReady(function() {
             playlist.getTracks(function(tracks) {
@@ -51,8 +51,8 @@ exports.playlist = {
                 test.done();
             });
         });
-    }),
-    'get tracks from Starred': timed(40000, function(test) {
+    }.timed(10000),
+    'get tracks from Starred': function(test) {
         var playlist = session.getStarred();
         playlist.whenReady(function() {
             playlist.getTracks(function(tracks) {
@@ -65,5 +65,5 @@ exports.playlist = {
                 test.done();
             });
         });
-    })
+    }.timed(40000)
 };
