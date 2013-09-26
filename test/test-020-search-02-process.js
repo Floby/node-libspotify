@@ -27,3 +27,36 @@ exports.testGetTrackFromSearchResult = function(test) {
         test.done();
     });
 };
+
+exports.testGetAlbumFromSearchResult = function(test) {
+    var search = new sp.Search('artist:"Hurts" album:"Exile"');
+    search.trackCount = 0;
+    search.albumCount = 1;
+    search.execute(function() {
+        test.doesNotThrow(function() {
+            test.ok(search.albums.length > 0, "the search should return at least one result");
+            var first = search.albums[0];
+            test.ok(first instanceof sp.Album, "the album results should be loaded album objects");
+            test.ok(first.isReady());
+            test.equal('Hurts', first.artist, "the album should be a Hurts album");
+            test.equal('Exile (Deluxe)', first.name, "the album should be Exile (Deluxe)");
+        });
+        test.done();
+    });
+};
+
+exports.testGetArtistFromSearchResult = function(test) {
+    var search = new sp.Search('artist:"Coldplay"');
+    search.trackCount = 0;
+    search.artistCount = 1;
+    search.execute(function() {
+        test.doesNotThrow(function() {
+            test.ok(search.artists.length > 0, "the search should return at least one result");
+            var first = search.artists[0];
+            test.ok(first instanceof sp.Artist, "the artist results should be loaded artist objects");
+            test.ok(first.isReady());
+            test.equal('Coldplay', first.name, "the artist should be Coldplay");
+        });
+        test.done();
+    });
+};

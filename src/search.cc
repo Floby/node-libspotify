@@ -3,7 +3,7 @@
  *
  *       Filename:  search.cc
  *
- *    Description: bindings to the spotify search submodule 
+ *    Description: bindings to the spotify search submodule
  *
  *        Version:  1.0
  *        Created:  23/12/2012 16:59:00
@@ -107,6 +107,36 @@ static Handle<Value> Search_Num_Tracks(const Arguments& args) {
 }
 
 /**
+ * JS search_num_albums implementation.
+ */
+static Handle<Value> Search_Num_Albums(const Arguments& args) {
+    HandleScope scope;
+
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    ObjectHandle<sp_search>* search = ObjectHandle<sp_search>::Unwrap(args[0]);
+    int num = sp_search_num_albums(search->pointer);
+
+    return scope.Close(Number::New(num));
+}
+
+/**
+ * JS search_num_artists implementation.
+ */
+static Handle<Value> Search_Num_Artists(const Arguments& args) {
+    HandleScope scope;
+
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    ObjectHandle<sp_search>* search = ObjectHandle<sp_search>::Unwrap(args[0]);
+    int num = sp_search_num_artists(search->pointer);
+
+    return scope.Close(Number::New(num));
+}
+
+/**
  * JS search_track implementation. gets a track a the given index in a search result
  */
 static Handle<Value> Search_Track(const Arguments& args) {
@@ -132,8 +162,64 @@ static Handle<Value> Search_Track(const Arguments& args) {
     return scope.Close(track->object);
 }
 
+/**
+ * JS search_album implementation. gets a album a the given index in a search result
+ */
+static Handle<Value> Search_Album(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 2);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsNumber());
+
+    // gets sp_search pointer from given object
+    ObjectHandle<sp_search>* search = ObjectHandle<sp_search>::Unwrap(args[0]);
+    int index = args[1]->ToNumber()->Int32Value();
+
+    // check index is within search results range
+    assert(index >= 0);
+    assert(index < sp_search_num_albums(search->pointer));
+
+    // create new handle for this album
+    ObjectHandle<sp_album>* album = new ObjectHandle<sp_album>("sp_album");
+    album->pointer = sp_search_album(search->pointer, index);
+
+    return scope.Close(album->object);
+}
+
+/**
+ * JS search_artist implementation. gets a artist a the given index in a search result
+ */
+static Handle<Value> Search_Artist(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 2);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsNumber());
+
+    // gets sp_search pointer from given object
+    ObjectHandle<sp_search>* search = ObjectHandle<sp_search>::Unwrap(args[0]);
+    int index = args[1]->ToNumber()->Int32Value();
+
+    // check index is within search results range
+    assert(index >= 0);
+    assert(index < sp_search_num_artists(search->pointer));
+
+    // create new handle for this artist
+    ObjectHandle<sp_artist>* artist = new ObjectHandle<sp_artist>("sp_artist");
+    artist->pointer = sp_search_artist(search->pointer, index);
+
+    return scope.Close(artist->object);
+}
+
 void nsp::init_search(Handle<Object> target) {
     NODE_SET_METHOD(target, "search_create", Search_Create);
     NODE_SET_METHOD(target, "search_num_tracks", Search_Num_Tracks);
+    NODE_SET_METHOD(target, "search_num_albums", Search_Num_Albums);
+    NODE_SET_METHOD(target, "search_num_artists", Search_Num_Artists);
     NODE_SET_METHOD(target, "search_track", Search_Track);
+    NODE_SET_METHOD(target, "search_album", Search_Album);
+    NODE_SET_METHOD(target, "search_artist", Search_Artist);
 }
