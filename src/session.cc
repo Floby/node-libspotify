@@ -474,15 +474,38 @@ static Handle<Value> Session_PlaylistContainer(const Arguments& args) {
     ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
 
     sp_playlistcontainer* spplaylistcontainer = sp_session_playlistcontainer(session->pointer);
-       
+
     ObjectHandle<sp_playlistcontainer>* playlistcontainer = new ObjectHandle<sp_playlistcontainer>("sp_playlistcontainer");
     playlistcontainer->pointer = spplaylistcontainer;
-       
+
 	// actually call sp_playlistcontainer_add_callbacks
     sp_error error = sp_playlistcontainer_add_callbacks(spplaylistcontainer, &nsp_playlistcontainer_callbacks, playlistcontainer);
 	NSP_THROW_IF_ERROR(error);
-   
+
     return scope.Close(playlistcontainer->object);
+}
+
+static Handle<Value> Session_Starred_Create(const Arguments& args) {
+    HandleScope scope;
+
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
+
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+
+    // actually call sp_session_starred_create
+    sp_playlist* spplaylist = sp_session_starred_create(session->pointer);
+
+    // Set the playlist in RAM
+    sp_playlist_set_in_ram(session->pointer, spplaylist, true);
+
+    ObjectHandle<sp_playlist>* playlist = new ObjectHandle<sp_playlist>("sp_playlist");
+    playlist->pointer = spplaylist;
+
+    sp_error error = sp_playlist_add_callbacks(spplaylist, &nsp_playlist_callbacks, playlist);
+    NSP_THROW_IF_ERROR(error);
+
+    return scope.Close(playlist->object);
 }
 
 void nsp::init_session(Handle<Object> target) {
@@ -493,4 +516,5 @@ void nsp::init_session(Handle<Object> target) {
     NODE_SET_METHOD(target, "session_logout", Session_Logout);
     NODE_SET_METHOD(target, "session_process_events", Session_Process_Events);
     NODE_SET_METHOD(target, "session_playlistcontainer", Session_PlaylistContainer);
+    NODE_SET_METHOD(target, "session_starred_create", Session_Starred_Create);
 }

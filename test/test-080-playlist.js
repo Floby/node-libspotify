@@ -19,6 +19,14 @@ exports.playlist = {
             test.done();
         }, 'getting playlist from url should not throw');
     },
+    'get playlist from Starred': function(test) {
+        var playlist;
+        test.doesNotThrow(function() {
+            playlist = session.getStarred()
+            test.ok(playlist instanceof sp.Playlist, 'We should get a playlist object');
+            test.done();
+        }, 'getting playlist from starred should not throw');
+    },
     'attributes are mapped': function(test) {
         var playlist = sp.Playlist.getFromUrl('spotify:user:flobyiv:playlist:5ZMnMnJWGXZ9qm4gacHpQF');
         playlist.whenReady(function() {
@@ -30,7 +38,7 @@ exports.playlist = {
             }, "getting attributes should not throw");
         });
     },
-    'get tracks': function(test) {
+    'get tracks from URI': function(test) {
         var playlist = sp.Playlist.getFromUrl('spotify:user:flobyiv:playlist:5ZMnMnJWGXZ9qm4gacHpQF');
         playlist.whenReady(function() {
             playlist.getTracks(function(tracks) {
@@ -43,5 +51,19 @@ exports.playlist = {
                 test.done();
             });
         });
-    }.timed(10000)
+    }.timed(10000),
+    'get tracks from Starred': function(test) {
+        var playlist = session.getStarred();
+        playlist.whenReady(function() {
+            playlist.getTracks(function(tracks) {
+                test.ok(Array.isArray(tracks), 'tracks should be an array');
+                test.ok(tracks.length > 0, 'There should be tracks in the array');
+                test.equal(tracks.map(function(e) {return e instanceof sp.Track;}).indexOf(false), -1, 'It should only contain tracks');
+                test.equal(tracks.reduce(function(prev, current) {
+                    return prev && current.isReady();
+                }, true), true, 'All tracks should be loaded');
+                test.done();
+            });
+        });
+    }.timed(40000)
 };
