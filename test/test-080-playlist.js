@@ -65,5 +65,18 @@ exports.playlist = {
                 test.done();
             });
         });
-    }.timed(40000)
+    }.timed(40000),
+    'get playlist image': function(test) {
+        var playlist = sp.Playlist.getFromUrl('spotify:user:digster.se:playlist:1jGWX65tQPpwkuqG2OaRCN');
+        playlist.whenReady(function () {
+            var img = playlist.getImage();
+            test.ok(img !== null, 'the playlist has an image');
+            img.whenReady(function () {
+                var buffer = img.getData();
+                test.ok(buffer instanceof Buffer, 'image data is a buffer');
+                test.ok(buffer.length > 0, 'image buffer contains data');
+                test.done();
+            });
+        });
+    },
 };

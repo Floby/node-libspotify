@@ -154,10 +154,14 @@ namespace nsp {
      * init the playlistcontainer related functions to the target module exports
      */
     void init_playlistcontainer(v8::Handle<v8::Object> target);
-	/**
-	 * init the playlist related functions to the target module exports
-	 */
+    /**
+     * init the playlist related functions to the target module exports
+     */
     void init_playlist(v8::Handle<v8::Object> target);
+    /**
+     * init the image related functions to the target module exports
+     */
+    void init_image(v8::Handle<v8::Object> target);
 
     /**
      * This utility class allows to keep track of a C pointer that we attached

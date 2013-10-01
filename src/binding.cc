@@ -37,6 +37,7 @@ extern "C" {
         nsp::init_track(target);
         nsp::init_playlistcontainer(target);
         nsp::init_playlist(target);
+        nsp::init_image(target);
 
     }
 }

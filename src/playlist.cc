@@ -17,6 +17,7 @@
  */
 
 #include "common.h"
+#include "imagecallbacks.cc"
 #include "playlistcallbacks.cc"
 #include <stdlib.h>
 
@@ -145,13 +146,13 @@ static Handle<Value> PlaylistContainer_Playlist(const Arguments& args) {
     assert(args[1]->IsObject());
     assert(args[2]->IsNumber());
 
-	// gets sp_playlistcontainer pointer from given object
+    // gets sp_playlistcontainer pointer from given object
     ObjectHandle<sp_playlistcontainer>* playlistcontainer = ObjectHandle<sp_playlistcontainer>::Unwrap(args[0]);
 
-	// gets sp_session pointer from given object
+    // gets sp_session pointer from given object
     ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[1]);
 
-	int index = args[2]->ToNumber()->Int32Value();
+    int index = args[2]->ToNumber()->Int32Value();
 
     assert(index >= 0);
     assert(index < sp_playlistcontainer_num_playlists(playlistcontainer->pointer));
@@ -166,9 +167,9 @@ static Handle<Value> PlaylistContainer_Playlist(const Arguments& args) {
     playlist->pointer = spplaylist;
 
     sp_error error = sp_playlist_add_callbacks(spplaylist, &nsp_playlist_callbacks, playlist);
-	NSP_THROW_IF_ERROR(error);
+    NSP_THROW_IF_ERROR(error);
 
-	return scope.Close(playlist->object);
+    return scope.Close(playlist->object);
 }
 
 void nsp::init_playlistcontainer(Handle<Object> target) {
@@ -221,7 +222,7 @@ static Handle<Value> Playlist_Name(const Arguments& args) {
     ObjectHandle<sp_playlist>* playlist = ObjectHandle<sp_playlist>::Unwrap(args[0]);
 
     // actually call sp_playlist_name
-	const char* name = sp_playlist_name(playlist->pointer);
+    const char* name = sp_playlist_name(playlist->pointer);
 
     return scope.Close(String::New(name));
 }
@@ -242,7 +243,7 @@ static Handle<Value> Playlist_Num_Tracks(const Arguments& args) {
     // actually call sp_playlist_num_tracks
     int numTracks = sp_playlist_num_tracks(playlist->pointer);
 
-	return scope.Close(Number::New(numTracks));
+    return scope.Close(Number::New(numTracks));
 }
 
 /**
@@ -256,10 +257,10 @@ static Handle<Value> Playlist_Track(const Arguments& args) {
     assert(args[0]->IsObject());
     assert(args[1]->IsNumber());
 
-	// gets sp_playlist pointer from given object
+    // gets sp_playlist pointer from given object
     ObjectHandle<sp_playlist>* playlist = ObjectHandle<sp_playlist>::Unwrap(args[0]);
 
-	int index = args[1]->ToNumber()->Int32Value();
+    int index = args[1]->ToNumber()->Int32Value();
 
     assert(index >= 0);
     assert(index < sp_playlist_num_tracks(playlist->pointer));
@@ -270,7 +271,7 @@ static Handle<Value> Playlist_Track(const Arguments& args) {
     ObjectHandle<sp_track>* track = new ObjectHandle<sp_track>("sp_track");
     track->pointer = sptrack;
 
-	return scope.Close(track->object);
+    return scope.Close(track->object);
 }
 
 /**
@@ -284,16 +285,16 @@ static Handle<Value> Playlist_Update_Subscribers(const Arguments& args) {
     assert(args[0]->IsObject());
     assert(args[1]->IsObject());
 
-	// gets sp_session pointer from given object
+    // gets sp_session pointer from given object
     ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
 
-	// gets sp_playlist pointer from given object
+    // gets sp_playlist pointer from given object
     ObjectHandle<sp_playlist>* playlist = ObjectHandle<sp_playlist>::Unwrap(args[1]);
 
-	sp_error error = sp_playlist_update_subscribers(session->pointer, playlist->pointer);
-	NSP_THROW_IF_ERROR(error);
+    sp_error error = sp_playlist_update_subscribers(session->pointer, playlist->pointer);
+    NSP_THROW_IF_ERROR(error);
 
-	return scope.Close(Undefined());
+    return scope.Close(Undefined());
 }
 
 /**
@@ -306,20 +307,50 @@ static Handle<Value> Playlist_Num_Subscribers(const Arguments& args) {
     assert(args.Length() == 1);
     assert(args[0]->IsObject());
 
-	// gets sp_playlist pointer from given object
+    // gets sp_playlist pointer from given object
     ObjectHandle<sp_playlist>* playlist = ObjectHandle<sp_playlist>::Unwrap(args[0]);
 
-	int numSubscribers = sp_playlist_num_subscribers(playlist->pointer);
+    int numSubscribers = sp_playlist_num_subscribers(playlist->pointer);
 
-	return scope.Close(Number::New(numSubscribers));
+    return scope.Close(Number::New(numSubscribers));
+}
+
+/**
+ * JS playlist image. Get the image for the playlist
+ */
+static Handle<Value> Playlist_Get_Image(const Arguments& args) {
+    HandleScope scope;
+
+    // test arguments sanity
+    assert(args.Length() == 2);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsObject());
+
+    byte image_id[20];
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+    ObjectHandle<sp_playlist>* playlist = ObjectHandle<sp_playlist>::Unwrap(args[1]);
+
+    if(!sp_playlist_get_image(playlist->pointer, image_id)) {
+        return scope.Close(Null());
+    }
+
+    ObjectHandle<sp_image>* obj = new ObjectHandle<sp_image>("sp_image");
+    obj->pointer = sp_image_create(session->pointer, image_id);
+
+    // Add callbacks
+    sp_error error = sp_image_add_load_callback(obj->pointer, &cb_image_loaded, obj);
+    NSP_THROW_IF_ERROR(error);
+
+    return scope.Close(obj->object);
 }
 
 
 void nsp::init_playlist(Handle<Object> target) {
-	NODE_SET_METHOD(target, "playlist_is_loaded", Playlist_Is_Loaded);
-	NODE_SET_METHOD(target, "playlist_name", Playlist_Name);
-	NODE_SET_METHOD(target, "playlist_num_tracks", Playlist_Num_Tracks);
-	NODE_SET_METHOD(target, "playlist_track", Playlist_Track);
-	NODE_SET_METHOD(target, "playlist_update_subscribers", Playlist_Update_Subscribers);
-	NODE_SET_METHOD(target, "playlist_num_subscribers", Playlist_Num_Subscribers);
+    NODE_SET_METHOD(target, "playlist_is_loaded", Playlist_Is_Loaded);
+    NODE_SET_METHOD(target, "playlist_name", Playlist_Name);
+    NODE_SET_METHOD(target, "playlist_num_tracks", Playlist_Num_Tracks);
+    NODE_SET_METHOD(target, "playlist_track", Playlist_Track);
+    NODE_SET_METHOD(target, "playlist_update_subscribers", Playlist_Update_Subscribers);
+    NODE_SET_METHOD(target, "playlist_num_subscribers", Playlist_Num_Subscribers);
+    NODE_SET_METHOD(target, "playlist_get_image", Playlist_Get_Image);
 }

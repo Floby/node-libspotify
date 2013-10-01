@@ -38,19 +38,19 @@ typedef struct sp_session sp_session;
 
 /* --- Types --- */
 typedef struct audio_fifo_data {
-	TAILQ_ENTRY(audio_fifo_data) link;
-	int channels;
-	int rate;
-	int nsamples;
+    TAILQ_ENTRY(audio_fifo_data) link;
+    int channels;
+    int rate;
+    int nsamples;
     sp_session* session;
-	int16_t samples[0];
+    int16_t samples[0];
 } audio_fifo_data_t;
 
 typedef struct audio_fifo {
-	TAILQ_HEAD(, audio_fifo_data) q;
-	int qlen;
-	pthread_mutex_t mutex;
-	pthread_cond_t cond;
+    TAILQ_HEAD(, audio_fifo_data) q;
+    int qlen;
+    pthread_mutex_t mutex;
+    pthread_cond_t cond;
 } audio_fifo_t;
 
 

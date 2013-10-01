@@ -9,12 +9,13 @@
         "src/artistbrowse.cc",
         "src/audio.cc",
         "src/binding.cc",
+        "src/image.cc",
         "src/link.cc",
         "src/player.cc",
         "src/search.cc",
         "src/session.cc",
         "src/track.cc",
-		"src/playlist.cc"
+        "src/playlist.cc"
       ],
       "cflags": ["-Wall"],
       "conditions" : [

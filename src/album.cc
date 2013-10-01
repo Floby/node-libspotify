@@ -18,6 +18,7 @@
 
 
 #include "common.h"
+#include "imagecallbacks.cc"
 
 using namespace v8;
 using namespace nsp;
@@ -189,26 +190,25 @@ static Handle<Value> Album_Cover(const Arguments& args) {
     HandleScope scope;
 
     // test arguments sanity
-    assert(args.Length() == 4);
+    assert(args.Length() == 3);
     assert(args[0]->IsObject());  // sp_session
     assert(args[1]->IsObject());  // sp_album
     assert(args[2]->IsNumber());  // sp_image_size
-    assert(args[3]->IsFunction()); // callback after cover image was loaded
 
     ObjectHandle<sp_session> *session = ObjectHandle<sp_session>::Unwrap(args[0]);
     ObjectHandle<sp_album> *album = ObjectHandle<sp_album>::Unwrap(args[1]);
     Handle<Integer> requestedImageSize = Local<Integer>::Cast(args[2]);
-    Handle<Function> callback = Persistent<Function>::New(Handle<Function>::Cast(args[3]));
 
     sp_image_size imageSize = static_cast<sp_image_size>(requestedImageSize->Uint32Value());
     const byte *imageId = sp_album_cover(album->pointer, imageSize);
 
     if(imageId) {
-        sp_image *image = sp_image_create(session->pointer, imageId);
-        sp_image_add_load_callback(image, &cb_image_loaded_album, *callback);
-        return scope.Close(Boolean::New(true));
+        ObjectHandle<sp_image>* obj = new ObjectHandle<sp_image>("sp_image");
+        obj->pointer = sp_image_create(session->pointer, imageId);
+        sp_image_add_load_callback(obj->pointer, &cb_image_loaded, obj);
+        return scope.Close(obj->object);
     } else {
-        return scope.Close(Boolean::New(false));
+        return scope.Close(Null());
     }
 
 }

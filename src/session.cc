@@ -81,7 +81,7 @@ static void call_logged_out_callback(sp_session* session) {
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  */
 static void call_metadata_updated_callback(sp_session* session) {
-  	ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
     Handle<Object> o = s->object;
     Handle<Value> cbv = o->Get(String::New("metadata_updated"));
     if(!cbv->IsFunction()) {
@@ -159,7 +159,7 @@ extern int call_music_delivery_callback(sp_session* session, const sp_audioforma
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  */
 static void call_play_token_lost_callback(sp_session* session) {
-	ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
     Handle<Object> o = s->object;
     Handle<Value> cbv = o->Get(String::New("play_token_lost"));
     if(!cbv->IsFunction()) {
@@ -478,9 +478,9 @@ static Handle<Value> Session_PlaylistContainer(const Arguments& args) {
     ObjectHandle<sp_playlistcontainer>* playlistcontainer = new ObjectHandle<sp_playlistcontainer>("sp_playlistcontainer");
     playlistcontainer->pointer = spplaylistcontainer;
 
-	// actually call sp_playlistcontainer_add_callbacks
+    // actually call sp_playlistcontainer_add_callbacks
     sp_error error = sp_playlistcontainer_add_callbacks(spplaylistcontainer, &nsp_playlistcontainer_callbacks, playlistcontainer);
-	NSP_THROW_IF_ERROR(error);
+    NSP_THROW_IF_ERROR(error);
 
     return scope.Close(playlistcontainer->object);
 }

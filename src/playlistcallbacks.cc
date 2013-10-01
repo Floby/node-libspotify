@@ -241,8 +241,8 @@ static sp_playlist_callbacks nsp_playlist_callbacks = {
     &call_playlist_metadata_updated_callback,
     &call_track_created_changed_callback,
     &call_track_seen_changed_callback,
-	&call_description_changed_callback,
-	&call_image_changed_callback,
-	&call_track_message_changed_callback,
-	&call_subscribers_changed_callback
+    &call_description_changed_callback,
+    &call_image_changed_callback,
+    &call_track_message_changed_callback,
+    &call_subscribers_changed_callback
 };
