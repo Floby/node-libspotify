@@ -140,10 +140,12 @@ namespace nsp {
      * init the album related functions to the target module exports
      */
     void init_album(v8::Handle<v8::Object> target);
+    void init_albumbrowse(v8::Handle<v8::Object> target);
     /**
      * init the artist related functions to the target module exports
      */
     void init_artist(v8::Handle<v8::Object> target);
+    void init_artistbrowse(v8::Handle<v8::Object> target);
     /**
      * init the link related functions to the target module exports
      */
@@ -152,11 +154,15 @@ namespace nsp {
      * init the playlistcontainer related functions to the target module exports
      */
     void init_playlistcontainer(v8::Handle<v8::Object> target);
-	/**
-	 * init the playlist related functions to the target module exports
-	 */
+    /**
+     * init the playlist related functions to the target module exports
+     */
     void init_playlist(v8::Handle<v8::Object> target);
-    
+    /**
+     * init the image related functions to the target module exports
+     */
+    void init_image(v8::Handle<v8::Object> target);
+
     /**
      * This utility class allows to keep track of a C pointer that we attached
      * to a JS object. It differs from node's ObjectWrap in the fact that it
@@ -191,7 +197,7 @@ namespace nsp {
              *  We do create this one
              */
             v8::Persistent<v8::Object> object;
-            
+
             /**
              * Get the name of the ObjectHandle that we gave it during instanciation
              */
@@ -229,7 +235,7 @@ namespace nsp {
 
         object->SetPointerInInternalField(0, this);
     }
-    
+
     template <typename T>
     ObjectHandle<T>* ObjectHandle<T>::Unwrap(v8::Handle<v8::Value> obj) {
         assert(obj->IsObject());

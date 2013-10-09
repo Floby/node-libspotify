@@ -50,5 +50,19 @@ exports.links = {
             sp.Playlist.getFromUrl('spotify:track:4BdSLkzKO6iMVCgw7A7JBl');
         }, URIError, 'We should get an URIError');
         test.done();
+    },
+    'get spotify url for album cover': function(test) {
+        var album = sp.Album.getFromUrl('spotify:album:2UGJa9DjYhXpBDKsCTyhSh');
+        album.whenReady(function () {
+            test.equal(album.coverImageUrl(), 'spotify:image:1ffad0da52c24ff70554dbc2b70d2265be777816', 'the url should be correct');
+            test.done();
+        });
+    },
+    'get spotify url for artist portrait': function (test) {
+        var artist = sp.Artist.getFromUrl('spotify:artist:4gzpq5DPGxSnKTe4SA8HAU');
+        artist.whenReady(function () {
+            test.equal(artist.portraitImageUrl(), 'spotify:image:32222dd4d53a339d92b1d8c72b678a1ec3e1840e', 'the url should be correct');
+            test.done();
+        });
     }
 };

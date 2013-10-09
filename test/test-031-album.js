@@ -34,8 +34,8 @@ exports.album = {
             var album = first.album;
 
             test.doesNotThrow(function () {
-                album.coverImage(function(err, buffer) {
-                    test.ok(err === null);
+                var img = album.coverImage()
+                img.whenReady(function() {
                     return test.done();
                 });
             });
@@ -49,8 +49,8 @@ exports.album = {
             var album = first.album;
 
             test.doesNotThrow(function () {
-                album.normalCoverImage(function(err, buffer) {
-                    test.ok(err === null);
+                var img = album.normalCoverImage();
+                img.whenReady(function() {
                     return test.done();
                 });
             });
@@ -64,8 +64,8 @@ exports.album = {
             var album = first.album;
 
             test.doesNotThrow(function () {
-                album.coverImage('small', function(err, buffer) {
-                    test.ok(err === null);
+                var img = album.coverImage('small');
+                img.whenReady(function() {
                     return test.done();
                 });
             });
@@ -79,8 +79,8 @@ exports.album = {
             var album = first.album;
 
             test.doesNotThrow(function () {
-                album.coverImage(album.IMAGE_SIZE_LARGE, function(err, buffer) {
-                    test.ok(err === null);
+                img = album.coverImage(album.IMAGE_SIZE_LARGE);
+                img.whenReady(function() {
                     return test.done();
                 });
             });
@@ -94,7 +94,7 @@ exports.album = {
             var album = first.album;
 
             test.throws(function () {
-                album.coverImage('very-strange-size', function(err, buffer) {});
+                album.coverImage('very-strange-size');
             }, Error, 'Should fail with unknown size');
 
             return test.done();
