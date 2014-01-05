@@ -24,25 +24,25 @@ using namespace nsp;
 
 /*
  * PLAYLIST CONTAINER CALLBACKS
-*/
+ */
 
 /**
  * spotify callback for the playlist_added event.
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__playlistcontainer__callbacks.html
  */
 static void call_playlist_added_callback(sp_playlistcontainer* pc, sp_playlist* spplaylist, int position, void* userdata) {
-	ObjectHandle<sp_playlistcontainer>* playlistcontainer = (ObjectHandle<sp_playlistcontainer>*) userdata;
+  ObjectHandle<sp_playlistcontainer>* playlistcontainer = (ObjectHandle<sp_playlistcontainer>*) userdata;
 
-    Handle<Object> o = playlistcontainer->object;
-    Handle<Value> cbv = o->Get(String::New("playlist_added"));
-    if(!cbv->IsFunction()) {
-        return;
-    }
+  Handle<Object> o = playlistcontainer->object;
+  Handle<Value> cbv = o->Get(String::New("playlist_added"));
+  if(!cbv->IsFunction()) {
+    return;
+  }
 
-	Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
-	const unsigned int argc = 0;
-    Local<Value> argv[argc] = {};
-    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+  Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+  const unsigned int argc = 0;
+  Local<Value> argv[argc] = {};
+  cb->Call(Context::GetCurrent()->Global(), argc, argv);
 }
 
 /**
@@ -50,18 +50,18 @@ static void call_playlist_added_callback(sp_playlistcontainer* pc, sp_playlist* 
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__playlistcontainer__callbacks.html
  */
 static void call_playlist_removed_callback(sp_playlistcontainer* pc, sp_playlist* playlist, int position, void* userdata) {
-	ObjectHandle<sp_playlistcontainer>* playlistcontainer = (ObjectHandle<sp_playlistcontainer>*) userdata;
+  ObjectHandle<sp_playlistcontainer>* playlistcontainer = (ObjectHandle<sp_playlistcontainer>*) userdata;
 
-    Handle<Object> o = playlistcontainer->object;
-    Handle<Value> cbv = o->Get(String::New("playlist_removed"));
-    if(!cbv->IsFunction()) {
-        return;
-    }
+  Handle<Object> o = playlistcontainer->object;
+  Handle<Value> cbv = o->Get(String::New("playlist_removed"));
+  if(!cbv->IsFunction()) {
+    return;
+  }
 
-    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
-    const unsigned int argc = 0;
-    Local<Value> argv[argc] = {};
-    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+  Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+  const unsigned int argc = 0;
+  Local<Value> argv[argc] = {};
+  cb->Call(Context::GetCurrent()->Global(), argc, argv);
 }
 
 /**
@@ -69,18 +69,18 @@ static void call_playlist_removed_callback(sp_playlistcontainer* pc, sp_playlist
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__playlistcontainer__callbacks.html
  */
 static void call_playlist_moved_callback(sp_playlistcontainer* pc, sp_playlist* playlist, int position, int new_position, void* userdata) {
-	ObjectHandle<sp_playlistcontainer>* playlistcontainer = (ObjectHandle<sp_playlistcontainer>*) userdata;
+  ObjectHandle<sp_playlistcontainer>* playlistcontainer = (ObjectHandle<sp_playlistcontainer>*) userdata;
 
-    Handle<Object> o = playlistcontainer->object;
-    Handle<Value> cbv = o->Get(String::New("playlist_moved"));
-    if(!cbv->IsFunction()) {
-        return;
-    }
+  Handle<Object> o = playlistcontainer->object;
+  Handle<Value> cbv = o->Get(String::New("playlist_moved"));
+  if(!cbv->IsFunction()) {
+    return;
+  }
 
-    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
-    const unsigned int argc = 0;
-    Local<Value> argv[argc] = {};
-    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+  Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+  const unsigned int argc = 0;
+  Local<Value> argv[argc] = {};
+  cb->Call(Context::GetCurrent()->Global(), argc, argv);
 }
 
 /**
@@ -88,31 +88,31 @@ static void call_playlist_moved_callback(sp_playlistcontainer* pc, sp_playlist* 
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__playlistcontainer__callbacks.html
  */
 static void call_container_loaded_callback(sp_playlistcontainer* pc, void* userdata) {
-	ObjectHandle<sp_playlistcontainer>* playlistcontainer = (ObjectHandle<sp_playlistcontainer>*)userdata;
+  ObjectHandle<sp_playlistcontainer>* playlistcontainer = (ObjectHandle<sp_playlistcontainer>*)userdata;
 
-    Handle<Object> o = playlistcontainer->object;
-    Handle<Value> cbv = o->Get(String::New("container_loaded"));
-    if(!cbv->IsFunction()) {
-        return;
-    }
+  Handle<Object> o = playlistcontainer->object;
+  Handle<Value> cbv = o->Get(String::New("container_loaded"));
+  if(!cbv->IsFunction()) {
+    return;
+  }
 
-    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
-    const unsigned int argc = 0;
-    Local<Value> argv[argc] = {};
-    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+  Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+  const unsigned int argc = 0;
+  Local<Value> argv[argc] = {};
+  cb->Call(Context::GetCurrent()->Global(), argc, argv);
 }
 
 static sp_playlistcontainer_callbacks nsp_playlistcontainer_callbacks = {
-    &call_playlist_added_callback,
-    &call_playlist_removed_callback,
-    &call_playlist_moved_callback,
-    &call_container_loaded_callback
+  &call_playlist_added_callback,
+  &call_playlist_removed_callback,
+  &call_playlist_moved_callback,
+  &call_container_loaded_callback
 };
 
 
 /*
  * PLAYLIST CALLBACKS
-*/
+ */
 
 
 
@@ -149,18 +149,18 @@ static void call_playlist_renamed_callback(sp_playlist* pl, void* userdata) {
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__playlist__callbacks.html
  */
 static void call_playlist_state_changed_callback(sp_playlist* pl, void* userdata) {
-	ObjectHandle<sp_playlist>* playlist = (ObjectHandle<sp_playlist>*)userdata;
+  ObjectHandle<sp_playlist>* playlist = (ObjectHandle<sp_playlist>*)userdata;
 
-    Handle<Object> o = playlist->object;
-    Handle<Value> cbv = o->Get(String::New("state_changed"));
-    if(!cbv->IsFunction()) {
-        return;
-    }
+  Handle<Object> o = playlist->object;
+  Handle<Value> cbv = o->Get(String::New("state_changed"));
+  if(!cbv->IsFunction()) {
+    return;
+  }
 
-    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
-    const unsigned int argc = 0;
-    Local<Value> argv[argc] = {};
-    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+  Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+  const unsigned int argc = 0;
+  Local<Value> argv[argc] = {};
+  cb->Call(Context::GetCurrent()->Global(), argc, argv);
 }
 
 /**
@@ -217,32 +217,32 @@ static void call_track_message_changed_callback(sp_playlist* pl, int position, c
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__playlist__callbacks.html
  */
 static void call_subscribers_changed_callback(sp_playlist* pl, void* userdata) {
-	ObjectHandle<sp_playlist>* playlist = (ObjectHandle<sp_playlist>*)userdata;
+  ObjectHandle<sp_playlist>* playlist = (ObjectHandle<sp_playlist>*)userdata;
 
-    Handle<Object> o = playlist->object;
-    Handle<Value> cbv = o->Get(String::New("subscribers_changed"));
-    if(!cbv->IsFunction()) {
-        return;
-    }
+  Handle<Object> o = playlist->object;
+  Handle<Value> cbv = o->Get(String::New("subscribers_changed"));
+  if(!cbv->IsFunction()) {
+    return;
+  }
 
-    Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
-    const unsigned int argc = 0;
-    Local<Value> argv[argc] = {};
-    cb->Call(Context::GetCurrent()->Global(), argc, argv);
+  Handle<Function> cb = Local<Function>(Function::Cast(*cbv));
+  const unsigned int argc = 0;
+  Local<Value> argv[argc] = {};
+  cb->Call(Context::GetCurrent()->Global(), argc, argv);
 }
 
 static sp_playlist_callbacks nsp_playlist_callbacks = {
-    &call_tracks_added_callback,
-    &call_tracks_removed_callback,
-    &call_tracks_moved_callback,
-    &call_playlist_renamed_callback,
-    &call_playlist_state_changed_callback,
-    &call_playlist_update_in_progress_callback,
-    &call_playlist_metadata_updated_callback,
-    &call_track_created_changed_callback,
-    &call_track_seen_changed_callback,
-	&call_description_changed_callback,
-	&call_image_changed_callback,
-	&call_track_message_changed_callback,
-	&call_subscribers_changed_callback
+  &call_tracks_added_callback,
+  &call_tracks_removed_callback,
+  &call_tracks_moved_callback,
+  &call_playlist_renamed_callback,
+  &call_playlist_state_changed_callback,
+  &call_playlist_update_in_progress_callback,
+  &call_playlist_metadata_updated_callback,
+  &call_track_created_changed_callback,
+  &call_track_seen_changed_callback,
+  &call_description_changed_callback,
+  &call_image_changed_callback,
+  &call_track_message_changed_callback,
+  &call_subscribers_changed_callback
 };
