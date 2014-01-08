@@ -37,12 +37,13 @@
   "devDependencies": {
     "nodeunit": "~0.7",
     "trycatch": "*",
-    "colors": "*"
+    "colors": "*",
+    "istanbul": "~0.2.3"
   },
   "scripts": {
     "install": "node-gyp configure build",
     "pretest": "rm -rf /tmp/node-libspotify 2>/dev/null ; node-gyp clean >/dev/null && node-gyp configure --debug  >/dev/null && node-gyp build >/dev/null",
-    "test": "nodeunit test/test-*"
+    "test": "istanbul cover nodeunit test/test-*"
   },
   "main": "lib/libspotify.js"
 }
