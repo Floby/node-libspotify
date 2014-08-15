@@ -60,7 +60,7 @@ extern int call_music_delivery_callback(sp_session* session, const sp_audioforma
   audio_fifo_data_t *afd;
   size_t s;
 
-  if (num_frames == 0) {		
+  if (num_frames == 0) {
     return 0; // Audio discontinuity, do nothing
   }
 
@@ -145,7 +145,6 @@ static void read_delivered_music(uv_timer_t* handle, int status) {
   return;
 }
 
-
 /**
  * Load the given track in the player of the given session
  */
@@ -161,6 +160,24 @@ static Handle<Value> Session_Player_Load(const Arguments& args) {
 
 
   sp_error error = sp_session_player_load(session->pointer, track->pointer);
+  NSP_THROW_IF_ERROR(error);
+
+  return scope.Close(Undefined());
+}
+
+/**
+ * Seek to the sepcified second
+ */
+static Handle<Value> Session_Player_Seek(const Arguments& args) {
+  HandleScope scope;
+
+  assert(args.Length() == 2);
+  assert(args[0]->IsObject());
+  assert(args[1]->IsNumber());
+
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+
+  sp_error error = sp_session_player_seek(session->pointer, args[1]->ToInt32()->Value());
   NSP_THROW_IF_ERROR(error);
 
   return scope.Close(Undefined());
@@ -201,6 +218,7 @@ static uv_timer_t read_music_handle;
 
 void nsp::init_player(Handle<Object> target) {
   NODE_SET_METHOD(target, "session_player_load", Session_Player_Load);
+  NODE_SET_METHOD(target, "session_player_seek", Session_Player_Seek);
   NODE_SET_METHOD(target, "session_player_play", Session_Player_Play);
   NODE_SET_METHOD(target, "session_player_stream_resume", Session_Player_Stream_Resume);
 
