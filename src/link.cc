@@ -23,8 +23,8 @@
 using namespace v8;
 using namespace nsp;
 
-static Handle<Value> Link_Create_From_Track(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Link_Create_From_Track) {
+    NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -39,11 +39,11 @@ static Handle<Value> Link_Create_From_Track(const Arguments& args) {
   // TODO handle truncated urls
   sp_link_as_string(link, url, 256);
 
-  return scope.Close(String::New(url));
+    NanReturnValue(NanNew<String>(url));
 }
 
-static Handle<Value> Link_Create_From_Artist(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Link_Create_From_Artist) {
+    NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -57,29 +57,11 @@ static Handle<Value> Link_Create_From_Artist(const Arguments& args) {
   // TODO handle truncated urls
   sp_link_as_string(link, url, 256);
 
-  return scope.Close(String::New(url));
+    NanReturnValue(NanNew<String>(url));
 }
 
-static Handle<Value> Link_Create_From_Playlist(const Arguments& args) {
-  HandleScope scope;
-
-  // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
-
-  // gets sp_playlist pointer from given object
-  ObjectHandle<sp_playlist>* playlist = ObjectHandle<sp_playlist>::Unwrap(args[0]);
-
-  sp_link* link = sp_link_create_from_playlist(playlist->pointer);
-  char url[256];
-  // TODO handle truncated urls
-  sp_link_as_string(link, url, 256);
-
-  return scope.Close(String::New(url));
-}
-
-static Handle<Value> Link_As_Track(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Link_As_Track) {
+    NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -93,11 +75,11 @@ static Handle<Value> Link_As_Track(const Arguments& args) {
   ObjectHandle<sp_track>* track = new ObjectHandle<sp_track>("sp_track");
   track->pointer = sp_link_as_track(link);
 
-  return scope.Close(track->object);
+    NanReturnValue(track->object);
 }
 
-static Handle<Value> Link_As_Artist(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Link_As_Artist) {
+    NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -111,7 +93,7 @@ static Handle<Value> Link_As_Artist(const Arguments& args) {
   ObjectHandle<sp_artist>* artist = new ObjectHandle<sp_artist>("sp_artist");
   artist->pointer = sp_link_as_artist(link);
 
-  return scope.Close(artist->object);
+    NanReturnValue(artist->object);
 }
 
 static Handle<Value> Link_As_Playlist(const Arguments& args) {

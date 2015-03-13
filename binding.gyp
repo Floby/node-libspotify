@@ -14,6 +14,9 @@
         "src/track.cc",
 		"src/playlist.cc"
       ],
+      "include_dirs" : [ 
+        "<!(node -e \"require('nan')\")"
+      ],
       "cflags": ["-Wall"],
       "conditions" : [
         [

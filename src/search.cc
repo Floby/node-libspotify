@@ -48,47 +48,47 @@ static void on_search_complete(sp_search* result, void* userdata) {
 /**
  * JS search_create implementation. calls sp_search_create
  */
-static Handle<Value> Search_Create(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Search_Create) {
+    NanScope();
 
-  // check arguments sanity
-  assert(args.Length() == 10);
-  assert(args[0]->IsObject());
-  assert(args[1]->IsString());
-  assert(args[2]->IsNumber());
-  assert(args[3]->IsNumber());
-  assert(args[4]->IsNumber());
-  assert(args[5]->IsNumber());
-  assert(args[6]->IsNumber());
-  assert(args[7]->IsNumber());
-  assert(args[8]->IsNumber());
-  assert(args[9]->IsNumber());
+    // check arguments sanity
+    assert(args.Length() == 10);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsString());
+    assert(args[2]->IsNumber());
+    assert(args[3]->IsNumber());
+    assert(args[4]->IsNumber());
+    assert(args[5]->IsNumber());
+    assert(args[6]->IsNumber());
+    assert(args[7]->IsNumber());
+    assert(args[8]->IsNumber());
+    assert(args[9]->IsNumber());
 
-  // unwrap the session handle from the given object
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+    // unwrap the session handle from the given object
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
 
-  // create the new handle for the sp_search we are creating
-  ObjectHandle<sp_search>* search = new ObjectHandle<sp_search>("sp_search");
-  String::Utf8Value query(args[1]);
+    // create the new handle for the sp_search we are creating
+    ObjectHandle<sp_search>* search = new ObjectHandle<sp_search>("sp_search");
+    String::Utf8Value query(args[1]);
 
-  // actually call sp_search_create
-  search->pointer = sp_search_create(
-      session->pointer,
-      *query,
-      args[2]->ToNumber()->Int32Value(),
-      args[3]->ToNumber()->Int32Value(),
-      args[4]->ToNumber()->Int32Value(),
-      args[5]->ToNumber()->Int32Value(),
-      args[6]->ToNumber()->Int32Value(),
-      args[7]->ToNumber()->Int32Value(),
-      args[8]->ToNumber()->Int32Value(),
-      args[9]->ToNumber()->Int32Value(),
-      SP_SEARCH_STANDARD,
-      &on_search_complete,
-      search
-      );
+    // actually call sp_search_create
+    search->pointer = sp_search_create(
+        session->pointer,
+        *query,
+        args[2]->ToNumber()->Int32Value(),
+        args[3]->ToNumber()->Int32Value(),
+        args[4]->ToNumber()->Int32Value(),
+        args[5]->ToNumber()->Int32Value(),
+        args[6]->ToNumber()->Int32Value(),
+        args[7]->ToNumber()->Int32Value(),
+        args[8]->ToNumber()->Int32Value(),
+        args[9]->ToNumber()->Int32Value(),
+        SP_SEARCH_STANDARD,
+        &on_search_complete,
+        search
+    );
 
-  return scope.Close(search->object);
+    NanReturnValue(search->object);
 }
 
 /**
@@ -109,8 +109,8 @@ static Handle<Value> Search_Num_Tracks(const Arguments& args) {
 /**
  * JS search_track implementation. gets a track a the given index in a search result
  */
-static Handle<Value> Search_Track(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Search_Track) {
+    NanScope();
 
   // test arguments sanity
   assert(args.Length() == 2);
@@ -129,7 +129,7 @@ static Handle<Value> Search_Track(const Arguments& args) {
   ObjectHandle<sp_track>* track = new ObjectHandle<sp_track>("sp_track");
   track->pointer = sp_search_track(search->pointer, index);
 
-  return scope.Close(track->object);
+    NanReturnValue(track->object);
 }
 
 void nsp::init_search(Handle<Object> target) {

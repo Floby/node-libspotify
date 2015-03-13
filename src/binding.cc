@@ -16,15 +16,12 @@
  * =====================================================================================
  */
 
+#include <nan.h>
 #include <node.h>
 #include <v8.h>
 #include "common.h"
 
-extern "C" {
-  void init (v8::Handle<v8::Object> target)
-  {
-    v8::HandleScope scope;
-
+void InitAll(Handle<Object> target) {
     // initializing all modules
     nsp::init_album(target);
     nsp::init_artist(target);
@@ -33,11 +30,6 @@ extern "C" {
     nsp::init_search(target);
     nsp::init_session(target);
     nsp::init_track(target);
-    nsp::init_playlistcontainer(target);
-    nsp::init_playlist(target);
-
-  }
 }
 
-
-NODE_MODULE(spotify, init);
+NODE_MODULE(spotify, InitAll);

@@ -23,8 +23,9 @@
 using namespace v8;
 using namespace nsp;
 
-Handle<Value> nsp::JsNoOp(const Arguments& args) {
-  return args.This();
+NAN_METHOD(nsp::JsNoOp) {
+    NanScope();
+    NanReturnThis();
 }
 
 /*
@@ -296,61 +297,61 @@ static sp_session_callbacks spcallbacks = {
  * JS session_config implementation. This just creates a sp_session_config struct
  * from a JS object values and wraps it in a new JS object
  */
-static Handle<Value> Session_Config(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Session_Config) {
+    NanScope();
 
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
+    assert(args.Length() == 1);
+    assert(args[0]->IsObject());
 
-  // create the handle for this object
-  ObjectHandle<sp_session_config>* session_config = new ObjectHandle<sp_session_config>("sp_session_config");
+    // create the handle for this object
+    ObjectHandle<sp_session_config>* session_config = new ObjectHandle<sp_session_config>("sp_session_config");
 
-  // allocate the data structure
-  sp_session_config* ptr = session_config->pointer = new sp_session_config;
+    // allocate the data structure
+    sp_session_config* ptr = session_config->pointer = new sp_session_config;
 
-  // set 0 in every field so that spotify doesn't complain
-  memset(ptr, 0, sizeof(sp_session_config));
+    // set 0 in every field so that spotify doesn't complain
+    memset(ptr, 0, sizeof(sp_session_config));
 
-  Handle<Object> obj = args[0]->ToObject();
+    Handle<Object> obj = args[0]->ToObject();
 
-  ptr->api_version                    = SPOTIFY_API_VERSION;
-  ptr->cache_location                 = NSP_STRING_KEY(obj, "cache_location");
-  ptr->settings_location              = NSP_STRING_KEY(obj, "settings_location");
-  ptr->user_agent                     = NSP_STRING_KEY(obj, "user_agent");
-  ptr->compress_playlists             = NSP_BOOL_KEY(obj, "compress_playlists");
-  ptr->dont_save_metadata_for_playlists = NSP_BOOL_KEY(obj, "dont_save_metadata_for_playlists");
-  ptr->initially_unload_playlists     = NSP_BOOL_KEY(obj, "initially_unload_playlists");
-  ptr->device_id                      = NSP_STRING_KEY(obj, "device_id");
-  ptr->proxy                          = NSP_STRING_KEY(obj, "proxy");
-  ptr->proxy_username                 = NSP_STRING_KEY(obj, "proxy_username");
-  ptr->proxy_password                 = NSP_STRING_KEY(obj, "proxy_password");
-  // ptr->ca_certs_filename              = NSP_STRING_KEY(obj, "ca_certs_filename");
-  ptr->tracefile                      = NSP_STRING_KEY(obj, "tracefile");
+    ptr->api_version                    = SPOTIFY_API_VERSION;
+    ptr->cache_location                 = NSP_STRING_KEY(obj, "cache_location");
+    ptr->settings_location              = NSP_STRING_KEY(obj, "settings_location");
+    ptr->user_agent                     = NSP_STRING_KEY(obj, "user_agent");
+    ptr->compress_playlists             = NSP_BOOL_KEY(obj, "compress_playlists");
+    ptr->dont_save_metadata_for_playlists = NSP_BOOL_KEY(obj, "dont_save_metadata_for_playlists");
+    ptr->initially_unload_playlists     = NSP_BOOL_KEY(obj, "initially_unload_playlists");
+    ptr->device_id                      = NSP_STRING_KEY(obj, "device_id");
+    ptr->proxy                          = NSP_STRING_KEY(obj, "proxy");
+    ptr->proxy_username                 = NSP_STRING_KEY(obj, "proxy_username");
+    ptr->proxy_password                 = NSP_STRING_KEY(obj, "proxy_password");
+    // ptr->ca_certs_filename              = NSP_STRING_KEY(obj, "ca_certs_filename");
+    ptr->tracefile                      = NSP_STRING_KEY(obj, "tracefile");
 
-  ptr->application_key                = NSP_BUFFER_KEY(obj, "application_key");
-  ptr->application_key_size           = NSP_BUFFERLENGTH_KEY(obj, "application_key");
-  ptr->callbacks = &spcallbacks;
+    ptr->application_key                = NSP_BUFFER_KEY(obj, "application_key");
+    ptr->application_key_size           = NSP_BUFFERLENGTH_KEY(obj, "application_key");
+    ptr->callbacks = &spcallbacks;
 
 
-  // copy everything from the original JS object into the new one
-  // so that it can be read later
-  Handle<Array> properties = obj->GetOwnPropertyNames();
-  for (unsigned int i = 0; i < properties->Length(); ++i) {
-    session_config->object->Set(
-        properties->Get(i),
-        obj->Get(properties->Get(i))
+    // copy everything from the original JS object into the new one
+    // so that it can be read later
+    Handle<Array> properties = obj->GetOwnPropertyNames();
+    for (unsigned int i = 0; i < properties->Length(); ++i) {
+        session_config->object->Set(
+            properties->Get(i),
+            obj->Get(properties->Get(i))
         );
   }
 
-  return scope.Close(session_config->object);
+    NanReturnValue(session_config->object);
 }
 
 /**
  * JS session_create implementation. This unwraps the config argument and calls
  * sp_session_create. The session is then wrapped in a JS object for use in JS land
  */
-static Handle<Value> Session_Create(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Session_Create) {
+    NanScope();
 
   assert(args.Length() == 1);
 
@@ -367,15 +368,15 @@ static Handle<Value> Session_Create(const Arguments& args) {
   sp_error error = sp_session_create(session_config->pointer, &session->pointer);
   NSP_THROW_IF_ERROR(error);
 
-  return scope.Close(session->object);
+    NanReturnValue(session->object);
 }
 
 /**
  * JS session_release implementation. This function unwraps the session for the given object
  * and calls sp_session_release on it
  */
-static Handle<Value> Session_Release(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Session_Release) {
+    NanScope();
 
   assert(args.Length() == 1);
 
@@ -392,7 +393,7 @@ static Handle<Value> Session_Release(const Arguments& args) {
   // make sure we won't be used this pointer ever again
   session->pointer = NULL;
 
-  return scope.Close(Undefined());
+    NanReturnValue(Undefined());
 }
 
 /*
@@ -400,36 +401,36 @@ static Handle<Value> Session_Release(const Arguments& args) {
  * and calls sp_session_login with the given credentials
  * TODO support for remember_me and credential blobs
  */
-static Handle<Value> Session_Login(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Session_Login) {
+    NanScope();
 
-  // check parameters sanity
-  assert(args.Length() == 3);
-  assert(args[0]->IsObject());
-  assert(args[1]->IsString());
-  assert(args[2]->IsString());
+    // check parameters sanity
+    assert(args.Length() == 3);
+    assert(args[0]->IsObject());
+    assert(args[1]->IsString());
+    assert(args[2]->IsString());
 
-  // unwrap the session from the given object
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+    // unwrap the session from the given object
+    ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
 
-  // actually call sp_session_login
-  sp_error error = sp_session_login(
-      session->pointer,
-      *(String::Utf8Value(args[1]->ToString())),
-      *(String::Utf8Value(args[2]->ToString())),
-      false,
-      NULL
-      );
-  NSP_THROW_IF_ERROR(error);
+    // actually call sp_session_login
+    sp_error error = sp_session_login(
+        session->pointer,
+        *(String::Utf8Value(args[1]->ToString())),
+        *(String::Utf8Value(args[2]->ToString())),
+        false,
+        NULL
+    );
+    NSP_THROW_IF_ERROR(error);
 
-  return scope.Close(Undefined());
+    NanReturnUndefined();
 }
 
 /**
  * JS session_logout implementation
  */
-static Handle<Value> Session_Logout(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Session_Logout) {
+    NanScope();
 
   assert(args.Length() == 1);
   assert(args[0]->IsObject());
@@ -438,7 +439,7 @@ static Handle<Value> Session_Logout(const Arguments& args) {
   sp_error error = sp_session_logout(session->pointer);
   NSP_THROW_IF_ERROR(error);
 
-  return scope.Close(Undefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -447,33 +448,8 @@ static Handle<Value> Session_Logout(const Arguments& args) {
  * from the main thread
  * @return next_timeout when in milliseconds to call this function again
  */
-static Handle<Value> Session_Process_Events(const Arguments& args) {
-  HandleScope scope;
-
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
-
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
-  int next_timeout = 0;
-  sp_error error = sp_session_process_events(session->pointer, &next_timeout);
-  NSP_THROW_IF_ERROR(error);
-
-  return scope.Close(Number::New(next_timeout));
-}
-
-/**
- * JS session_playlistcontainer implementation. This function unwraps the session handle
- * and calls sp_session_playlistcontainer. this will return the sp_playlistcontainer for the currently logged in user
- */
-static Handle<Value> Session_PlaylistContainer(const Arguments& args) {
-  HandleScope scope;
-
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
-
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
-
-  sp_playlistcontainer* spplaylistcontainer = sp_session_playlistcontainer(session->pointer);
+NAN_METHOD(Session_Process_Events) {
+    NanScope();
 
   ObjectHandle<sp_playlistcontainer>* playlistcontainer = new ObjectHandle<sp_playlistcontainer>("sp_playlistcontainer");
   playlistcontainer->pointer = spplaylistcontainer;
@@ -482,7 +458,7 @@ static Handle<Value> Session_PlaylistContainer(const Arguments& args) {
   sp_error error = sp_playlistcontainer_add_callbacks(spplaylistcontainer, &nsp_playlistcontainer_callbacks, playlistcontainer);
   NSP_THROW_IF_ERROR(error);
 
-  return scope.Close(playlistcontainer->object);
+    NanReturnValue(NanNew<Number>(next_timeout));
 }
 
 void nsp::init_session(Handle<Object> target) {

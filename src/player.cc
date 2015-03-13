@@ -128,15 +128,18 @@ static void read_delivered_music(uv_timer_t* handle, int status) {
     buffer->handle_->Set(String::New("channels"), Number::New(afd->channels));
     buffer->handle_->Set(String::New("rate"), Number::New(afd->rate));
 
-    Local<Value> argv[1] = { Local<Value>::New(buffer->handle_) };
-    Handle<Value> send_more_data = cb->Call(Context::GetCurrent()->Global(), 1, argv);
+        Handle<Value> cbv = NanNew(session->object)->Get(NanNew<String>("music_delivery"));
+        if(!cbv->IsFunction()) {
+            return;
+        }
+        NanCallback *callback = new NanCallback(cbv.As<Function>());
 
-    assert(send_more_data->IsBoolean());
+        Handle<Object> buffer = NanNewBufferHandle((char*) afd->samples, afd->nsamples * sizeof(int16_t)* afd->channels, free_music_data, afd);
+        buffer->Set(NanNew<String>("channels"), NanNew<Number>(afd->channels));
+        buffer->Set(NanNew<String>("rate"), NanNew<Number>(afd->rate));
 
-    // Pause the delivery of data because we have been told that no more data can be handled,
-    // it's up to whoever told us to stop to call Session_Player_Stream_Resume to resume data
-    if (!send_more_data->ToBoolean()->Value()) {
-      pause_delivery = 1;
+        Local<Value> argv[1] = { NanNew(buffer) };
+        callback->Call(1, argv);
     }
 
     scope.Close(Undefined());
@@ -149,8 +152,8 @@ static void read_delivered_music(uv_timer_t* handle, int status) {
 /**
  * Load the given track in the player of the given session
  */
-static Handle<Value> Session_Player_Load(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Session_Player_Load) {
+    NanScope();
 
   assert(args.Length() == 2);
   assert(args[0]->IsObject());
@@ -163,18 +166,14 @@ static Handle<Value> Session_Player_Load(const Arguments& args) {
   sp_error error = sp_session_player_load(session->pointer, track->pointer);
   NSP_THROW_IF_ERROR(error);
 
-  return scope.Close(Undefined());
+    NanReturnValue(Undefined());
 }
 
 /**
  * starts playing
  */
-static Handle<Value> Session_Player_Play(const Arguments& args) {
-  HandleScope scope;
-
-  assert(args.Length() == 2);
-  assert(args[0]->IsObject());
-  assert(args[1]->IsBoolean());
+NAN_METHOD(Session_Player_Play) {
+    HandleScope scope;
 
   ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
 
@@ -194,7 +193,7 @@ static Handle<Value> Session_Player_Stream_Resume(const Arguments& args) {
 
   pause_delivery = 0;
 
-  return scope.Close(Undefined());
+    NanReturnValue(Undefined());
 }
 
 static uv_timer_t read_music_handle;

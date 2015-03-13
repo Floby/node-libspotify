@@ -25,8 +25,8 @@ using namespace nsp;
 /**
  * JS artist_is_loaded implementation. checks if a given artist is loaded
  */
-static Handle<Value> Artist_Is_Loaded(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Artist_Is_Loaded) {
+    NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -38,14 +38,14 @@ static Handle<Value> Artist_Is_Loaded(const Arguments& args) {
   // actually call sp_artist_is_loaded
   bool loaded = sp_artist_is_loaded(artist->pointer);
 
-  return scope.Close(Boolean::New(loaded));
+    NanReturnValue(NanNew<Boolean>(loaded));
 }
 
 /**
  * JS artist_name implementation. checks if a given artist is loaded
  */
-static Handle<Value> Artist_Name(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Artist_Name) {
+    NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -56,7 +56,7 @@ static Handle<Value> Artist_Name(const Arguments& args) {
 
   const char* name = sp_artist_name(artist->pointer);
 
-  return scope.Close(String::New(name));
+    NanReturnValue(NanNew<String>(name));
 }
 
 void nsp::init_artist(Handle<Object> target) {
