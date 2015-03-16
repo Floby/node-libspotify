@@ -38,10 +38,22 @@ NAN_METHOD(nsp::JsNoOp) {
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  */
 static void call_logged_in_callback(sp_session* session, sp_error error) {
-  ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
-  Handle<Object> o = s->object;
-  Handle<Value> cbv = o->Get(String::New("logged_in"));
-  if(!cbv->IsFunction()) {
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    Handle<Object> o = NanNew(s->object);
+    Handle<Value> cbv = o->Get(NanNew<String>("logged_in"));
+    if(!cbv->IsFunction()) {
+        return;
+    }
+    NanCallback *cb = new NanCallback(cbv.As<Function>());
+
+    const unsigned int argc = 1;
+    Handle<Value> err = NanNull();
+    if(error != SP_ERROR_OK) {
+        err = NanError(sp_error_message(error));
+    }
+    Local<Value> argv[argc] = { NanNew<Value>(err) };
+    cb->Call(argc, argv);
+
     return;
   }
 
@@ -62,10 +74,18 @@ static void call_logged_in_callback(sp_session* session, sp_error error) {
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  */
 static void call_logged_out_callback(sp_session* session) {
-  ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
-  Handle<Object> o = s->object;
-  Handle<Value> cbv = o->Get(String::New("logged_out"));
-  if(!cbv->IsFunction()) {
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    Handle<Object> o = NanNew(s->object);
+    Handle<Value> cbv = o->Get(NanNew<String>("logged_out"));
+    if(!cbv->IsFunction()) {
+        return;
+    }
+    NanCallback *cb = new NanCallback(cbv.As<Function>());
+
+    const unsigned int argc = 0;
+    Local<Value> argv[argc] = {};
+    cb->Call(argc, argv);
+
     return;
   }
 
@@ -118,12 +138,19 @@ uv_timer_t do_notify_handle; ///> uv loop handle for notifying main thread
  * since the notify_main_thread is not called from the main thread
  * we have to set a timer in order to execute the JS callback at the right moment
  */
-static void do_call_notify_main_thread_callback(uv_timer_t* handle, int status) {
-  sp_session* session = (sp_session*) handle->data;
-  ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
-  Handle<Object> o = s->object;
-  Handle<Value> cbv = o->Get(String::New("notify_main_thread"));
-  if(!cbv->IsFunction()) {
+static void do_call_notify_main_thread_callback(sp_session* session) {
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    Handle<Object> o = NanNew(s->object);
+    Handle<Value> cbv = o->Get(NanNew<String>("notify_main_thread"));
+    if(!cbv->IsFunction()) {
+        return;
+    }
+    NanCallback *cb = new NanCallback(cbv.As<Function>());
+
+    const unsigned int argc = 0;
+    Local<Value> argv[argc] = {};
+    cb->Call(argc, argv);
+
     return;
   }
 
@@ -139,13 +166,49 @@ static void do_call_notify_main_thread_callback(uv_timer_t* handle, int status) 
  * spotify callback for the notify_main_thread event.
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  */
-static void call_notify_main_thread_callback(sp_session* session) {
-  uv_timer_init(uv_default_loop(), &do_notify_handle);
-  do_notify_handle.data = session;
 
-  // set the loop to call our JS callback in 3 ms
-  // TODO how about next tick ?
-  uv_timer_start(&do_notify_handle, &do_call_notify_main_thread_callback, 1, 0);
+static sp_session* notifysession = NULL;
+static bool alive = false;
+
+class NSPCallbackWorker : public NanAsyncWorker {
+public:
+
+  NSPCallbackWorker () : NanAsyncWorker(NULL) {
+  }
+
+  ~NSPCallbackWorker () { }
+
+  void Execute () {
+    while (!notifysession && alive) {
+        usleep(1e3); // 1ms
+        continue;
+    }
+  }
+
+protected:
+  void HandleOKCallback () {
+    if (notifysession) {
+        do_call_notify_main_thread_callback(notifysession);
+        notifysession = NULL;
+
+        if (alive) {
+            NanAsyncQueueWorker(new NSPCallbackWorker());
+        }
+    }
+  }
+  
+  void HandleErrorCallback () {}
+};
+
+static void call_notify_main_thread_callback(sp_session* session) {
+    // uv_timer_init(uv_default_loop(), &do_notify_handle);
+    // do_notify_handle.data = session;
+
+    // set the loop to call our JS callback in 3 ms
+    // TODO how about next tick ?
+    // uv_timer_start(&do_notify_handle, &do_call_notify_main_thread_callback, 1, 0);
+
+    notifysession = session;   
 }
 
 /**
@@ -187,7 +250,21 @@ static void call_log_message_callback(sp_session* session, const char* data) {
  * See https://developer.spotify.com/technologies/libspotify/docs/12.1.45/structsp__session__callbacks.html
  * implemented in player.cc
  */
-extern void call_end_of_track_callback(sp_session* session);
+static void call_end_of_track_callback(sp_session* session) {
+    ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
+    Handle<Object> o = NanNew(s->object);
+    Handle<Value> cbv = o->Get(NanNew<String>("end_of_track"));
+    if(!cbv->IsFunction()) {
+        return;
+    }
+    NanCallback *cb = new NanCallback(cbv.As<Function>());
+
+    const unsigned int argc = 0;
+    Local<Value> argv[argc] = {};
+    cb->Call(argc, argv);
+
+    return;
+}
 
 /**
  * spotify callback for the streaming_error event.
@@ -337,7 +414,7 @@ NAN_METHOD(Session_Config) {
     // so that it can be read later
     Handle<Array> properties = obj->GetOwnPropertyNames();
     for (unsigned int i = 0; i < properties->Length(); ++i) {
-        session_config->object->Set(
+        NanNew(session_config->object)->Set(
             properties->Get(i),
             obj->Get(properties->Get(i))
         );
@@ -368,7 +445,17 @@ NAN_METHOD(Session_Create) {
   sp_error error = sp_session_create(session_config->pointer, &session->pointer);
   NSP_THROW_IF_ERROR(error);
 
+    alive = true;
+    NanAsyncQueueWorker(new NSPCallbackWorker());
+
     NanReturnValue(session->object);
+}
+
+/**
+ * JS session_close implementation. Removes the listener.
+ */
+NAN_METHOD(Session_Close) {
+    alive = false;
 }
 
 /**
@@ -393,7 +480,7 @@ NAN_METHOD(Session_Release) {
   // make sure we won't be used this pointer ever again
   session->pointer = NULL;
 
-    NanReturnValue(Undefined());
+    NanReturnUndefined();
 }
 
 /*
@@ -422,6 +509,10 @@ NAN_METHOD(Session_Login) {
         NULL
     );
     NSP_THROW_IF_ERROR(error);
+
+    // Start callback worker
+    alive = true;
+    NanAsyncQueueWorker(new NSPCallbackWorker());
 
     NanReturnUndefined();
 }
@@ -462,11 +553,11 @@ NAN_METHOD(Session_Process_Events) {
 }
 
 void nsp::init_session(Handle<Object> target) {
-  NODE_SET_METHOD(target, "session_config", Session_Config);
-  NODE_SET_METHOD(target, "session_create", Session_Create);
-  NODE_SET_METHOD(target, "session_release", Session_Release);
-  NODE_SET_METHOD(target, "session_login", Session_Login);
-  NODE_SET_METHOD(target, "session_logout", Session_Logout);
-  NODE_SET_METHOD(target, "session_process_events", Session_Process_Events);
-  NODE_SET_METHOD(target, "session_playlistcontainer", Session_PlaylistContainer);
+    NODE_SET_METHOD(target, "session_config", Session_Config);
+    NODE_SET_METHOD(target, "session_create", Session_Create);
+    NODE_SET_METHOD(target, "session_release", Session_Release);
+    NODE_SET_METHOD(target, "session_close", Session_Close);
+    NODE_SET_METHOD(target, "session_login", Session_Login);
+    NODE_SET_METHOD(target, "session_logout", Session_Logout);
+    NODE_SET_METHOD(target, "session_process_events", Session_Process_Events);
 }

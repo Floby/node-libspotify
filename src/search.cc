@@ -26,9 +26,22 @@ using namespace nsp;
  * Spotify callback when a search query completed
  */
 static void on_search_complete(sp_search* result, void* userdata) {
-  ObjectHandle<sp_search>* search = static_cast<ObjectHandle<sp_search>* >(userdata);
-  Handle<Value> cbv = search->object->Get(String::New("on_search_complete"));
-  if(!cbv->IsFunction()) {
+    ObjectHandle<sp_search>* search = static_cast<ObjectHandle<sp_search>* >(userdata);
+    Handle<Value> cbv = NanNew(search->object)->Get(NanNew<String>("on_search_complete"));
+    if(!cbv->IsFunction()) {
+        return;
+    }
+    NanCallback *cb = new NanCallback(cbv.As<Function>());
+
+    const unsigned int argc = 2;
+    sp_error error = sp_search_error(result);
+    Handle<Value> err = NanNull();
+    if(error != SP_ERROR_OK) {
+        err = Exception::Error(NanNew<String>(sp_error_message(error)));
+    }
+    Local<Value> argv[argc] = { NanNew<Value>(err), NanNew<Object>(search->object) };
+    cb->Call(argc, argv);
+
     return;
   }
 
@@ -94,8 +107,8 @@ NAN_METHOD(Search_Create) {
 /**
  * JS search_num_tracks implementation.
  */
-static Handle<Value> Search_Num_Tracks(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Search_Num_Tracks) {
+    NanScope();
 
   assert(args.Length() == 1);
   assert(args[0]->IsObject());
@@ -103,7 +116,7 @@ static Handle<Value> Search_Num_Tracks(const Arguments& args) {
   ObjectHandle<sp_search>* search = ObjectHandle<sp_search>::Unwrap(args[0]);
   int num = sp_search_num_tracks(search->pointer);
 
-  return scope.Close(Number::New(num));
+    NanReturnValue(NanNew<Number>(num));
 }
 
 /**

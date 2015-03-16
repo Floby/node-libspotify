@@ -36,7 +36,7 @@
     "nan": "^1.7.0"
   },
   "devDependencies": {
-    "nodeunit": "~0.7",
+    "nodeunit": "^0.7",
     "trycatch": "*",
     "colors": "*",
     "istanbul": "~0.2.3"

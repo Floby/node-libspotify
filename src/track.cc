@@ -159,17 +159,17 @@ NAN_METHOD(Track_Get_Availability) {
     Handle<Value> res;
     switch (availability) {
         case SP_TRACK_AVAILABILITY_AVAILABLE:
-            res = String::New("AVAILABLE");
+            res = NanNew<String>("AVAILABLE");
             break;
         case SP_TRACK_AVAILABILITY_NOT_STREAMABLE:
-            res = String::New("NOT_STREAMABLE");
+            res = NanNew<String>("NOT_STREAMABLE");
             break;
         case SP_TRACK_AVAILABILITY_BANNED_BY_ARTIST:
-            res = String::New("BANNED_BY_ARTIST");
+            res = NanNew<String>("BANNED_BY_ARTIST");
             break;
         case SP_TRACK_AVAILABILITY_UNAVAILABLE:
         default:
-            res = String::New("UNAVAILABLE");
+            res = NanNew<String>("UNAVAILABLE");
             break;
     }
 
@@ -207,7 +207,7 @@ NAN_METHOD(Track_Set_Starred) {
 
     ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
 
-    Handle<Array> arr = Local<Array>(Array::Cast(*args[1]));
+    Handle<Array> arr = args[1].As<Array>();
     unsigned int length = arr->Length();
     sp_track* tracks[length];
     for(unsigned int i=0; i<length; ++i) {
@@ -224,7 +224,7 @@ NAN_METHOD(Track_Set_Starred) {
  * JS track_popularity implementation. checks if a given track is loaded
  */
 NAN_METHOD(Track_Popularity) {
-    HandleScope scope;
+    NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
