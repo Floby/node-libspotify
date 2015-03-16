@@ -42,8 +42,8 @@ using v8::Persistent;
  * In a C++ function called from JS, takes a spotify error code, tests if not OK and throws an exception
  * with the appropriate error message
  */
-#define NSP_THROW_IF_ERROR(error) if(error != SP_ERROR_OK) {return v8::ThrowException( \
-            v8::Exception::Error(NanNew<String>(sp_error_message( error )))\
+#define NSP_THROW_IF_ERROR(error) if(error != SP_ERROR_OK) { NanThrowError( \
+            sp_error_message( error )\
         );}
 
 /**
