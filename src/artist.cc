@@ -26,7 +26,7 @@ using namespace nsp;
  * JS artist_is_loaded implementation. checks if a given artist is loaded
  */
 NAN_METHOD(Artist_Is_Loaded) {
-    NanScope();
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -38,14 +38,14 @@ NAN_METHOD(Artist_Is_Loaded) {
   // actually call sp_artist_is_loaded
   bool loaded = sp_artist_is_loaded(artist->pointer);
 
-    NanReturnValue(NanNew<Boolean>(loaded));
+  NanReturnValue(NanNew<Boolean>(loaded));
 }
 
 /**
  * JS artist_name implementation. checks if a given artist is loaded
  */
 NAN_METHOD(Artist_Name) {
-    NanScope();
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -56,7 +56,7 @@ NAN_METHOD(Artist_Name) {
 
   const char* name = sp_artist_name(artist->pointer);
 
-    NanReturnValue(NanNew<String>(name));
+  NanReturnValue(NanNew<String>(name));
 }
 
 void nsp::init_artist(Handle<Object> target) {

@@ -30,8 +30,8 @@ using namespace nsp;
 /**
  * JS playlistcontainer_is_loaded implementation. checks if a given playlistcontainer is loaded
  */
-static Handle<Value> PlaylistContainer_Is_Loaded(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(PlaylistContainer_Is_Loaded) {
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -43,14 +43,14 @@ static Handle<Value> PlaylistContainer_Is_Loaded(const Arguments& args) {
   // actually call sp_playlistcontainer_is_loaded
   bool loaded = sp_playlistcontainer_is_loaded(playlistcontainer->pointer);
 
-  return scope.Close(Boolean::New(loaded));
+  NanReturnValue(NanNew<Boolean>(loaded));
 }
 
 /**
  * JS num playlists implementation.
  */
-static Handle<Value> PlaylistContainer_Num_Playlists(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(PlaylistContainer_Num_Playlists) {
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -62,14 +62,14 @@ static Handle<Value> PlaylistContainer_Num_Playlists(const Arguments& args) {
   // actually call sp_playlistcontainer_num_playlists
   int numPlaylists = sp_playlistcontainer_num_playlists(playlistcontainer->pointer);
 
-  return scope.Close(Number::New(numPlaylists));
+  NanReturnValue(NanNew<Number>(numPlaylists));
 }
 
 /**
  * JS playlist implementation. Gets the playlist at index for the playlist container
  */
-static Handle<Value> PlaylistContainer_Playlist(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(PlaylistContainer_Playlist) {
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 3);
@@ -83,7 +83,7 @@ static Handle<Value> PlaylistContainer_Playlist(const Arguments& args) {
   // gets sp_session pointer from given object
   ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[1]);
 
-  int index = args[2]->ToNumber()->Int32Value();
+  int index = args[2].As<Number>()->Int32Value();
 
   assert(index >= 0);
   assert(index < sp_playlistcontainer_num_playlists(playlistcontainer->pointer));
@@ -100,7 +100,7 @@ static Handle<Value> PlaylistContainer_Playlist(const Arguments& args) {
   sp_error error = sp_playlist_add_callbacks(spplaylist, &nsp_playlist_callbacks, playlist);
   NSP_THROW_IF_ERROR(error);
 
-  return scope.Close(playlist->object);
+  NanReturnValue(playlist->object);
 }
 
 void nsp::init_playlistcontainer(Handle<Object> target) {
@@ -116,8 +116,8 @@ void nsp::init_playlistcontainer(Handle<Object> target) {
 /**
  * JS playlist_is_loaded implementation. checks if a given playlist is loaded
  */
-static Handle<Value> Playlist_Is_Loaded(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Playlist_Is_Loaded) {
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -129,14 +129,14 @@ static Handle<Value> Playlist_Is_Loaded(const Arguments& args) {
   // actually call sp_playlistcontainer_is_loaded
   bool loaded = sp_playlist_is_loaded(playlist->pointer);
 
-  return scope.Close(Boolean::New(loaded));
+  NanReturnValue(NanNew<Boolean>(loaded));
 }
 
 /**
  * JS playlist_name implementation. return the playlist name
  */
-static Handle<Value> Playlist_Name(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Playlist_Name) {
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -148,14 +148,14 @@ static Handle<Value> Playlist_Name(const Arguments& args) {
   // actually call sp_playlist_name
   const char* name = sp_playlist_name(playlist->pointer);
 
-  return scope.Close(String::New(name));
+  NanReturnValue(NanNew<String>(name));
 }
 
 /**
  * JS num tracks implementation.
  */
-static Handle<Value> Playlist_Num_Tracks(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Playlist_Num_Tracks) {
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -167,14 +167,14 @@ static Handle<Value> Playlist_Num_Tracks(const Arguments& args) {
   // actually call sp_playlist_num_tracks
   int numTracks = sp_playlist_num_tracks(playlist->pointer);
 
-  return scope.Close(Number::New(numTracks));
+  NanReturnValue(NanNew<Number>(numTracks));
 }
 
 /**
  * JS playlist track implementation. Gets the track at index for the playlist
  */
-static Handle<Value> Playlist_Track(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Playlist_Track) {
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 2);
@@ -195,14 +195,14 @@ static Handle<Value> Playlist_Track(const Arguments& args) {
   ObjectHandle<sp_track>* track = new ObjectHandle<sp_track>("sp_track");
   track->pointer = sptrack;
 
-  return scope.Close(track->object);
+  NanReturnValue(track->object);
 }
 
 /**
  * JS playlist num subscribers. Gets the number of subscribers for the playlist
  */
-static Handle<Value> Playlist_Update_Subscribers(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Playlist_Update_Subscribers) {
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 2);
@@ -218,14 +218,14 @@ static Handle<Value> Playlist_Update_Subscribers(const Arguments& args) {
   sp_error error = sp_playlist_update_subscribers(session->pointer, playlist->pointer);
   NSP_THROW_IF_ERROR(error);
 
-  return scope.Close(Undefined());
+  NanReturnUndefined();
 }
 
 /**
  * JS playlist num subscribers. Gets the number of subscribers for the playlist
  */
-static Handle<Value> Playlist_Num_Subscribers(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Playlist_Num_Subscribers) {
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -236,7 +236,7 @@ static Handle<Value> Playlist_Num_Subscribers(const Arguments& args) {
 
   int numSubscribers = sp_playlist_num_subscribers(playlist->pointer);
 
-  return scope.Close(Number::New(numSubscribers));
+  NanReturnValue(NanNew<Number>(numSubscribers));
 }
 
 

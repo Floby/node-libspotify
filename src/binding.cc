@@ -22,14 +22,16 @@
 #include "common.h"
 
 void InitAll(Handle<Object> target) {
-    // initializing all modules
-    nsp::init_album(target);
-    nsp::init_artist(target);
-    nsp::init_link(target);
-    nsp::init_player(target);
-    nsp::init_search(target);
-    nsp::init_session(target);
-    nsp::init_track(target);
+  // initializing all modules
+  nsp::init_album(target);
+  nsp::init_artist(target);
+  nsp::init_link(target);
+  nsp::init_player(target);
+  nsp::init_search(target);
+  nsp::init_session(target);
+  nsp::init_track(target);
+  nsp::init_playlistcontainer(target);
+  nsp::init_playlist(target);
 }
 
 NODE_MODULE(spotify, InitAll);

@@ -29,14 +29,14 @@
     "node": ">0.10.0"
   },
   "dependencies": {
-    "backoff": "~1.2",
-    "bindings": "~1.0.0",
-    "format": "0.1",
+    "bindings": "~1.1.1",
     "i": "~0.3",
+    "format": "0.1",
+    "backoff": "~2.0",
     "nan": "^1.7.0"
   },
   "devDependencies": {
-    "nodeunit": "^0.7",
+    "nodeunit": "^0.9",
     "trycatch": "*",
     "colors": "*",
     "istanbul": "~0.2.3"

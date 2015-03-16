@@ -24,7 +24,7 @@ using namespace v8;
 using namespace nsp;
 
 NAN_METHOD(Link_Create_From_Track) {
-    NanScope();
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -39,11 +39,11 @@ NAN_METHOD(Link_Create_From_Track) {
   // TODO handle truncated urls
   sp_link_as_string(link, url, 256);
 
-    NanReturnValue(NanNew<String>(url));
+  NanReturnValue(NanNew<String>(url));
 }
 
 NAN_METHOD(Link_Create_From_Artist) {
-    NanScope();
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -57,11 +57,29 @@ NAN_METHOD(Link_Create_From_Artist) {
   // TODO handle truncated urls
   sp_link_as_string(link, url, 256);
 
-    NanReturnValue(NanNew<String>(url));
+  NanReturnValue(NanNew<String>(url));
+}
+
+NAN_METHOD(Link_Create_From_Playlist) {
+  NanScope();
+
+  // test arguments sanity
+  assert(args.Length() == 1);
+  assert(args[0]->IsObject());
+
+  // gets sp_playlist pointer from given object
+  ObjectHandle<sp_playlist>* playlist = ObjectHandle<sp_playlist>::Unwrap(args[0]);
+
+  sp_link* link = sp_link_create_from_playlist(playlist->pointer);
+  char url[256];
+  // TODO handle truncated urls
+  sp_link_as_string(link, url, 256);
+
+  NanReturnValue(NanNew<String>(url));
 }
 
 NAN_METHOD(Link_As_Track) {
-    NanScope();
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -75,11 +93,11 @@ NAN_METHOD(Link_As_Track) {
   ObjectHandle<sp_track>* track = new ObjectHandle<sp_track>("sp_track");
   track->pointer = sp_link_as_track(link);
 
-    NanReturnValue(track->object);
+  NanReturnValue(track->object);
 }
 
 NAN_METHOD(Link_As_Artist) {
-    NanScope();
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 1);
@@ -93,11 +111,11 @@ NAN_METHOD(Link_As_Artist) {
   ObjectHandle<sp_artist>* artist = new ObjectHandle<sp_artist>("sp_artist");
   artist->pointer = sp_link_as_artist(link);
 
-    NanReturnValue(artist->object);
+  NanReturnValue(artist->object);
 }
 
-static Handle<Value> Link_As_Playlist(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Link_As_Playlist) {
+  NanScope();
 
   // test arguments sanity
   assert(args.Length() == 2);
@@ -119,12 +137,12 @@ static Handle<Value> Link_As_Playlist(const Arguments& args) {
   sp_error error = sp_playlist_add_callbacks(playlist->pointer, &nsp_playlist_callbacks, playlist);
   NSP_THROW_IF_ERROR(error);
 
-  return scope.Close(playlist->object);
+  NanReturnValue(playlist->object);
 }
 
 
-static Handle<Value> Link_Type(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Link_Type) {
+  NanScope();
   const char* type = NULL;
 
   // test arguments sanity
@@ -134,7 +152,7 @@ static Handle<Value> Link_Type(const Arguments& args) {
   String::Utf8Value url(args[0]);
   sp_link* link = sp_link_create_from_string(*url);
   if(!link) {
-    return scope.Close(Boolean::New(false));
+    NanReturnValue(NanNew<Boolean>(false));
   }
 
   switch(sp_link_type(link)) {
@@ -148,11 +166,10 @@ static Handle<Value> Link_Type(const Arguments& args) {
       type = "track";
       break;
     default:
-      return scope.Close(Boolean::New(false));
-      break;
+      NanReturnValue(NanNew<Boolean>(false));
   }
 
-  return scope.Close(String::New(type));
+  NanReturnValue(NanNew<String>(type));
 }
 
 
