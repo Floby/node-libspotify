@@ -20,7 +20,7 @@ if(!exists) {
     process.exit(1);
 }
 
-var exists = false;
+exists = false;
 try {
     exists = fs.existsSync(fs.realpathSync(__dirname + '/../spotify_key/passwd.js'));
 }

@@ -10,7 +10,7 @@ var search = {
         testutil.getDefaultTestSession(function(s) {
             session = s;
             cb();
-        })
+        });
     },
 
     testSearchFromString: function(test) {
@@ -32,7 +32,7 @@ var search = {
             test.done();
         });
         search.execute();
-    },
+    }
 };
 
 exports.search = search;

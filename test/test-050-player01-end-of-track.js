@@ -8,7 +8,7 @@ exports.setUp = function(cb) {
     testutil.getDefaultTestSession(function(s) {
         session = s;
         cb();
-    })
+    });
 };
 exports.testEndOfShortTrack = function(test) {
     var search = new sp.Search('album:"Indie Rock to the Blues" track:"short song I"');
@@ -24,10 +24,11 @@ exports.testEndOfShortTrack = function(test) {
             called_end = true;
             player.stop();
         });
+        player.on('data', function() {});
         setTimeout(function() {
             test.ok(called_end);
             player.stop();
             test.done();
         }, track.duration + 2000); // 2 seconds margin
     });
-}
+};

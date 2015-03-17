@@ -10,10 +10,14 @@
     "player",
     "music"
   ],
-  "version": "0.0.1",
+  "version": "0.2.2",
   "maintainers": [
-    { "name": "Florent Jaby", "email": "florent.jaby@gmail.com" }
+    {
+      "name": "Florent Jaby",
+      "email": "florent.jaby@gmail.com"
+    }
   ],
+  "homepage": "http://projects.flo.by/node-libspotify/",
   "bugs": {
     "url": "https://github.com/floby/node-libspotify/issues"
   },
@@ -22,23 +26,25 @@
     "url": "https://github.com/Floby/node-libspotify.git"
   },
   "engines": {
-    "node": "~0.8.0"
+    "node": ">0.10.0"
   },
   "dependencies": {
-    "bindings": "~1.0.0",
-    "i":"~0.3",
-    "format":"0.1",
-    "backoff":"~1.2"
+    "bindings": "~1.1.1",
+    "i": "~0.3",
+    "format": "0.1",
+    "backoff": "~2.0",
+    "nan": "^1.7.0"
   },
   "devDependencies": {
-    "nodeunit": "~0.7",
+    "nodeunit": "^0.9",
     "trycatch": "*",
-    "colors": "*"
+    "colors": "*",
+    "istanbul": "~0.2.3"
   },
   "scripts": {
     "install": "node-gyp configure build",
     "pretest": "rm -rf /tmp/node-libspotify 2>/dev/null ; node-gyp clean >/dev/null && node-gyp configure --debug  >/dev/null && node-gyp build >/dev/null",
-    "test": "nodeunit test/test-*"
+    "test": "istanbul cover nodeunit test/test-*"
   },
   "main": "lib/libspotify.js"
 }

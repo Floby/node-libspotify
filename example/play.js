@@ -1,9 +1,6 @@
 var sp = require('../lib/libspotify');
 var cred = require('../spotify_key/passwd');
-var fs = require('fs');
 var spawn = require('child_process').spawn;
-
-var f = fs.createWriteStream('/tmp/bidule.raw');
 
 var session = new sp.Session({
     applicationKey: __dirname + '/../spotify_key/spotify_appkey.key'
@@ -38,7 +35,6 @@ session.once('login', function(err) {
         });
         player.once('track-end', function() {
             console.log('track ended');
-            f.end();
             player.stop();
             session.close();
         });

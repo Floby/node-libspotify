@@ -26,60 +26,17 @@ exports.setUp = function(cb) {
             testutil.getDefaultTestSession(function(s) {
                 session = s;
                 cb();
-            })
+            });
         });
     }
     else {
         testutil.getDefaultTestSession(function(s) {
             session = s;
             cb();
-        })
+        });
     }
 };
 
-//exports.setUp = function(cb) {
-    //testutil.getDefaultTestSession(function(s) {
-        //session = s;
-        //cb();
-    //})
-//};
-exports.testPlaySingleGuillemotsTrack = function(test) {
-    var search = new sp.Search('artist:"Guillemots" track:"Fleet"');
-    var f = fs.createWriteStream('/tmp/node-libspotify/guillemots.raw');
-    f.on('open', function() {
-        trycatch(function() {
-            search.execute(function() {
-                var track = search.tracks[0];
-                test.ok(track.isReady(), 'track should be loaded');
-                var player = session.getPlayer();
-                test.doesNotThrow(function() {
-                    player.load(track);
-                }, "loading a track should not throw");
-                player.play();
-                console.log('playing track, this may take some time');
-                if(pa) player.pipe(pa);
-                player.pipe(f);
-                var got_data = false;
-                player.once('data', function(chunk) {
-                    test.ok(chunk.length > 0, "we should get samples from the player");
-                    got_data = true;
-                });
-                setTimeout(function() {
-                    if(pa) pa.start();
-                }, 500);
-                setTimeout(function() {
-                    if(pa) pa.stop();
-                    player.stop();
-                    f.end();
-                    test.ok(got_data, "we should have received some data from the player");
-                    test.done();
-                }, 2000);
-            });
-        }, /* catch */ function(e) {
-            test.done(e);
-        })
-    });
-}
 exports.testPlaySingleAlJArreauTrack = function(test) {
     var search = new sp.Search('artist:"Al Jarreau" track:"Boogie down"');
     var f = fs.createWriteStream('/tmp/node-libspotify/al-jarreau.raw');
@@ -110,10 +67,10 @@ exports.testPlaySingleAlJArreauTrack = function(test) {
                     f.end();
                     test.ok(got_data, "we should have received some data from the player");
                     test.done();
-                }, 2000);
+                }, 5000);
             });
         }, /* catch */ function(e) {
             test.done(e);
-        })
+        });
     });
-}
+};

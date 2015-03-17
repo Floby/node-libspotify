@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Floby/node-libspotify.png?branch=master)](https://travis-ci.org/Floby/node-libspotify?branch=master)
+
 node-libspotify
 ===============
 
@@ -14,8 +16,7 @@ you can get it from [here](https://developer.spotify.com/technologies/libspotify
 You must provide your own spotify application key, because I'm not giving mine away :]
 You also must provide valid credentials for a spotify account.
 
-Once you cloned the repository
-run `npm install` then test the module with `npm test`
+Once you cloned the repository run `npm install` then test the module with `npm test`.
 
 Main objectives
 ---------------
@@ -29,11 +30,11 @@ What the user can do with the audio stream is up to him/her. As it is raw PCM da
 some kind of encoder (like gstreamer) in order to broadcast music or stream it to a web user (as long as it complies
 with the Spotify terms of service ;).
 
-The user can also choose to play the song locally with a node module like [node-portaudio](https://github.com/joeferner/node-portaudio)
-or pipe the audio data to another process like [play](http://linux.about.com/library/cmd/blcmdl1_play.htm)
+The user can also choose to play the song locally with a node module like [speaker](http://github.com/TooTallNate/node-speaker)
+or pipe the audio data to another process like [aplay](http://linux.die.net/man/1/aplay).
 
 
-The main goal is now achieved. Audio data is exposed as the Player object which behaves like a readable stream
+The main goal is now achieved. Audio data is exposed as the Player object which behaves like a readable stream.
 
 Snippet
 -------
@@ -44,10 +45,7 @@ Here is a code snippet of how to play a track from spotify
 
 var sp = require('../lib/libspotify');
 var cred = require('../spotify_key/passwd');
-var fs = require('fs');
 var spawn = require('child_process').spawn;
-
-var f = fs.createWriteStream('/tmp/bidule.raw');
 
 var session = new sp.Session({
     applicationKey: __dirname + '/../spotify_key/spotify_appkey.key'
@@ -86,7 +84,6 @@ session.once('login', function(err) {
         });
         player.once('track-end', function() {
             console.error('track ended');
-            f.end();
             player.stop();
             session.close();
         });
@@ -100,3 +97,11 @@ TODO
 ====
 
 * Bind to the rest of the API...
+
+
+
+Credits
+=======
+
+Thanks to [IainCole](https://github.com/IainCole/node-libspotify) for his help on the playlist subsystem.
+Thanks to [LinusU](https://github.com/LinusU) and [swissmanu](https://github.com/swissmanu) for their help on album cover retreivals
