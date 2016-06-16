@@ -24,14 +24,14 @@ using namespace v8;
 using namespace nsp;
 
 NAN_METHOD(Link_Create_From_Track) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
 
   // gets sp_track pointer from given object
-  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[0]);
+  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(info[0]);
 
   // TODO handle length in ms
   sp_link* link = sp_link_create_from_track(track->pointer, 0);
@@ -39,53 +39,53 @@ NAN_METHOD(Link_Create_From_Track) {
   // TODO handle truncated urls
   sp_link_as_string(link, url, 256);
 
-  NanReturnValue(NanNew<String>(url));
+  info.GetReturnValue().Set(Nan::New<String>(url).ToLocalChecked());
 }
 
 NAN_METHOD(Link_Create_From_Artist) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
 
   // gets sp_artist pointer from given object
-  ObjectHandle<sp_artist>* artist = ObjectHandle<sp_artist>::Unwrap(args[0]);
+  ObjectHandle<sp_artist>* artist = ObjectHandle<sp_artist>::Unwrap(info[0]);
 
   sp_link* link = sp_link_create_from_artist(artist->pointer);
   char url[256];
   // TODO handle truncated urls
   sp_link_as_string(link, url, 256);
 
-  NanReturnValue(NanNew<String>(url));
+  info.GetReturnValue().Set(Nan::New<String>(url).ToLocalChecked());
 }
 
 NAN_METHOD(Link_Create_From_Playlist) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
 
   // gets sp_playlist pointer from given object
-  ObjectHandle<sp_playlist>* playlist = ObjectHandle<sp_playlist>::Unwrap(args[0]);
+  ObjectHandle<sp_playlist>* playlist = ObjectHandle<sp_playlist>::Unwrap(info[0]);
 
   sp_link* link = sp_link_create_from_playlist(playlist->pointer);
   char url[256];
   // TODO handle truncated urls
   sp_link_as_string(link, url, 256);
 
-  NanReturnValue(NanNew<String>(url));
+  info.GetReturnValue().Set(Nan::New<String>(url).ToLocalChecked());
 }
 
 NAN_METHOD(Link_As_Track) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsString());
+  assert(info.Length() == 1);
+  assert(info[0]->IsString());
 
-  String::Utf8Value url(args[0]);
+  String::Utf8Value url(info[0]);
 
   sp_link* link = sp_link_create_from_string(*url);
   assert(sp_link_type(link) == SP_LINKTYPE_TRACK);
@@ -93,17 +93,17 @@ NAN_METHOD(Link_As_Track) {
   ObjectHandle<sp_track>* track = new ObjectHandle<sp_track>("sp_track");
   track->pointer = sp_link_as_track(link);
 
-  NanReturnValue(track->object);
+  info.GetReturnValue().Set(Nan::New(track->object));
 }
 
 NAN_METHOD(Link_As_Artist) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsString());
+  assert(info.Length() == 1);
+  assert(info[0]->IsString());
 
-  String::Utf8Value url(args[0]);
+  String::Utf8Value url(info[0]);
 
   sp_link* link = sp_link_create_from_string(*url);
   assert(sp_link_type(link) == SP_LINKTYPE_ARTIST);
@@ -111,24 +111,24 @@ NAN_METHOD(Link_As_Artist) {
   ObjectHandle<sp_artist>* artist = new ObjectHandle<sp_artist>("sp_artist");
   artist->pointer = sp_link_as_artist(link);
 
-  NanReturnValue(artist->object);
+  info.GetReturnValue().Set(Nan::New(artist->object));
 }
 
 NAN_METHOD(Link_As_Playlist) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 2);
-  assert(args[0]->IsString());
-  assert(args[1]->IsObject());
+  assert(info.Length() == 2);
+  assert(info[0]->IsString());
+  assert(info[1]->IsObject());
 
-  String::Utf8Value url(args[0]);
+  String::Utf8Value url(info[0]);
 
   sp_link* link = sp_link_create_from_string(*url);
   assert(sp_link_type(link) == SP_LINKTYPE_PLAYLIST);
 
   // gets sp_session pointer from given object
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[1]);
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(info[1]);
 
   ObjectHandle<sp_playlist>* playlist = new ObjectHandle<sp_playlist>("sp_playlist");
   playlist->pointer = sp_playlist_create(session->pointer, link);
@@ -137,22 +137,22 @@ NAN_METHOD(Link_As_Playlist) {
   sp_error error = sp_playlist_add_callbacks(playlist->pointer, &nsp_playlist_callbacks, playlist);
   NSP_THROW_IF_ERROR(error);
 
-  NanReturnValue(playlist->object);
+  info.GetReturnValue().Set(Nan::New(playlist->object));
 }
 
 
 NAN_METHOD(Link_Type) {
-  NanScope();
+
   const char* type = NULL;
 
   // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsString());
+  assert(info.Length() == 1);
+  assert(info[0]->IsString());
 
-  String::Utf8Value url(args[0]);
+  String::Utf8Value url(info[0]);
   sp_link* link = sp_link_create_from_string(*url);
   if(!link) {
-    NanReturnValue(NanNew<Boolean>(false));
+    info.GetReturnValue().Set(Nan::New<Boolean>(false));
   }
 
   switch(sp_link_type(link)) {
@@ -166,20 +166,20 @@ NAN_METHOD(Link_Type) {
       type = "track";
       break;
     default:
-      NanReturnValue(NanNew<Boolean>(false));
+      info.GetReturnValue().Set(Nan::New<Boolean>(false));
   }
 
-  NanReturnValue(NanNew<String>(type));
+  info.GetReturnValue().Set(Nan::New<String>(type).ToLocalChecked());
 }
 
 
 
-void nsp::init_link(Handle<Object> target) {
-  NODE_SET_METHOD(target, "link_create_from_track", Link_Create_From_Track);
-  NODE_SET_METHOD(target, "link_create_from_artist", Link_Create_From_Artist);
-  NODE_SET_METHOD(target, "link_create_from_playlist", Link_Create_From_Playlist);
-  NODE_SET_METHOD(target, "link_as_track", Link_As_Track);
-  NODE_SET_METHOD(target, "link_as_artist", Link_As_Artist);
-  NODE_SET_METHOD(target, "link_as_playlist", Link_As_Playlist);
-  NODE_SET_METHOD(target, "link_type", Link_Type);
+void nsp::init_link(Local<Object> target) {
+  Nan::Export(target, "link_create_from_track", Link_Create_From_Track);
+  Nan::Export(target, "link_create_from_artist", Link_Create_From_Artist);
+  Nan::Export(target, "link_create_from_playlist", Link_Create_From_Playlist);
+  Nan::Export(target, "link_as_track", Link_As_Track);
+  Nan::Export(target, "link_as_artist", Link_As_Artist);
+  Nan::Export(target, "link_as_playlist", Link_As_Playlist);
+  Nan::Export(target, "link_type", Link_Type);
 }

@@ -35,7 +35,7 @@ using v8::Value;
 using v8::String;
 using v8::Object;
 using v8::ObjectTemplate;
-using v8::Handle;
+using v8::Local;
 using v8::Persistent;
 
 
@@ -43,7 +43,7 @@ using v8::Persistent;
  * In a C++ function called from JS, takes a spotify error code, tests if not OK and throws an exception
  * with the appropriate error message
  */
-#define NSP_THROW_IF_ERROR(error) if(error != SP_ERROR_OK) { NanThrowError( \
+#define NSP_THROW_IF_ERROR(error) if(error != SP_ERROR_OK) { Nan::ThrowError( \
       sp_error_message( error )\
     );}
 
@@ -53,9 +53,9 @@ using v8::Persistent;
  * @param name: the key to read from
  * @return the boolean value read from the object
  */
-inline bool NSP_BOOL_KEY(Handle<Object> o, const char* name) {
+inline bool NSP_BOOL_KEY(Local<Object> o, const char* name) {
   assert(o->IsObject());
-  Local<Value> value = o->Get(NanNew<String>(name));
+  Local<Value> value = o->Get(Nan::GetCurrentContext(), Nan::New<v8::String>(name).ToLocalChecked()).ToLocalChecked();
   assert(value->IsBoolean());
   return value->BooleanValue();
 }
@@ -66,9 +66,9 @@ inline bool NSP_BOOL_KEY(Handle<Object> o, const char* name) {
  * @param name: the key to read from
  * @return the int value read from the object
  */
-inline int NSP_INT_KEY(Handle<Object> o, const char* name) {
+inline int NSP_INT_KEY(Local<Object> o, const char* name) {
   assert(o->IsObject());
-  Local<Value> value = o->Get(NanNew<String>(name));
+  Local<Value> value = o->Get(Nan::GetCurrentContext(), Nan::New<v8::String>(name).ToLocalChecked()).ToLocalChecked();
   assert(value->IsNumber());
   assert(value->IsUint32());
   return value->Int32Value();
@@ -82,9 +82,9 @@ inline int NSP_INT_KEY(Handle<Object> o, const char* name) {
  * @param name: the key to read from
  * @return the string value read from the object
  */
-inline char* NSP_STRING_KEY(Handle<Object> o, const char* name) {
+inline char* NSP_STRING_KEY(Local<Object> o, const char* name) {
   assert(o->IsObject());
-  Local<Value> value = o->Get(NanNew<String>(name));
+  Local<Value> value = o->Get(Nan::GetCurrentContext(), Nan::New<v8::String>(name).ToLocalChecked()).ToLocalChecked();
   if(value->IsNull()) {
     return NULL;
   }
@@ -101,9 +101,9 @@ inline char* NSP_STRING_KEY(Handle<Object> o, const char* name) {
  * @param name: the key to read from
  * @return the node buffer object read from the object
  */
-inline char* NSP_BUFFER_KEY(Handle<Object> o, const char* name) {
+inline char* NSP_BUFFER_KEY(Local<Object> o, const char* name) {
   assert(o->IsObject());
-  Local<Value> value = o->Get(NanNew<String>(name));
+  Local<Value> value = o->Get(Nan::GetCurrentContext(), Nan::New<v8::String>(name).ToLocalChecked()).ToLocalChecked();
   assert(node::Buffer::HasInstance(value));
   return node::Buffer::Data(value->ToObject());
 }
@@ -115,9 +115,9 @@ inline char* NSP_BUFFER_KEY(Handle<Object> o, const char* name) {
  * @param name: the key to read from
  * @return the length of the buffer read from the object
  */
-inline int NSP_BUFFERLENGTH_KEY(Handle<Object> o, const char* name) {
+inline int NSP_BUFFERLENGTH_KEY(Local<Object> o, const char* name) {
   assert(o->IsObject());
-  Local<Value> value = o->Get(NanNew<String>(name));
+  Local<Value> value = o->Get(Nan::GetCurrentContext(), Nan::New<v8::String>(name).ToLocalChecked()).ToLocalChecked();
   assert(node::Buffer::HasInstance(value));
   return node::Buffer::Length(value->ToObject());
 }
@@ -136,39 +136,39 @@ namespace nsp {
   /**
    * init the session related functions to the target module exports
    */
-  void init_session(Handle<Object> target);
+  void init_session(Local<Object> target);
   /**
    * init the search related functions to the target module exports
    */
-  void init_search(Handle<Object> target);
+  void init_search(Local<Object> target);
   /**
    * init the track related functions to the target module exports
    */
-  void init_track(Handle<Object> target);
+  void init_track(Local<Object> target);
   /**
    * init the player related functions to the target module exports
    */
-  void init_player(Handle<Object> target);
+  void init_player(Local<Object> target);
   /**
    * init the album related functions to the target module exports
    */
-  void init_album(Handle<Object> target);
+  void init_album(Local<Object> target);
   /**
    * init the artist related functions to the target module exports
    */
-  void init_artist(Handle<Object> target);
+  void init_artist(Local<Object> target);
   /**
    * init the link related functions to the target module exports
    */
-  void init_link(Handle<Object> target);
+  void init_link(Local<Object> target);
   /**
    * init the playlistcontainer related functions to the target module exports
    */
-  void init_playlistcontainer(v8::Handle<v8::Object> target);
+  void init_playlistcontainer(v8::Local<v8::Object> target);
   /**
    * init the playlist related functions to the target module exports
    */
-  void init_playlist(v8::Handle<v8::Object> target);
+  void init_playlist(v8::Local<v8::Object> target);
 
 
   /**
@@ -205,7 +205,7 @@ namespace nsp {
          *  We do create this one
          */
         Persistent<Object> object;
-        
+
         /**
          * Get the name of the ObjectHandle that we gave it during instanciation
          */
@@ -215,33 +215,32 @@ namespace nsp {
 
       protected:
       private:
-        Persistent<String> name_;
+        Persistent<v8::String> name_;
 
         /**
          * Empty function to set as constructor for an FunctionTemplate
          * @deprecated
          */
         NAN_METHOD(New) {
-          NanScope();
           // do nothing;
-          NanReturnThis();
+          info.GetReturnValue().Set(info.This());
         }
     };
 
   template <typename T>
     ObjectHandle<T>::ObjectHandle(const char* name) : pointer(NULL) {
-      Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(JsNoOp);
-      NanAssignPersistent(name_, NanNew<String>(name == NULL ? "CObject" : name));
+      Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(JsNoOp);
+      name_.Reset(Nan::GetCurrentContext()->GetIsolate(), Nan::New<v8::String>(name == NULL ? "CObject" : name).ToLocalChecked());
 
-      tpl->SetClassName(NanNew(name_));
+      tpl->SetClassName(Nan::New(name_));
       tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
       Local<ObjectTemplate> otpl = tpl->InstanceTemplate();
-      NanAssignPersistent(object, otpl->NewInstance());
+      object.Reset(Nan::GetCurrentContext()->GetIsolate(), otpl->NewInstance());
 
-      NanSetInternalFieldPointer(NanNew(object), 0, this);
+      Nan::SetInternalFieldPointer(Nan::New(object), 0, this);
     }
-  
+
   template <typename T>
     ObjectHandle<T>* ObjectHandle<T>::Unwrap(Local<Value> obj) {
       assert(obj->IsObject());

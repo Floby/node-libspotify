@@ -25,90 +25,90 @@ using namespace nsp;
  * JS track_is_loaded implementation. checks if a given track is loaded
  */
 NAN_METHOD(Track_Is_Loaded) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
 
   // gets sp_track pointer from given object
-  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[0]);
+  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(info[0]);
 
   // actually call sp_track_is_loaded
   bool loaded = sp_track_is_loaded(track->pointer);
 
-  NanReturnValue(NanNew<Boolean>(loaded));
+  info.GetReturnValue().Set(Nan::New<Boolean>(loaded));
 }
 
 /**
  * JS track_duration implementation. checks if a given track is loaded
  */
 NAN_METHOD(Track_Duration) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
 
   // gets sp_track pointer from given object
-  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[0]);
+  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(info[0]);
 
   // actually call sp_track_is_loaded
   int duration = sp_track_duration(track->pointer);
 
-  NanReturnValue(NanNew<Number>(duration));
+  info.GetReturnValue().Set(Nan::New<Number>(duration));
 }
 
 /**
  * JS track_num_artists implementation. checks if a given track is loaded
  */
 NAN_METHOD(Track_Num_Artists) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
 
   // gets sp_track pointer from given object
-  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[0]);
+  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(info[0]);
 
   int num_artists = sp_track_num_artists(track->pointer);
 
-  NanReturnValue(NanNew<Number>(num_artists));
+  info.GetReturnValue().Set(Nan::New<Number>(num_artists));
 }
 
 /**
  * JS track_name implementation. checks if a given track is loaded
  */
 NAN_METHOD(Track_Name) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
 
   // gets sp_track pointer from given object
-  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[0]);
+  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(info[0]);
 
   const char* name = sp_track_name(track->pointer);
 
-  NanReturnValue(NanNew<String>(name));
+  info.GetReturnValue().Set(Nan::New<String>(name).ToLocalChecked());
 }
 
 /**
  * JS track_artist implementation. checks if a given track is loaded
  */
 NAN_METHOD(Track_Artist) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 2);
-  assert(args[0]->IsObject());
-  assert(args[1]->IsNumber());
+  assert(info.Length() == 2);
+  assert(info[0]->IsObject());
+  assert(info[1]->IsNumber());
 
   // gets sp_track pointer from given object
-  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[0]);
-  int index = args[1]->ToNumber()->Int32Value();
+  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(info[0]);
+  int index = info[1]->ToNumber()->Int32Value();
   assert(index >= 0);
   assert(index < sp_track_num_artists(track->pointer));
 
@@ -116,7 +116,7 @@ NAN_METHOD(Track_Artist) {
   ObjectHandle<sp_artist>* artist = new ObjectHandle<sp_artist>("sp_artist");
   artist->pointer = spartist;
 
-  NanReturnValue(artist->object);
+  info.GetReturnValue().Set(Nan::New(artist->object));
 }
 
 
@@ -124,127 +124,127 @@ NAN_METHOD(Track_Artist) {
  * JS track_album implementation. checks if a given track is loaded
  */
 NAN_METHOD(Track_Album) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
 
   // gets sp_track pointer from given object
-  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[0]);
+  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(info[0]);
 
   sp_album* spalbum = sp_track_album(track->pointer);
   ObjectHandle<sp_album>* album = new ObjectHandle<sp_album>("sp_album");
   album->pointer = spalbum;
 
-  NanReturnValue(album->object);
+  info.GetReturnValue().Set(Nan::New(album->object));
 }
 
 /**
  * JS track_get_availability implementation. checks if a given track is loaded
  */
 NAN_METHOD(Track_Get_Availability) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 2);
-  assert(args[0]->IsObject());
-  assert(args[1]->IsObject());
+  assert(info.Length() == 2);
+  assert(info[0]->IsObject());
+  assert(info[1]->IsObject());
 
   // gets sp_track pointer from given object
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
-  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[1]);
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(info[0]);
+  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(info[1]);
 
   sp_availability availability = sp_track_get_availability(session->pointer, track->pointer);
-  Handle<Value> res;
+  Local<Value> res;
   switch (availability) {
     case SP_TRACK_AVAILABILITY_AVAILABLE:
-      res = NanNew<String>("AVAILABLE");
+      res = Nan::New<String>("AVAILABLE").ToLocalChecked();
       break;
     case SP_TRACK_AVAILABILITY_NOT_STREAMABLE:
-      res = NanNew<String>("NOT_STREAMABLE");
+      res = Nan::New<String>("NOT_STREAMABLE").ToLocalChecked();
       break;
     case SP_TRACK_AVAILABILITY_BANNED_BY_ARTIST:
-      res = NanNew<String>("BANNED_BY_ARTIST");
+      res = Nan::New<String>("BANNED_BY_ARTIST").ToLocalChecked();
       break;
     case SP_TRACK_AVAILABILITY_UNAVAILABLE:
     default:
-      res = NanNew<String>("UNAVAILABLE");
+      res = Nan::New<String>("UNAVAILABLE").ToLocalChecked();
       break;
   }
 
-  NanReturnValue(res);
+  info.GetReturnValue().Set(res);
 }
 
 NAN_METHOD(Track_Is_Starred) {
-  NanScope();
-  
+
+
   // test arguments sanity
-  assert(args.Length() == 2);
-  assert(args[0]->IsObject());
-  assert(args[1]->IsObject());
+  assert(info.Length() == 2);
+  assert(info[0]->IsObject());
+  assert(info[1]->IsObject());
 
   // get session and track pointers from object
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
-  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[1]);
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(info[0]);
+  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(info[1]);
 
   bool starred = sp_track_is_starred(session->pointer, track->pointer);
 
-  NanReturnValue(NanNew<Boolean>(starred));
+  info.GetReturnValue().Set(Nan::New<Boolean>(starred));
 }
 
 NAN_METHOD(Track_Set_Starred) {
-  NanScope();
-  
+
+
   // test arguments sanity
-  assert(args.Length() == 3);
-  assert(args[0]->IsObject());
-  assert(args[1]->IsArray());
-  assert(args[2]->IsBoolean());
+  assert(info.Length() == 3);
+  assert(info[0]->IsObject());
+  assert(info[1]->IsArray());
+  assert(info[2]->IsBoolean());
 
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(info[0]);
 
-  Handle<Array> arr = args[1].As<Array>();
+  Local<Array> arr = info[1].As<Array>();
   unsigned int length = arr->Length();
   sp_track* tracks[length];
   for(unsigned int i=0; i<length; ++i) {
     tracks[i] = ObjectHandle<sp_track>::Unwrap(arr->Get(i))->pointer;
   }
 
-  sp_error error = sp_track_set_starred(session->pointer, tracks, length, args[2]->ToBoolean()->BooleanValue());
+  sp_error error = sp_track_set_starred(session->pointer, tracks, length, info[2]->ToBoolean()->BooleanValue());
   NSP_THROW_IF_ERROR(error);
 
-  NanReturnUndefined();
+  info.GetReturnValue().SetUndefined();
 }
 
 /**
  * JS track_popularity implementation. checks if a given track is loaded
  */
 NAN_METHOD(Track_Popularity) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
 
   // gets sp_track pointer from given object
-  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[0]);
+  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(info[0]);
 
   // actually call sp_track_popularity
   int popularity = sp_track_popularity(track->pointer);
 
-  NanReturnValue(NanNew<Number>(popularity));
+  info.GetReturnValue().Set(Nan::New<Number>(popularity));
 }
 
-void nsp::init_track(Handle<Object> target) {
-  NODE_SET_METHOD(target, "track_is_loaded", Track_Is_Loaded);
-  NODE_SET_METHOD(target, "track_duration", Track_Duration);
-  NODE_SET_METHOD(target, "track_num_artists", Track_Num_Artists);
-  NODE_SET_METHOD(target, "track_name", Track_Name);
-  NODE_SET_METHOD(target, "track_artist", Track_Artist);
-  NODE_SET_METHOD(target, "track_album", Track_Album);
-  NODE_SET_METHOD(target, "track_get_availability", Track_Get_Availability);
-  NODE_SET_METHOD(target, "track_is_starred", Track_Is_Starred);
-  NODE_SET_METHOD(target, "track_popularity", Track_Popularity);
-  NODE_SET_METHOD(target, "track_set_starred", Track_Set_Starred);
+void nsp::init_track(Local<Object> target) {
+  Nan::Export(target, "track_is_loaded", Track_Is_Loaded);
+  Nan::Export(target, "track_duration", Track_Duration);
+  Nan::Export(target, "track_num_artists", Track_Num_Artists);
+  Nan::Export(target, "track_name", Track_Name);
+  Nan::Export(target, "track_artist", Track_Artist);
+  Nan::Export(target, "track_album", Track_Album);
+  Nan::Export(target, "track_get_availability", Track_Get_Availability);
+  Nan::Export(target, "track_is_starred", Track_Is_Starred);
+  Nan::Export(target, "track_popularity", Track_Popularity);
+  Nan::Export(target, "track_set_starred", Track_Set_Starred);
 }

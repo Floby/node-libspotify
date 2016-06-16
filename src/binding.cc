@@ -21,7 +21,7 @@
 #include <v8.h>
 #include "common.h"
 
-void InitAll(Handle<Object> target) {
+void InitAll(Local<Object> target) {
   // initializing all modules
   nsp::init_album(target);
   nsp::init_artist(target);

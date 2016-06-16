@@ -24,8 +24,7 @@ using namespace v8;
 using namespace nsp;
 
 NAN_METHOD(nsp::JsNoOp) {
-  NanScope();
-  NanReturnThis();
+  info.GetReturnValue().Set(info.This());
 }
 
 /*
@@ -39,19 +38,19 @@ NAN_METHOD(nsp::JsNoOp) {
  */
 static void call_logged_in_callback(sp_session* session, sp_error error) {
   ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
-  Handle<Object> o = NanNew(s->object);
-  Handle<Value> cbv = o->Get(NanNew<String>("logged_in"));
+  Local<Object> o = Nan::New(s->object);
+  Local<Value> cbv = o->Get(Nan::GetCurrentContext(), Nan::New<String>("logged_in").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<Function>());
 
   const unsigned int argc = 1;
-  Handle<Value> err = NanNull();
+  Local<Value> err = Nan::Null();
   if(error != SP_ERROR_OK) {
-    err = NanError(sp_error_message(error));
+    err = Nan::Error(sp_error_message(error));
   }
-  Local<Value> argv[argc] = { NanNew<Value>(err) };
+  Local<Value> argv[argc] = { Nan::New<Value>(err) };
   cb->Call(argc, argv);
 
   return;
@@ -63,12 +62,12 @@ static void call_logged_in_callback(sp_session* session, sp_error error) {
  */
 static void call_logged_out_callback(sp_session* session) {
   ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
-  Handle<Object> o = NanNew(s->object);
-  Handle<Value> cbv = o->Get(NanNew<String>("logged_out"));
+  Local<Object> o = Nan::New(s->object);
+  Local<Value> cbv = o->Get(Nan::GetCurrentContext(), Nan::New<String>("logged_out").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<Function>());
 
   const unsigned int argc = 0;
   Local<Value> argv[argc] = {};
@@ -83,12 +82,12 @@ static void call_logged_out_callback(sp_session* session) {
  */
 static void call_metadata_updated_callback(sp_session* session) {
   ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
-  Handle<Object> o = NanNew(s->object);
-  Handle<Value> cbv = o->Get(NanNew<String>("metadata_updated"));
+  Local<Object> o = Nan::New(s->object);
+  Local<Value> cbv = o->Get(Nan::GetCurrentContext(), Nan::New<String>("metadata_updated").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<Function>());
 
   const unsigned int argc = 0;
   Local<Value> argv[argc] = {};
@@ -120,12 +119,12 @@ uv_timer_t do_notify_handle; ///> uv loop handle for notifying main thread
  */
 static void do_call_notify_main_thread_callback(sp_session* session) {
   ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
-  Handle<Object> o = NanNew(s->object);
-  Handle<Value> cbv = o->Get(NanNew<String>("notify_main_thread"));
+  Local<Object> o = Nan::New(s->object);
+  Local<Value> cbv = o->Get(Nan::GetCurrentContext(), Nan::New<String>("notify_main_thread").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<Function>());
 
   const unsigned int argc = 0;
   Local<Value> argv[argc] = {};
@@ -142,10 +141,10 @@ static void do_call_notify_main_thread_callback(sp_session* session) {
 static sp_session* notifysession = NULL;
 static bool alive = false;
 
-class NSPCallbackWorker : public NanAsyncWorker {
+class NSPCallbackWorker : public Nan::AsyncWorker {
 public:
 
- NSPCallbackWorker () : NanAsyncWorker(NULL) {
+ NSPCallbackWorker () : Nan::AsyncWorker(NULL) {
  }
 
  ~NSPCallbackWorker () { }
@@ -164,11 +163,11 @@ protected:
     notifysession = NULL;
 
     if (alive) {
-      NanAsyncQueueWorker(new NSPCallbackWorker());
+      Nan::AsyncQueueWorker(new NSPCallbackWorker());
     }
   }
  }
- 
+
  void HandleErrorCallback () {}
 };
 
@@ -180,7 +179,7 @@ static void call_notify_main_thread_callback(sp_session* session) {
   // TODO how about next tick ?
   // uv_timer_start(&do_notify_handle, &do_call_notify_main_thread_callback, 1, 0);
 
-  notifysession = session;   
+  notifysession = session;
 }
 
 /**
@@ -196,12 +195,12 @@ extern int call_music_delivery_callback(sp_session* session, const sp_audioforma
  */
 static void call_play_token_lost_callback(sp_session* session) {
   ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
-  Handle<Object> o = NanNew(s->object);
-  Handle<Value> cbv = o->Get(NanNew<String>("play_token_lost"));
+  Local<Object> o = Nan::New(s->object);
+  Local<Value> cbv = o->Get(Nan::GetCurrentContext(), Nan::New<String>("play_token_lost").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<Function>());
 
   const unsigned int argc = 0;
   Local<Value> argv[argc] = {};
@@ -333,10 +332,10 @@ static sp_session_callbacks spcallbacks = {
  * from a JS object values and wraps it in a new JS object
  */
 NAN_METHOD(Session_Config) {
-  NanScope();
 
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
+
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
 
   // create the handle for this object
   ObjectHandle<sp_session_config>* session_config = new ObjectHandle<sp_session_config>("sp_session_config");
@@ -347,7 +346,7 @@ NAN_METHOD(Session_Config) {
   // set 0 in every field so that spotify doesn't complain
   memset(ptr, 0, sizeof(sp_session_config));
 
-  Handle<Object> obj = args[0]->ToObject();
+  Local<Object> obj = info[0]->ToObject();
 
   ptr->api_version                    = SPOTIFY_API_VERSION;
   ptr->cache_location                 = NSP_STRING_KEY(obj, "cache_location");
@@ -370,15 +369,15 @@ NAN_METHOD(Session_Config) {
 
   // copy everything from the original JS object into the new one
   // so that it can be read later
-  Handle<Array> properties = obj->GetOwnPropertyNames();
+  Local<Array> properties = obj->GetOwnPropertyNames();
   for (unsigned int i = 0; i < properties->Length(); ++i) {
-    NanNew(session_config->object)->Set(
+    Nan::New(session_config->object)->Set(
       properties->Get(i),
       obj->Get(properties->Get(i))
     );
   }
 
-  NanReturnValue(session_config->object);
+  info.GetReturnValue().Set(Nan::New(session_config->object));
 }
 
 /**
@@ -386,15 +385,15 @@ NAN_METHOD(Session_Config) {
  * sp_session_create. The session is then wrapped in a JS object for use in JS land
  */
 NAN_METHOD(Session_Create) {
-  NanScope();
 
-  assert(args.Length() == 1);
+
+  assert(info.Length() == 1);
 
   // create a new handle for the session struct
   ObjectHandle<sp_session>* session = new ObjectHandle<sp_session>("sp_session");
 
   // unwraps config struct from the first arguments
-  ObjectHandle<sp_session_config>* session_config = ObjectHandle<sp_session_config>::Unwrap(args[0]);
+  ObjectHandle<sp_session_config>* session_config = ObjectHandle<sp_session_config>::Unwrap(info[0]);
 
   // set the current session ObjectHandle as session userdata for later retrieval
   session_config->pointer->userdata = session;
@@ -404,9 +403,9 @@ NAN_METHOD(Session_Create) {
   NSP_THROW_IF_ERROR(error);
 
   alive = true;
-  NanAsyncQueueWorker(new NSPCallbackWorker());
+  Nan::AsyncQueueWorker(new NSPCallbackWorker());
 
-  NanReturnValue(session->object);
+  info.GetReturnValue().Set(Nan::New(session->object));
 }
 
 /**
@@ -421,12 +420,12 @@ NAN_METHOD(Session_Close) {
  * and calls sp_session_release on it
  */
 NAN_METHOD(Session_Release) {
-  NanScope();
 
-  assert(args.Length() == 1);
+
+  assert(info.Length() == 1);
 
   // unwrap the ObjectHandle for the session
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(info[0]);
 
   // that would be unfortunate...
   assert(NULL != session->pointer);
@@ -438,7 +437,7 @@ NAN_METHOD(Session_Release) {
   // make sure we won't be used this pointer ever again
   session->pointer = NULL;
 
-  NanReturnUndefined();
+  info.GetReturnValue().SetUndefined();
 }
 
 /*
@@ -447,22 +446,22 @@ NAN_METHOD(Session_Release) {
  * TODO support for remember_me and credential blobs
  */
 NAN_METHOD(Session_Login) {
-  NanScope();
+
 
   // check parameters sanity
-  assert(args.Length() == 3);
-  assert(args[0]->IsObject());
-  assert(args[1]->IsString());
-  assert(args[2]->IsString());
+  assert(info.Length() == 3);
+  assert(info[0]->IsObject());
+  assert(info[1]->IsString());
+  assert(info[2]->IsString());
 
   // unwrap the session from the given object
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(info[0]);
 
   // actually call sp_session_login
   sp_error error = sp_session_login(
       session->pointer,
-      *(String::Utf8Value(args[1]->ToString())),
-      *(String::Utf8Value(args[2]->ToString())),
+      *(String::Utf8Value(info[1]->ToString())),
+      *(String::Utf8Value(info[2]->ToString())),
       false,
       NULL
   );
@@ -470,25 +469,25 @@ NAN_METHOD(Session_Login) {
 
   // Start callback worker
   alive = true;
-  NanAsyncQueueWorker(new NSPCallbackWorker());
+  Nan::AsyncQueueWorker(new NSPCallbackWorker());
 
-  NanReturnUndefined();
+  info.GetReturnValue().SetUndefined();
 }
 
 /**
  * JS session_logout implementation
  */
 NAN_METHOD(Session_Logout) {
-  NanScope();
 
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
 
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
+
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(info[0]);
   sp_error error = sp_session_logout(session->pointer);
   NSP_THROW_IF_ERROR(error);
 
-  NanReturnUndefined();
+  info.GetReturnValue().SetUndefined();
 }
 
 /**
@@ -498,17 +497,17 @@ NAN_METHOD(Session_Logout) {
  * @return next_timeout when in milliseconds to call this function again
  */
 NAN_METHOD(Session_Process_Events) {
-  NanScope();
 
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
 
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
+
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(info[0]);
   int next_timeout = 0;
   sp_error error = sp_session_process_events(session->pointer, &next_timeout);
   NSP_THROW_IF_ERROR(error);
 
-  NanReturnValue(NanNew<Number>(next_timeout));
+  info.GetReturnValue().Set(Nan::New<Number>(next_timeout));
 }
 
 /**
@@ -516,12 +515,12 @@ NAN_METHOD(Session_Process_Events) {
  * and calls sp_session_playlistcontainer. this will return the sp_playlistcontainer for the currently logged in user
  */
 NAN_METHOD(Session_PlaylistContainer) {
-  NanScope();
 
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
 
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
+
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(info[0]);
 
   sp_playlistcontainer* spplaylistcontainer = sp_session_playlistcontainer(session->pointer);
 
@@ -532,16 +531,16 @@ NAN_METHOD(Session_PlaylistContainer) {
   sp_error error = sp_playlistcontainer_add_callbacks(spplaylistcontainer, &nsp_playlistcontainer_callbacks, playlistcontainer);
   NSP_THROW_IF_ERROR(error);
 
-  NanReturnValue(playlistcontainer->object);
+  info.GetReturnValue().Set(Nan::New(playlistcontainer->object));
 }
 
-void nsp::init_session(Handle<Object> target) {
-  NODE_SET_METHOD(target, "session_config", Session_Config);
-  NODE_SET_METHOD(target, "session_create", Session_Create);
-  NODE_SET_METHOD(target, "session_release", Session_Release);
-  NODE_SET_METHOD(target, "session_close", Session_Close);
-  NODE_SET_METHOD(target, "session_login", Session_Login);
-  NODE_SET_METHOD(target, "session_logout", Session_Logout);
-  NODE_SET_METHOD(target, "session_process_events", Session_Process_Events);
-  NODE_SET_METHOD(target, "session_playlistcontainer", Session_PlaylistContainer);
+void nsp::init_session(Local<Object> target) {
+  Nan::Export(target, "session_config", Session_Config);
+  Nan::Export(target, "session_create", Session_Create);
+  Nan::Export(target, "session_release", Session_Release);
+  Nan::Export(target, "session_close", Session_Close);
+  Nan::Export(target, "session_login", Session_Login);
+  Nan::Export(target, "session_logout", Session_Logout);
+  Nan::Export(target, "session_process_events", Session_Process_Events);
+  Nan::Export(target, "session_playlistcontainer", Session_PlaylistContainer);
 }

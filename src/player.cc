@@ -39,12 +39,12 @@ static bool workeralive = false;
  */
 extern void call_end_of_track_callback(sp_session* session) {
   ObjectHandle<sp_session>* s = (ObjectHandle<sp_session>*) sp_session_userdata(session);
-  Handle<Object> o = NanNew(s->object);
-  Handle<Value> cbv = o->Get(NanNew<String>("end_of_track"));
+  Local<Object> o = Nan::New(s->object);
+  Local<Value> cbv = o->Get(Nan::GetCurrentContext(), Nan::New<String>("end_of_track").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<Function>());
 
   const unsigned int argc = 0;
   Local<Value> argv[argc] = {};
@@ -105,49 +105,49 @@ static void free_music_data(char* data, void* hint) {
  * Load the given track in the player of the given session
  */
 NAN_METHOD(Session_Player_Load) {
-  NanScope();
 
-  assert(args.Length() == 2);
-  assert(args[0]->IsObject());
-  assert(args[1]->IsObject());
 
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
-  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(args[1]);
+  assert(info.Length() == 2);
+  assert(info[0]->IsObject());
+  assert(info[1]->IsObject());
+
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(info[0]);
+  ObjectHandle<sp_track>* track = ObjectHandle<sp_track>::Unwrap(info[1]);
 
 
   sp_error error = sp_session_player_load(session->pointer, track->pointer);
   NSP_THROW_IF_ERROR(error);
 
-  NanReturnUndefined();
+  info.GetReturnValue().SetUndefined();
 }
 
 /**
  * starts playing
  */
 NAN_METHOD(Session_Player_Play) {
-  NanScope();
 
-  assert(args.Length() == 2);
-  assert(args[0]->IsObject());
-  assert(args[1]->IsBoolean());
 
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+  assert(info.Length() == 2);
+  assert(info[0]->IsObject());
+  assert(info[1]->IsBoolean());
 
-  sp_error error = sp_session_player_play(session->pointer, args[1]->BooleanValue());
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(info[0]);
+
+  sp_error error = sp_session_player_play(session->pointer, info[1]->BooleanValue());
   NSP_THROW_IF_ERROR(error);
 
-  NanReturnUndefined();
+  info.GetReturnValue().SetUndefined();
 }
 
 /**
  * async class
  */
-class NSPWorker : public NanAsyncWorker {
+class NSPWorker : public Nan::AsyncWorker {
 public:
  audio_fifo_t* af;
  audio_fifo_data_t* afd;
 
- NSPWorker () : NanAsyncWorker(NULL) {
+ NSPWorker () : Nan::AsyncWorker(NULL) {
   af = &g_audiofifo;
   afd = NULL;
  }
@@ -166,19 +166,19 @@ protected:
     sp_session* spsession = afd->session;
     ObjectHandle<sp_session>* session = (ObjectHandle<sp_session>*) sp_session_userdata(spsession);
 
-    Handle<Value> cbv = NanNew(session->object)->Get(NanNew<String>("music_delivery"));
+    Local<Value> cbv = Nan::New(session->object)->Get(Nan::New<String>("music_delivery").ToLocalChecked());
     if(!cbv->IsFunction()) {
       workeralive = false;
       return;
     }
-    NanCallback *callback = new NanCallback(cbv.As<Function>());
+    Nan::Callback *callback = new Nan::Callback(cbv.As<Function>());
 
-    Handle<Object> buffer = NanNewBufferHandle((char*) afd->samples, afd->nsamples * sizeof(int16_t)* afd->channels, free_music_data, afd);
-    buffer->Set(NanNew<String>("channels"), NanNew<Number>(afd->channels));
-    buffer->Set(NanNew<String>("rate"), NanNew<Number>(afd->rate));
+    Local<Object> buffer = Nan::NewBuffer((char*) afd->samples, afd->nsamples * sizeof(int16_t)* afd->channels, free_music_data, afd).ToLocalChecked();
+    buffer->Set(Nan::New<String>("channels").ToLocalChecked(), Nan::New<Number>(afd->channels));
+    buffer->Set(Nan::New<String>("rate").ToLocalChecked(), Nan::New<Number>(afd->rate));
 
-    Local<Value> argv[1] = { NanNew(buffer) };
-    Handle<Value> send_more_data = callback->Call(1, argv);
+    Local<Value> argv[1] = { buffer };
+    Local<Value> send_more_data = callback->Call(1, argv);
 
     assert(send_more_data->IsBoolean());
 
@@ -192,13 +192,13 @@ protected:
   }
 
   if (alive) {
-    NanAsyncQueueWorker(new NSPWorker());
+    Nan::AsyncQueueWorker(new NSPWorker());
     workeralive = true;
   } else {
     workeralive = false;
   }
  }
- 
+
  void HandleErrorCallback () {}
 };
 
@@ -206,33 +206,33 @@ protected:
  * starts player thread
  */
 NAN_METHOD(Session_Player_Stream_Resume) {
-  NanScope();
+
 
   alive = true;
 
   if (alive && !workeralive) {
-    NanAsyncQueueWorker(new NSPWorker());
+    Nan::AsyncQueueWorker(new NSPWorker());
   }
 
-  NanReturnUndefined();
+  info.GetReturnValue().SetUndefined();
 }
 
 /**
  * stops player thread
  */
 NAN_METHOD(Session_Player_Stop) {
-  NanScope();
+
 
   alive = false;
 
-  NanReturnUndefined();
+  info.GetReturnValue().SetUndefined();
 }
 
-void nsp::init_player(Handle<Object> target) {
-  NODE_SET_METHOD(target, "session_player_load", Session_Player_Load);
-  NODE_SET_METHOD(target, "session_player_play", Session_Player_Play);
-  NODE_SET_METHOD(target, "session_player_stream_resume", Session_Player_Stream_Resume);
-  NODE_SET_METHOD(target, "session_player_stop", Session_Player_Stop);
+void nsp::init_player(Local<Object> target) {
+  Nan::Export(target, "session_player_load", Session_Player_Load);
+  Nan::Export(target, "session_player_play", Session_Player_Play);
+  Nan::Export(target, "session_player_stream_resume", Session_Player_Stream_Resume);
+  Nan::Export(target, "session_player_stop", Session_Player_Stop);
 
   audio_fifo_t* af = &g_audiofifo;
   TAILQ_INIT(&af->q);

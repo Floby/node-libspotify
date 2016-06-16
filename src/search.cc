@@ -3,7 +3,7 @@
  *
  *       Filename:  search.cc
  *
- *    Description: bindings to the spotify search submodule 
+ *    Description: bindings to the spotify search submodule
  *
  *        Version:  1.0
  *        Created:  23/12/2012 16:59:00
@@ -27,19 +27,19 @@ using namespace nsp;
  */
 static void on_search_complete(sp_search* result, void* userdata) {
   ObjectHandle<sp_search>* search = static_cast<ObjectHandle<sp_search>* >(userdata);
-  Handle<Value> cbv = NanNew(search->object)->Get(NanNew<String>("on_search_complete"));
+  Local<Value> cbv = Nan::New(search->object)->Get(Nan::GetCurrentContext(), Nan::New<String>("on_search_complete").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<v8::Function>());
 
   const unsigned int argc = 2;
   sp_error error = sp_search_error(result);
-  Handle<Value> err = NanNull();
+  Local<Value> err = Nan::Null();
   if(error != SP_ERROR_OK) {
-    err = Exception::Error(NanNew<String>(sp_error_message(error)));
+    err = Exception::Error(Nan::New<String>(sp_error_message(error)).ToLocalChecked());
   }
-  Local<Value> argv[argc] = { NanNew<Value>(err), NanNew<Object>(search->object) };
+  Local<Value> argv[argc] = { Nan::New<Value>(err), Nan::New<Object>(search->object) };
   cb->Call(argc, argv);
 
   return;
@@ -49,77 +49,77 @@ static void on_search_complete(sp_search* result, void* userdata) {
  * JS search_create implementation. calls sp_search_create
  */
 NAN_METHOD(Search_Create) {
-  NanScope();
+
 
   // check arguments sanity
-  assert(args.Length() == 10);
-  assert(args[0]->IsObject());
-  assert(args[1]->IsString());
-  assert(args[2]->IsNumber());
-  assert(args[3]->IsNumber());
-  assert(args[4]->IsNumber());
-  assert(args[5]->IsNumber());
-  assert(args[6]->IsNumber());
-  assert(args[7]->IsNumber());
-  assert(args[8]->IsNumber());
-  assert(args[9]->IsNumber());
+  assert(info.Length() == 10);
+  assert(info[0]->IsObject());
+  assert(info[1]->IsString());
+  assert(info[2]->IsNumber());
+  assert(info[3]->IsNumber());
+  assert(info[4]->IsNumber());
+  assert(info[5]->IsNumber());
+  assert(info[6]->IsNumber());
+  assert(info[7]->IsNumber());
+  assert(info[8]->IsNumber());
+  assert(info[9]->IsNumber());
 
   // unwrap the session handle from the given object
-  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(args[0]);
+  ObjectHandle<sp_session>* session = ObjectHandle<sp_session>::Unwrap(info[0]);
 
   // create the new handle for the sp_search we are creating
   ObjectHandle<sp_search>* search = new ObjectHandle<sp_search>("sp_search");
-  String::Utf8Value query(args[1]);
+  String::Utf8Value query(info[1]);
 
   // actually call sp_search_create
   search->pointer = sp_search_create(
       session->pointer,
       *query,
-      args[2]->ToNumber()->Int32Value(),
-      args[3]->ToNumber()->Int32Value(),
-      args[4]->ToNumber()->Int32Value(),
-      args[5]->ToNumber()->Int32Value(),
-      args[6]->ToNumber()->Int32Value(),
-      args[7]->ToNumber()->Int32Value(),
-      args[8]->ToNumber()->Int32Value(),
-      args[9]->ToNumber()->Int32Value(),
+      info[2]->ToNumber()->Int32Value(),
+      info[3]->ToNumber()->Int32Value(),
+      info[4]->ToNumber()->Int32Value(),
+      info[5]->ToNumber()->Int32Value(),
+      info[6]->ToNumber()->Int32Value(),
+      info[7]->ToNumber()->Int32Value(),
+      info[8]->ToNumber()->Int32Value(),
+      info[9]->ToNumber()->Int32Value(),
       SP_SEARCH_STANDARD,
       &on_search_complete,
       search
   );
 
-  NanReturnValue(search->object);
+  info.GetReturnValue().Set(Nan::New(search->object));
 }
 
 /**
  * JS search_num_tracks implementation.
  */
 NAN_METHOD(Search_Num_Tracks) {
-  NanScope();
 
-  assert(args.Length() == 1);
-  assert(args[0]->IsObject());
 
-  ObjectHandle<sp_search>* search = ObjectHandle<sp_search>::Unwrap(args[0]);
+  assert(info.Length() == 1);
+  assert(info[0]->IsObject());
+
+  ObjectHandle<sp_search>* search = ObjectHandle<sp_search>::Unwrap(info[0]);
   int num = sp_search_num_tracks(search->pointer);
 
-  NanReturnValue(NanNew<Number>(num));
+  info.GetReturnValue().Set(Nan::New<Number>(num));
 }
 
 /**
  * JS search_track implementation. gets a track a the given index in a search result
  */
 NAN_METHOD(Search_Track) {
-  NanScope();
+
 
   // test arguments sanity
-  assert(args.Length() == 2);
-  assert(args[0]->IsObject());
-  assert(args[1]->IsNumber());
+  assert(info.Length() == 2);
+  assert(info[0]->IsObject());
+  assert(info[1]->IsNumber());
 
   // gets sp_search pointer from given object
-  ObjectHandle<sp_search>* search = ObjectHandle<sp_search>::Unwrap(args[0]);
-  int index = args[1]->ToNumber()->Int32Value();
+  ObjectHandle<sp_search>* search = ObjectHandle<sp_search>::Unwrap(info[0]);
+  int index = info[1]->ToNumber()->Int32Value();
 
   // check index is within search results range
   assert(index >= 0);
@@ -129,11 +129,11 @@ NAN_METHOD(Search_Track) {
   ObjectHandle<sp_track>* track = new ObjectHandle<sp_track>("sp_track");
   track->pointer = sp_search_track(search->pointer, index);
 
-  NanReturnValue(track->object);
+  info.GetReturnValue().Set(Nan::New(track->object));
 }
 
-void nsp::init_search(Handle<Object> target) {
-  NODE_SET_METHOD(target, "search_create", Search_Create);
-  NODE_SET_METHOD(target, "search_num_tracks", Search_Num_Tracks);
-  NODE_SET_METHOD(target, "search_track", Search_Track);
+void nsp::init_search(Local<Object> target) {
+  Nan::Export(target, "search_create", Search_Create);
+  Nan::Export(target, "search_num_tracks", Search_Num_Tracks);
+  Nan::Export(target, "search_track", Search_Track);
 }

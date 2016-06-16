@@ -33,12 +33,12 @@ using namespace nsp;
 static void call_playlist_added_callback(sp_playlistcontainer* pc, sp_playlist* spplaylist, int position, void* userdata) {
   ObjectHandle<sp_playlistcontainer>* playlistcontainer = (ObjectHandle<sp_playlistcontainer>*) userdata;
 
-  Handle<Object> o = NanNew(playlistcontainer->object);
-  Handle<Value> cbv = o->Get(NanNew<String>("playlist_added"));
+  Local<Object> o = Nan::New(playlistcontainer->object);
+  Local<Value> cbv = o->Get(Nan::GetCurrentContext(), Nan::New<String>("playlist_added").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<Function>());
 
   const unsigned int argc = 0;
   Local<Value> argv[argc] = {};
@@ -52,12 +52,12 @@ static void call_playlist_added_callback(sp_playlistcontainer* pc, sp_playlist* 
 static void call_playlist_removed_callback(sp_playlistcontainer* pc, sp_playlist* playlist, int position, void* userdata) {
   ObjectHandle<sp_playlistcontainer>* playlistcontainer = (ObjectHandle<sp_playlistcontainer>*) userdata;
 
-  Handle<Object> o = NanNew(playlistcontainer->object);
-  Handle<Value> cbv = o->Get(NanNew<String>("playlist_removed"));
+  Local<Object> o = Nan::New(playlistcontainer->object);
+  Local<Value> cbv = o->Get(Nan::GetCurrentContext(), Nan::New<String>("playlist_removed").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<Function>());
 
   const unsigned int argc = 0;
   Local<Value> argv[argc] = {};
@@ -71,12 +71,12 @@ static void call_playlist_removed_callback(sp_playlistcontainer* pc, sp_playlist
 static void call_playlist_moved_callback(sp_playlistcontainer* pc, sp_playlist* playlist, int position, int new_position, void* userdata) {
   ObjectHandle<sp_playlistcontainer>* playlistcontainer = (ObjectHandle<sp_playlistcontainer>*) userdata;
 
-  Handle<Object> o = NanNew(playlistcontainer->object);
-  Handle<Value> cbv = o->Get(NanNew<String>("playlist_moved"));
+  Local<Object> o = Nan::New(playlistcontainer->object);
+  Local<Value> cbv = o->Get(Nan::GetCurrentContext(), Nan::New<String>("playlist_moved").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<Function>());
 
   const unsigned int argc = 0;
   Local<Value> argv[argc] = {};
@@ -90,12 +90,12 @@ static void call_playlist_moved_callback(sp_playlistcontainer* pc, sp_playlist* 
 static void call_container_loaded_callback(sp_playlistcontainer* pc, void* userdata) {
   ObjectHandle<sp_playlistcontainer>* playlistcontainer = (ObjectHandle<sp_playlistcontainer>*)userdata;
 
-  Handle<Object> o = NanNew(playlistcontainer->object);
-  Handle<Value> cbv = o->Get(NanNew<String>("container_loaded"));
+  Local<Object> o = Nan::New(playlistcontainer->object);
+  Local<Value> cbv = o->Get(Nan::GetCurrentContext(), Nan::New<String>("container_loaded").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<Function>());
 
   const unsigned int argc = 0;
   Local<Value> argv[argc] = {};
@@ -151,12 +151,12 @@ static void call_playlist_renamed_callback(sp_playlist* pl, void* userdata) {
 static void call_playlist_state_changed_callback(sp_playlist* pl, void* userdata) {
   ObjectHandle<sp_playlist>* playlist = (ObjectHandle<sp_playlist>*)userdata;
 
-  Handle<Object> o = NanNew(playlist->object);
-  Handle<Value> cbv = o->Get(NanNew<String>("state_changed"));
+  Local<Object> o = Nan::New(playlist->object);
+  Local<Value> cbv = o->Get(Nan::GetCurrentContext(), Nan::New<String>("state_changed").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<Function>());
 
   const unsigned int argc = 0;
   Local<Value> argv[argc] = {};
@@ -219,12 +219,12 @@ static void call_track_message_changed_callback(sp_playlist* pl, int position, c
 static void call_subscribers_changed_callback(sp_playlist* pl, void* userdata) {
   ObjectHandle<sp_playlist>* playlist = (ObjectHandle<sp_playlist>*)userdata;
 
-  Handle<Object> o = NanNew(playlist->object);
-  Handle<Value> cbv = o->Get(NanNew<String>("subscribers_changed"));
+  Local<Object> o = Nan::New(playlist->object);
+  Local<Value> cbv = o->Get(Nan::GetCurrentContext(), Nan::New<String>("subscribers_changed").ToLocalChecked()).ToLocalChecked();
   if(!cbv->IsFunction()) {
     return;
   }
-  NanCallback *cb = new NanCallback(cbv.As<Function>());
+  Nan::Callback *cb = new Nan::Callback(cbv.As<Function>());
 
   const unsigned int argc = 0;
   Local<Value> argv[argc] = {};

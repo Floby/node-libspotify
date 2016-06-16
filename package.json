@@ -10,7 +10,7 @@
     "player",
     "music"
   ],
-  "version": "0.2.2",
+  "version": "0.3.0",
   "maintainers": [
     {
       "name": "Florent Jaby",
@@ -29,11 +29,11 @@
     "node": ">0.10.0"
   },
   "dependencies": {
-    "bindings": "~1.1.1",
-    "i": "~0.3",
-    "format": "0.1",
-    "backoff": "~2.0",
-    "nan": "^1.7.0"
+    "bindings": "^1.1.1",
+    "i": "^0.3.5",
+    "format": "^0.1.0",
+    "backoff": "^2.0.0",
+    "nan": "*"
   },
   "devDependencies": {
     "nodeunit": "^0.9",
