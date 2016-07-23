@@ -1,4 +1,6 @@
 ---
+sudo: required
+dist: trusty
 language: node_js
 before_install: sh scripts/travis-install.sh
 before_script: sh scripts/travis-setup.sh
