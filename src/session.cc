@@ -19,6 +19,7 @@
 #include "common.h"
 #include "playlistcallbacks.cc"
 #include <stdlib.h>
+#include <unistd.h>
 
 using namespace v8;
 using namespace nsp;
