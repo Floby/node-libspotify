@@ -16,9 +16,9 @@ var search = {
     testSearchFromString: function(test) {
         var search = null;
         test.doesNotThrow(function() {
-            search = new sp.Search("Bogus search terms");
+            search = new sp.Search("Tame Impala");
             search.on('ready', function() {
-                test.ok(search.tracks.length == 0, "there should be not many results");
+                test.ok(search.tracks.length > 0, "there should be some results");
                 test.done();
             });
             search.execute();
